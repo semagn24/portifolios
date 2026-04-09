@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hawassa Go - Smart Urban Transit</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --p: #1E40AF; --s: #3B82F6; --bg: #F8FAFC; --dark: #0F172A; }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--dark); }
+        .nav { background: white; padding: 1.25rem 2rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #E2E8F0; position: sticky; top:0; z-index:100; }
+        .main { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
+        .card { background: white; padding: 1.5rem; border-radius: 16px; border: 1px solid #E2E8F0; box-shadow: 0 1px 3px rgba(0,0,0,0.1); transition: 0.3s; }
+        .btn { padding: 0.7rem 1.4rem; border-radius: 10px; border: none; font-weight: 700; cursor: pointer; transition: 0.2s; font-family: inherit; }
+        .btn-p { background: var(--p); color: white; }
+        
+        #auth { position: fixed; inset: 0; background: var(--dark); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+        .login { background: white; padding: 3rem; border-radius: 24px; width: 400px; text-align: center; }
+        .field { width:100%; padding:0.8rem; border:2px solid #E2E8F0; border-radius:12px; margin-bottom:1rem; outline:none; }
+        .hidden { display: none !important; }
+        
+        .badge { padding: 0.3rem 0.7rem; border-radius: 20px; font-size: 0.7rem; font-weight: 800; display: inline-block; }
+        .live-dot { height:8px; width:8px; background:#22C55E; border-radius:50%; display:inline-block; margin-right:5px; animation: pulse 1s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+        
+        .alert-bar { background: #FFEDD5; border-left: 5px solid #F97316; padding: 1rem; border-radius: 12px; margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem; }
+    </style>
+</head>
+<body>
+
+    <div id="auth">
+        <div class="login">
+            <h1 style="color:var(--p); font-weight:900; letter-spacing:-1px; margin-bottom:0.5rem">HawassaGo</h1>
+            <p style="margin-bottom:2rem; color:#64748B">Seamless Urban Transit Connectivity</p>
+            <input type="text" id="u" class="field" placeholder="Username" value="commuter">
+            <input type="password" id="p" class="field" placeholder="Password" value="password">
+            <button id="auth-btn" class="btn btn-p" style="width:100%" onclick="handleAuth()">Sign In</button>
+            <p style="margin-top:1.5rem; font-size:0.85rem; color:#64748B">New to the city? <a href="#" style="color:var(--p); font-weight:700" onclick="toggleAuth()">Join Now</a></p>
+        </div>
+    </div>
+
+    <div id="app" class="hidden">
+        <nav class="nav">
+            <h2 style="font-weight:900; color:var(--p)">Hawassa<span style="color:var(--dark)">Go</span></h2>
+            <div style="display:flex; gap:1rem; align-items:center">
+                <div style="text-align:right">
+                    <span id="u-bal" style="font-weight:800; color:var(--p)">$0.00</span><br>
+                    <small id="u-name" style="color:#64748B">Pass Holder</small>
+                </div>
+                <button class="btn" style="background:var(--p); color:white" onclick="v('dash')">🗺 Live Fleet</button>
+                <button class="btn" onclick="v('tickets')">🎫 My Tickets</button>
+                <button class="btn" style="background:none" onclick="location.reload()">Logout</button>
+            </div>
+        </nav>
+
+        <main class="main">
+            <div id="alerts" class="alert-bar hidden"></div>
+
+            <!-- DASHBOARD -->
+            <div id="v-dash" class="v">
+                <h3 style="margin-bottom:1.5rem">Live Fleet Tracking</h3>
+                <div class="grid" id="fleet-grid"></div>
+                
+                <h3 style="margin:2rem 0 1.5rem">Journey Planner & Fare Calculator</h3>
+                <div class="card" style="display:flex; gap:1.5rem; align-items:center; flex-wrap:wrap">
+                    <select id="route-sel" class="field" style="max-width:300px; margin:0"></select>
+                    <div id="fare-calc" style="font-weight:800; font-size:1.2rem; color:var(--p)">$0.00</div>
+                    <button class="btn btn-p" onclick="buyTicket()">Purchase Digital Ticket</button>
+                </div>
+            </div>
+
+            <!-- TICKETS -->
+            <div id="v-tickets" class="v hidden">
+                <h3 style="margin-bottom:1.5rem">My Digital Passbook</h3>
+                <div class="grid" id="ticket-grid"></div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const API = 'http://localhost:3005/api';
+        let user = null, isReg = false;
+
+        function toggleAuth() {
+            isReg = !isReg;
+            document.getElementById('auth-btn').innerText = isReg ? 'Create Account' : 'Sign In';
+        }
+
+        async function handleAuth() {
+            const u = document.getElementById('u').value, p = document.getElementById('p').value;
+            const res = await fetch(`${API}/auth/${isReg?'register':'login'}`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({username:u, password:p}) });
+            if (res.ok) {
+                user = (await res.json()).user;
+                document.getElementById('auth').classList.add('hidden');
+                document.getElementById('app').classList.remove('hidden');
+                initApp();
+            } else alert('Invalid credentials');
+        }
+
+        async function initApp() {
+            document.getElementById('u-name').innerText = user.username;
+            document.getElementById('u-bal').innerText = `$${user.balance.toFixed(2)}`;
+            loadFleet();
+            loadRoutes();
+            loadAlerts();
+        }
+
+        async function loadFleet() {
+            const fleet = await (await fetch(`${API}/fleet`)).json();
+            document.getElementById('fleet-grid').innerHTML = fleet.map(b => `
+                <div class="card">
+                    <div style="display:flex; justify-content:space-between; align-items:start">
+                        <div>
+                            <span class="live-dot"></span><b style="color:var(--p)">Fleet #${b.id}</b>
+                            <p style="font-size:0.8rem; color:#64748B">${b.plate}</p>
+                        </div>
+                        <span class="badge" style="background:#E0F2FE; color:var(--p)">${b.status}</span>
+                    </div>
+                    <div style="margin-top:1.5rem">
+                        <small style="color:#64748B">CURRENT ROUTE</small>
+                        <h4 style="margin:2px 0 10px">${b.route.name}</h4>
+                        <small style="color:#64748B">LAST SEEN AT</small>
+                        <p style="font-weight:600">${b.location}</p>
+                    </div>
+                    <div style="margin-top:1.5rem; display:flex; justify-content:space-between; font-size:0.85rem">
+                        <span>Passenger Load:</span>
+                        <b style="color:${b.passengers > 50 ? '#F43F5E':'#10B981'}">${b.passengers}/60</b>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function loadRoutes() {
+            const routes = await (await fetch(`${API}/routes`)).json();
+            const sel = document.getElementById('route-sel');
+            sel.innerHTML = routes.map(r => `<option value="${r.id}" data-price="${r.price}">${r.name} (${r.distance})</option>`).join('');
+            sel.onchange = () => { document.getElementById('fare-calc').innerText = `$${sel.options[sel.selectedIndex].dataset.price}.00`; };
+            sel.onchange();
+        }
+
+        async function buyTicket() {
+            const sid = document.getElementById('route-sel').value;
+            const res = await fetch(`${API}/tickets`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({userId: user.id, routeId: parseInt(sid)}) });
+            if (res.ok) {
+                const data = await res.json();
+                user.balance = data.balance;
+                document.getElementById('u-bal').innerText = `$${user.balance.toFixed(2)}`;
+                alert('Ticket Secured! Your Digital ID is ' + data.ticket.id);
+                loadFleet(); // Sync UI
+            } else alert('Insufficient Balance');
+        }
+
+        async function v(view) {
+            document.querySelectorAll('.v').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`v-${view}`).classList.remove('hidden');
+            if (view === 'tickets') loadTickets();
+        }
+
+        async function loadTickets() {
+            const tickets = await (await fetch(`${API}/tickets/${user.id}`)).json();
+            document.getElementById('ticket-grid').innerHTML = tickets.map(t => `
+                <div class="card" style="border-left:5px solid var(--p)">
+                    <b>${t.routeName}</b>
+                    <p style="font-size:0.75rem; color:#64748B; margin-top:5px">PASS ID: ${t.id}</p>
+                    <div style="margin-top:1.5rem; display:flex; justify-content:space-between; align-items:center">
+                        <small>${new Date(t.date).toLocaleDateString()}</small>
+                        <b style="color:var(--p)">$${t.price}.00</b>
+                    </div>
+                </div>
+            `).join('') || '<p>No active tickets found.</p>';
+        }
+
+        async function loadAlerts() {
+            const res = await fetch(`${API}/alerts`);
+            const alerts = await res.json();
+            if (alerts.length > 0) {
+                const bar = document.getElementById('alerts');
+                bar.classList.remove('hidden');
+                bar.innerHTML = `⚠️ <b>${alerts[0].type}:</b> ${alerts[0].msg} <small style="margin-left:auto">${alerts[0].time}</small>`;
+            }
+        }
+    </script>
+</body>
+</html>

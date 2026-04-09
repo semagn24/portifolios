@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semagn Legese - CV</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --text-color: #333;
+            --text-light: #666;
+            --bg-color: #f4f7f6;
+            --white: #ffffff;
+            --border-color: #e0e0e0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .cv-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--white);
+            padding: 40px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            margin: 0;
+            color: var(--primary-color);
+            font-size: 2.5rem;
+        }
+
+        header h2 {
+            margin: 10px 0;
+            font-size: 1.2rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .contact-info span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        section {
+            margin-bottom: 30px;
+        }
+
+        h3 {
+            color: var(--secondary-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+        }
+
+        .experience-item,
+        .project-item,
+        .education-item {
+            margin-bottom: 20px;
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 5px;
+        }
+
+        .item-title {
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+
+        .item-subtitle {
+            font-weight: 600;
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        .item-date {
+            font-size: 0.85rem;
+            color: #888;
+            font-style: italic;
+        }
+
+        ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 5px;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+        }
+
+        .skill-tag {
+            background: #f0f2f5;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .print-btn {
+            display: block;
+            width: fit-content;
+            margin: 20px auto 0;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .print-btn:hover {
+            background: var(--secondary-color);
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .cv-container {
+                box-shadow: none;
+                padding: 0;
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .print-btn {
+                display: none;
+            }
+
+            a {
+                text-decoration: none;
+                color: inherit;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="cv-container">
+        <header>
+            <h1>Semagn Legese</h1>
+            <h2>Software Engineering Student</h2>
+            <div class="contact-info">
+                <span>📍 Hawassa, Ethiopia</span>
+                <span>📞 +251 996506278</span>
+                <span>📧 semagnlegese@gmail.com</span>
+                <span>🔗 <a href="https://github.com/semagn24" target="_blank" style="color:var(--text-light); text-decoration:none;">github.com/semagn24</a></span>
+                <span>👤 Male | 📅 1995 (EC)</span>
+                <span>🌍 Ethiopian</span>
+            </div>
+        </header>
+
+        <section>
+            <h3>Career Objective</h3>
+            <p>
+                Motivated Software Engineering student with strong interest in problem-solving and software development.<br>
+                Passionate about building real-world applications and continuously improving technical skills.<br>
+                Seeking an opportunity to contribute to innovative projects and grow as a professional developer.
+            </p>
+        </section>
+
+        <section>
+            <h3>Technical Skills</h3>
+            <div class="skills-grid">
+                <div class="skill-tag">HTML5</div>
+                <div class="skill-tag">CSS3</div>
+                <div class="skill-tag">JavaScript (ES6+)</div>
+                <div class="skill-tag">React.js</div>
+                <div class="skill-tag">Node.js</div>
+                <div class="skill-tag">PHP</div>
+                <div class="skill-tag">Python</div>
+                <div class="skill-tag">Java</div>
+                <div class="skill-tag">MongoDB</div>
+                <div class="skill-tag">SQL</div>
+                <div class="skill-tag">Git</div>
+                <div class="skill-tag">GitHub</div>
+            </div>
+        </section>
+
+        <section>
+            <h3>Education</h3>
+            <div class="education-item">
+                <div class="item-header">
+                    <span class="item-title">Software Engineering Student</span>
+                </div>
+                <div class="item-subtitle">Wachamo University</div>
+            </div>
+            <div class="education-item">
+                <div class="item-header">
+                    <span class="item-title">Completed High School</span>
+                </div>
+                <div class="item-subtitle">Hawassa Tabour Secondary and Preparatory School</div>
+            </div>
+        </section>
+
+        <a href="javascript:window.print()" class="print-btn">Print / Save as PDF</a>
+        <a href="Semagn_Legese_Mildega_CV_Updated (1).pdf" download class="print-btn"
+            style="background-color: #4a5568; margin-top: 10px;">Download direct PDF</a>
+        <a href="index.html" class="print-btn" style="background-color: #666; margin-top: 10px;">Back to Portfolio</a>
+    </div>
+
+</body>
+
+</html>

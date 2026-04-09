@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Hawassa Transport Tracking System Demo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4facfe;
+            --secondary: #00f2fe;
+            --bg: #0f172a;
+            --card: #1e293b;
+            --text: #f1f5f9;
+            --text-light: #94a3b8;
+            --border: #334155;
+            --success: #48bb78;
+            --warning: #fbd38d;
+            --danger: #fc8181;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        header {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            color: #0f172a;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 20px rgba(79, 172, 254, 0.3);
+        }
+
+        header h1 {
+            font-size: 1.3rem;
+            font-weight: 800;
+        }
+
+        .live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .live-dot {
+            width: 10px;
+            height: 10px;
+            background: #48bb78;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(72, 187, 120, .7)
+            }
+
+            50% {
+                box-shadow: 0 0 0 8px rgba(72, 187, 120, 0)
+            }
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            padding: 0.5rem 1.25rem;
+            border-radius: 2rem;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            background: rgba(79, 172, 254, 0.15);
+            color: var(--primary);
+        }
+
+        .main {
+            max-width: 1100px;
+            margin: 1.5rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat {
+            background: var(--card);
+            border-radius: 0.75rem;
+            padding: 1.1rem;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .stat .val {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .stat .lbl {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-top: 0.2rem;
+        }
+
+        .grid2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+        }
+
+        @media(max-width:700px) {
+            .grid2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            background: var(--card);
+            border-radius: 1rem;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .panel-head {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.95rem;
+        }
+
+        .bus-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .bus-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.2s;
+            cursor: pointer;
+        }
+
+        .bus-item:hover {
+            background: rgba(79, 172, 254, 0.05);
+        }
+
+        .bus-item-left {
+            flex: 1;
+        }
+
+        .bus-plate {
+            font-weight: 800;
+            font-size: 0.95rem;
+        }
+
+        .bus-route {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-top: 0.15rem;
+        }
+
+        .bus-driver {
+            font-size: 0.78rem;
+            color: var(--text-light);
+        }
+
+        .bus-right {
+            text-align: right;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.7rem;
+            border-radius: 2rem;
+            font-size: 0.78rem;
+            font-weight: 700;
+        }
+
+        .s-moving {
+            background: rgba(72, 187, 120, 0.15);
+            color: var(--success);
+        }
+
+        .s-stopped {
+            background: rgba(252, 129, 129, 0.15);
+            color: var(--danger);
+        }
+
+        .s-arrived {
+            background: rgba(251, 211, 141, 0.15);
+            color: var(--warning);
+        }
+
+        .eta-text {
+            font-size: 0.78rem;
+            color: var(--text-light);
+            margin-top: 0.25rem;
+        }
+
+        .pass-bar {
+            width: 60px;
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            margin-top: 0.4rem;
+        }
+
+        .pass-fill {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        .map-wrap {
+            height: 400px;
+            background: var(--bg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .map-grid-lines {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(rgba(79, 172, 254, 0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(79, 172, 254, 0.04) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .city-label {
+            position: absolute;
+            font-size: 0.7rem;
+            color: var(--text-light);
+            font-weight: 600;
+        }
+
+        .bus-dot {
+            position: absolute;
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            border-radius: 50%;
+            border: 2px solid white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            box-shadow: 0 0 15px rgba(79, 172, 254, 0.5);
+            cursor: pointer;
+            transition: all 0.8s ease;
+            transform: translate(-50%, -50%);
+        }
+
+        .bus-dot:hover {
+            transform: translate(-50%, -50%) scale(1.3);
+        }
+
+        .bus-tooltip {
+            display: none;
+            position: absolute;
+            bottom: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            color: #1a202c;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            white-space: nowrap;
+            font-size: 0.78rem;
+            font-weight: 700;
+            z-index: 10;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .bus-dot:hover .bus-tooltip {
+            display: block;
+        }
+
+        .route-list {
+            padding: 0.75rem 0;
+        }
+
+        .route-item {
+            padding: 0.875rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .route-item h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        .route-stops {
+            display: flex;
+            gap: 0;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+        }
+
+        .stop {
+            font-size: 0.78rem;
+            color: var(--text-light);
+        }
+
+        .stop-arrow {
+            color: var(--primary);
+            margin: 0 0.3rem;
+            font-size: 0.78rem;
+        }
+
+        .route-meta {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-top: 0.35rem;
+        }
+
+        .complaint-form {
+            padding: 1.25rem;
+        }
+
+        .cf-group {
+            margin-bottom: 1rem;
+        }
+
+        .cf-group label {
+            display: block;
+            font-size: 0.84rem;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 0.35rem;
+        }
+
+        .cf-group input,
+        .cf-group textarea,
+        .cf-group select {
+            width: 100%;
+            padding: 0.7rem 0.9rem;
+            background: #0f172a;
+            border: 2px solid var(--border);
+            border-radius: 0.75rem;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border 0.3s;
+        }
+
+        .cf-group input:focus,
+        .cf-group textarea:focus,
+        .cf-group select:focus {
+            border-color: var(--primary);
+        }
+
+        .submit-complaint {
+            width: 100%;
+            padding: 0.8rem;
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            color: #0f172a;
+            border: none;
+            border-radius: 0.75rem;
+            font-weight: 800;
+            font-family: inherit;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .submit-complaint:hover {
+            filter: brightness(1.1);
+        }
+
+        .complaints-wrap {
+            padding: 0.75rem 0;
+        }
+
+        .complaint-card {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .complaint-card .meta {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-bottom: 0.4rem;
+        }
+
+        .complaint-card .msg {
+            font-size: 0.9rem;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #1e293b;
+            color: white;
+            padding: 0.875rem 1.5rem;
+            border-radius: 1rem;
+            border: 1px solid var(--border);
+            font-weight: 600;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s;
+            z-index: 999;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin: 1rem 2rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>🚌 Hawassa Transport Tracking System</h1>
+        <div class="live-indicator">
+            <div class="live-dot"></div>LIVE &nbsp;|&nbsp; <span id="clockDisplay"></span>
+        </div>
+    </header>
+
+    <a href="../index.html" class="back-link">← Back to Portfolio</a>
+
+    <div class="tabs" style="border-top: 1px solid var(--border)">
+        <button class="tab-btn active" onclick="switchTab('dashboard',this)">📊 Dashboard</button>
+        <button class="tab-btn" onclick="switchTab('routes',this)">🗺️ Routes</button>
+        <button class="tab-btn" onclick="switchTab('complaint',this)">📝 Complaints</button>
+        <button class="tab-btn" onclick="switchTab('fare',this)">💰 Calculator</button>
+    </div>
+
+    <div class="main">
+        <!-- DASHBOARD -->
+        <div id="page-dashboard" class="page active">
+            <div class="stats-row" id="statsRow"></div>
+            <div class="grid2">
+                <div class="panel">
+                    <div class="panel-head">🚌 Active Buses <span id="busCountBadge"
+                            style="font-size:0.8rem;color:var(--text-light);font-weight:500"></span></div>
+                    <div class="bus-list" id="busList"></div>
+                </div>
+                <div class="panel">
+                    <div class="panel-head">🗺️ Live Map</div>
+                    <div class="map-wrap" id="mapWrap">
+                        <div class="map-grid-lines"></div>
+                        <div class="city-label" style="top:5%;left:5%">Hawassa University</div>
+                        <div class="city-label" style="top:50%;left:60%">City Center</div>
+                        <div class="city-label" style="top:80%;left:30%">Lake Hawassa</div>
+                        <div class="city-label" style="top:20%;left:70%">Tabor Hill</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ROUTES -->
+        <div id="page-routes" class="page">
+            <div class="panel">
+                <div class="panel-head">🗺️ All Routes</div>
+                <div class="route-list" id="routeList"></div>
+            </div>
+        </div>
+
+        <!-- COMPLAINTS -->
+        <div id="page-complaint" class="page">
+            <div class="grid2">
+                <div class="panel">
+                    <div class="panel-head">📝 Submit Complaint</div>
+                    <div class="complaint-form">
+                        <div class="cf-group"><label>Your Name</label><input type="text" id="cName"
+                                placeholder="Optional"></div>
+                        <div class="cf-group"><label>Bus Plate Number</label>
+                            <select id="cPlate">
+                                <option value="">-- Select Bus --</option>
+                            </select>
+                        </div>
+                        <div class="cf-group"><label>Message *</label><textarea id="cMsg" rows="4"
+                                placeholder="Describe the issue..."></textarea></div>
+                        <button class="submit-complaint" onclick="submitComplaint()">Submit Complaint</button>
+                    </div>
+                </div>
+                <div class="panel">
+                    <div class="panel-head">📋 Recent Complaints</div>
+                    <div class="complaints-wrap" id="complaintsList"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FARE CALCULATOR -->
+        <div id="page-fare" class="page">
+            <div class="panel" style="max-width:600px; margin:0 auto;">
+                <div class="panel-head">💰 Calculate Route Fare</div>
+                <div class="complaint-form">
+                    <div class="cf-group"><label>Select Route</label>
+                        <select id="fRoute" onchange="updateStops()"><option value="">-- Choose Route --</option></select>
+                    </div>
+                    <div class="cf-group"><label>From Stop</label>
+                        <select id="fFrom"><option value="">-- Choose Stop --</option></select>
+                    </div>
+                    <div class="cf-group"><label>To Stop</label>
+                        <select id="fTo"><option value="">-- Choose Stop --</option></select>
+                    </div>
+                    <button class="submit-complaint" onclick="calculateFare()">Calculate Fare</button>
+                    
+                    <div id="fareResult" style="margin-top:2rem; text-align:center; display:none;">
+                        <h3 style="color:var(--text-light); margin-bottom:0.5rem;">Estimated Cost</h3>
+                        <div style="font-size:3rem; font-weight:800; color:#48bb78;"><span id="fareAmount">0</span> <span style="font-size:1.5rem;">ETB</span></div>
+                        <p style="color:var(--text-light); margin-top:0.5rem;" id="fareDistance"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // MOCK DATA for standalone version
+        let allRoutes = [
+            { id: 1, name: 'Route 1', from: 'Piazza', to: 'University', stops: ['Piazza', 'Atote', 'Tabor', 'University'], distance: 5.2, fare: 10 },
+            { id: 2, name: 'Route 2', from: 'Bus Station', to: 'Lake Resort', stops: ['Bus Station', 'City Center', 'Lake Resort'], distance: 3.8, fare: 8 },
+            { id: 3, name: 'Route 3', from: 'Hospital', to: 'Market', stops: ['Hospital', 'Tula', 'Market'], distance: 6.5, fare: 12 },
+            { id: 4, name: 'Route 4', from: 'Airport', to: 'City Center', stops: ['Airport', 'Industrial Park', 'City Center'], distance: 15.0, fare: 25 },
+        ];
+        
+        let buses = [
+            { id: 1, plateNumber: 'HWA-1234', routeId: 1, route: allRoutes[0], driver: 'Abebe G.', capacity: 30, passengers: 20, status: 'moving', eta: 5, lat: 25, lng: 30, currentStop: 'Atote' },
+            { id: 2, plateNumber: 'HWA-5678', routeId: 1, route: allRoutes[0], driver: 'Bekele T.', capacity: 30, passengers: 28, status: 'stopped', eta: 12, lat: 45, lng: 50, currentStop: 'Tabor' },
+            { id: 3, plateNumber: 'HWA-9012', routeId: 2, route: allRoutes[1], driver: 'Tadesse M.', capacity: 45, passengers: 15, status: 'moving', eta: 8, lat: 70, lng: 65, currentStop: 'City Center' },
+            { id: 4, plateNumber: 'HWA-3456', routeId: 3, route: allRoutes[2], driver: 'Girma W.', capacity: 30, passengers: 5, status: 'arrived', eta: 0, lat: 80, lng: 35, currentStop: 'Market' },
+            { id: 5, plateNumber: 'HWA-7890', routeId: 4, route: allRoutes[3], driver: 'Dawit S.', capacity: 50, passengers: 45, status: 'moving', eta: 20, lat: 10, lng: 80, currentStop: 'Industrial Park' },
+        ];
+
+        let complaints = [
+            { id: 1, name: 'Selam', busPlate: 'HWA-1234', message: 'The bus is very clean but arrived a bit late.', createdAt: new Date(Date.now() - 3600000).toISOString() },
+            { id: 2, name: 'Anonymous', busPlate: 'HWA-5678', message: 'Reckless driving, please speak to the driver.', createdAt: new Date(Date.now() - 86400000).toISOString() }
+        ];
+
+        function statusClass(s) { return s === 'moving' ? 's-moving' : s === 'arrived' ? 's-arrived' : 's-stopped'; }
+        function statusLabel(s) { return s === 'moving' ? '🟢 Moving' : s === 'arrived' ? '🟡 Arrived' : '🔴 Stopped'; }
+
+        function loadBuses() {
+            // Randomly update simulated bus positions and passengers
+            buses.forEach(b => {
+                if(b.status === 'moving') {
+                    b.lat += (Math.random() - 0.5) * 4;
+                    b.lng += (Math.random() - 0.5) * 4;
+                    // clamp
+                    if(b.lat < 5) b.lat = 5; if(b.lat > 95) b.lat = 95;
+                    if(b.lng < 5) b.lng = 5; if(b.lng > 95) b.lng = 95;
+                    // Random passenger flux
+                    if(Math.random() > 0.7) {
+                        b.passengers += Math.floor(Math.random() * 5) - 2;
+                        if(b.passengers < 0) b.passengers = 0;
+                        if(b.passengers > b.capacity) b.passengers = b.capacity;
+                    }
+                }
+            });
+
+            renderStats();
+            renderBusList();
+            renderMap();
+            populateBusDropdown();
+        }
+
+        function renderStats() {
+            const moving = buses.filter(b => b.status === 'moving').length;
+            const stopped = buses.filter(b => b.status === 'stopped').length;
+            const totalPass = buses.reduce((a, b) => a + b.passengers, 0);
+            document.getElementById('statsRow').innerHTML = `
+            <div class="stat"><div class="val">${buses.length}</div><div class="lbl">Total Buses</div></div>
+            <div class="stat"><div class="val" style="color:var(--success)">${moving}</div><div class="lbl">🟢 Moving</div></div>
+            <div class="stat"><div class="val" style="color:var(--danger)">${stopped}</div><div class="lbl">🔴 Stopped</div></div>
+            <div class="stat"><div class="val">${totalPass}</div><div class="lbl">Total Passengers</div></div>
+        `;
+            document.getElementById('busCountBadge').textContent = buses.length + ' buses';
+        }
+
+        function renderBusList() {
+            document.getElementById('busList').innerHTML = buses.map(b => {
+                const pct = Math.round((b.passengers / b.capacity) * 100);
+                return `<div class="bus-item">
+                <div style="font-size:1.8rem">🚌</div>
+                <div class="bus-item-left">
+                    <div class="bus-plate">${b.plateNumber}</div>
+                    <div class="bus-route">${b.route?.from} → ${b.route?.to}</div>
+                    <div class="bus-driver">👤 ${b.driver} | 📍 ${b.currentStop}</div>
+                </div>
+                <div class="bus-right">
+                    <span class="status-badge ${statusClass(b.status)}">${statusLabel(b.status)}</span>
+                    <div class="eta-text">ETA: ~${b.eta} min</div>
+                    <div class="pass-bar"><div class="pass-fill" style="width:${pct}%"></div></div>
+                    <div style="font-size:0.72rem;color:var(--text-light)">${b.passengers}/${b.capacity}</div>
+                </div>
+            </div>`;
+            }).join('');
+        }
+
+        function renderMap() {
+            const wrap = document.getElementById('mapWrap');
+            wrap.querySelectorAll('.bus-dot').forEach(d => d.remove());
+            buses.forEach(b => {
+                const dot = document.createElement('div');
+                dot.className = 'bus-dot';
+                dot.style.left = b.lat + '%';
+                dot.style.top = b.lng + '%';
+                dot.innerHTML = `🚌<div class="bus-tooltip">${b.plateNumber}<br>👤 ${b.driver}<br>⏱️ ~${b.eta} min ETA<br>👥 ${b.passengers}/${b.capacity}</div>`;
+                wrap.appendChild(dot);
+            });
+        }
+
+        function loadRoutes() {
+            document.getElementById('routeList').innerHTML = allRoutes.map(r => `
+            <div class="route-item">
+                <h4>${r.name}: ${r.from} → ${r.to}</h4>
+                <div class="route-meta">📏 ${r.distance} km &nbsp;|&nbsp; 💰 ${r.fare} ETB &nbsp;|&nbsp; 🚌 ${buses.filter(b => b.routeId === r.id).length} buses</div>
+                <div class="route-stops">${r.stops.map((s, i) => `<span class="stop">${s}</span>${i < r.stops.length - 1 ? '<span class="stop-arrow">→</span>' : ''}`).join('')}</div>
+            </div>`).join('');
+            document.getElementById('fRoute').innerHTML = '<option value="">-- Choose Route --</option>' + allRoutes.map(r => `<option value="${r.id}">${r.name} (${r.from} - ${r.to})</option>`).join('');
+        }
+
+        function populateBusDropdown() {
+            if (document.getElementById('cPlate').options.length <= 1) {
+                document.getElementById('cPlate').innerHTML = '<option value="">-- Select Bus --</option>' +
+                    buses.map(b => `<option value="${b.plateNumber}">${b.plateNumber} (${b.route?.name || ''})</option>`).join('');
+            }
+        }
+
+        function loadComplaints() {
+            document.getElementById('complaintsList').innerHTML = complaints.length === 0
+                ? '<p style="padding:1.5rem;color:var(--text-light)">No complaints yet.</p>'
+                : complaints.slice().reverse().map(c => `
+                <div class="complaint-card">
+                    <div class="meta">👤 ${c.name} | 🚌 ${c.busPlate} | ${new Date(c.createdAt).toLocaleString()}</div>
+                    <div class="msg">${c.message}</div>
+                </div>`).join('');
+        }
+
+        function submitComplaint() {
+            const name = document.getElementById('cName').value.trim();
+            const busPlate = document.getElementById('cPlate').value;
+            const message = document.getElementById('cMsg').value.trim();
+            if (!message) { showToast('⚠️ Please enter a message!'); return; }
+            
+            complaints.push({
+                id: complaints.length + 1,
+                name: name || 'Anonymous',
+                busPlate: busPlate || 'Unknown Bus',
+                message: message,
+                createdAt: new Date().toISOString()
+            });
+
+            document.getElementById('cName').value = '';
+            document.getElementById('cMsg').value = '';
+            document.getElementById('cPlate').value = '';
+            loadComplaints();
+            showToast('✅ Complaint submitted!');
+        }
+
+        function updateStops() {
+            const rid = parseInt(document.getElementById('fRoute').value);
+            const route = allRoutes.find(r => r.id === rid);
+            if(route) {
+                const opts = '<option value="">-- Choose Stop --</option>' + route.stops.map((s,i) => `<option value="${i}">${s}</option>`).join('');
+                document.getElementById('fFrom').innerHTML = opts;
+                document.getElementById('fTo').innerHTML = opts;
+                document.getElementById('fareResult').style.display='none';
+            }
+        }
+
+        function calculateFare() {
+            const rid = parseInt(document.getElementById('fRoute').value);
+            const fromIdx = parseInt(document.getElementById('fFrom').value);
+            const toIdx = parseInt(document.getElementById('fTo').value);
+            if(isNaN(rid) || isNaN(fromIdx) || isNaN(toIdx)) { showToast('⚠️ Please select route and stops'); return; }
+            if(fromIdx === toIdx) { showToast('⚠️ Stops must be different'); return; }
+            const route = allRoutes.find(r => r.id === rid);
+            const stopsDiff = Math.abs(toIdx - fromIdx);
+            const totalStops = route.stops.length - 1;
+            const ratio = stopsDiff / totalStops;
+            const estimatedFare = Math.max(5, Math.ceil(route.fare * ratio));
+            const estimatedDist = (route.distance * ratio).toFixed(1);
+            
+            document.getElementById('fareAmount').textContent = estimatedFare;
+            document.getElementById('fareDistance').textContent = `Distance: ~${estimatedDist} km`;
+            document.getElementById('fareResult').style.display = 'block';
+        }
+
+        function switchTab(tab, btn) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(`page-${tab}`).classList.add('active');
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            if (tab === 'routes' || tab === 'fare') loadRoutes();
+            if (tab === 'complaint') loadComplaints();
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3000);
+        }
+
+        function updateClock() { document.getElementById('clockDisplay').textContent = new Date().toLocaleTimeString(); }
+
+        // Auto-refresh logic (mocking live tracking)
+        loadBuses();
+        setInterval(loadBuses, 5000);
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
+</body>
+
+</html>

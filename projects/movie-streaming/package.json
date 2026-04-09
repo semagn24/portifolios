@@ -1,0 +1,13 @@
+{
+    "name": "movie-streaming-platform",
+    "version": "1.0.0",
+    "description": "Full-Stack Movie Streaming Platform",
+    "main": "server.js",
+    "scripts": {
+        "start": "node server.js"
+    },
+    "dependencies": {
+        "cors": "^2.8.5",
+        "express": "^4.18.2"
+    }
+}

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HRMS ULTIMATE - Enterprise Global Suite</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-light: #EEF2FF;
+            --secondary: #0EA5E9;
+            --ai: #8B5CF6;
+            --danger: #EF4444;
+            --bg: #F8FAFC;
+            --sidebar: #0F172A;
+            --text: #1E293B;
+            --text-m: #64748B;
+            --border: #E2E8F0;
+            --radius: 12px;
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+
+        .wrapper { display: flex; min-height: 100vh; display: none; }
+        .sidebar { width: 260px; background: var(--sidebar); color: white; position: fixed; height: 100vh; padding: 1.5rem; transition: 0.3s; z-index: 1000; overflow-y: auto; }
+        .sidebar-brand { padding: 1rem 0.5rem 2rem 0.5rem; border-bottom: 1px solid #1E293B; margin-bottom: 1.5rem; }
+        
+        .nav-link { 
+            display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; color: #94A3B8; 
+            text-decoration: none; border-radius: 10px; font-weight: 500; cursor: pointer; margin-bottom: 0.25rem;
+            font-size: 0.9rem; transition: 0.2s;
+        }
+        .nav-link:hover, .nav-link.active { background: rgba(255,255,255,0.05); color: white; }
+        .nav-link.active { background: var(--primary); }
+
+        .content { margin-left: 260px; flex: 1; padding: 2rem; transition: 0.3s; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+
+        .card { background: white; padding: 1.5rem; border-radius: var(--radius); border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); margin-bottom: 1.5rem; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        
+        .table { width: 100%; border-collapse: collapse; }
+        .table th { text-align: left; padding: 0.8rem; background: #F8FAFC; color: var(--text-m); font-size: 0.75rem; text-transform: uppercase; border-bottom: 1px solid var(--border); }
+        .table td { padding: 0.8rem; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+
+        .badge { padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.7rem; font-weight: 700; }
+        .badge-s { background: #DCFCE7; color: #166534; }
+        .badge-w { background: #FEF3C7; color: #92400E; }
+        .badge-d { background: #FEE2E2; color: #991B1B; }
+
+        #auth { position: fixed; inset: 0; background: #0F172A; display: flex; align-items: center; justify-content: center; z-index: 2000; }
+        .login-card { background: white; padding: 3rem; border-radius: 24px; width: 400px; text-align: center; }
+        .field { width: 100%; padding: 0.8rem; border: 2px solid var(--border); border-radius: 12px; margin-bottom: 1rem; outline: none; }
+        .btn { padding: 0.7rem 1.2rem; border-radius: 10px; font-weight: 700; border: none; cursor: pointer; transition: 0.2s; font-family: inherit; }
+        .btn-p { background: var(--primary); color: white; }
+        .btn-ai { background: var(--ai); color: white; }
+        
+        .hidden { display: none !important; }
+        .lang-toggle { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+        .lang-btn { padding: 0.3rem 0.6rem; border-radius: 6px; border: none; cursor: pointer; font-size: 0.75rem; }
+        
+        @keyframes slide { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .v-section { animation: slide 0.4s ease-out; }
+    </style>
+</head>
+<body>
+
+    <div id="auth">
+        <div class="login-card">
+            <h1 style="color:var(--primary); margin-bottom:0.5rem">HR PRO ULTIMATE</h1>
+            <p style="color:var(--text-m); margin-bottom:2rem">Professional Enterprise Solutions</p>
+            <input type="email" id="u" class="field" placeholder="Email" value="admin@company.com">
+            <input type="password" id="p" class="field" placeholder="Password" value="admin123">
+            <button class="btn btn-p" style="width:100%" onclick="login()">Sign In</button>
+        </div>
+    </div>
+
+    <div class="wrapper" id="app">
+        <aside class="sidebar">
+            <div class="sidebar-brand"><h2 style="font-weight: 900; color: white;">HR PRO</h2></div>
+            <nav>
+                <div class="nav-link active" data-v="dash" onclick="view('dash')">📊 Dashboard</div>
+                <div class="nav-link" data-v="wrk" onclick="view('wrk')">👥 Workforce</div>
+                <div class="nav-link" data-v="recruit" onclick="view('recruit')">🎯 Recruitment</div>
+                <div class="nav-link" data-v="pay" onclick="view('pay')">💰 Payroll</div>
+                <div class="nav-link" data-v="leave" onclick="view('leave')">🏖 Leaves</div>
+                <div class="nav-link" data-v="att" onclick="view('att')">🕒 Attendance</div>
+                <div class="nav-link" data-v="perf" onclick="view('perf')">📈 Performance</div>
+                <div class="nav-link" data-v="rep" onclick="view('rep')">📑 Reports</div>
+                <div class="nav-link" data-v="docs" onclick="view('docs')">📁 Documents</div>
+                <div class="nav-link" data-v="logs" onclick="view('logs')">📜 Activity Logs</div>
+                <div class="nav-link" data-v="set" onclick="view('set')">⚙️ Settings</div>
+            </nav>
+            <div style="margin-top: 2rem; padding: 1rem; border-top: 1px solid #334155;">
+                <button class="btn" style="width:100%; background:#1E293B; color:white;" onclick="location.reload()">Logout</button>
+            </div>
+        </aside>
+
+        <main class="content">
+            <header class="header">
+                <div><h1 id="v-title">Dashboard</h1><p id="v-sub" style="color:var(--text-m)">Company Overview & Insights</p></div>
+                <div style="display:flex; align-items:center; gap:15px">
+                    <select id="branch-sel" onchange="loadView()" style="padding:0.6rem; border-radius:10px; border:1px solid var(--border); font-weight:600">
+                        <option>All Branches</option>
+                    </select>
+                    <div style="display:flex; align-items:center; gap:10px; background:white; padding:5px 15px; border-radius:12px; border:1px solid var(--border)">
+                         <div style="text-align:right"><b>Admin User</b><br><small style="color:var(--primary)">ADMIN</small></div>
+                         <div style="width:38px; height:38px; background:var(--primary); border-radius:10px; display:flex; align-items:center; justify-content:center; color:white; font-weight:800">AU</div>
+                    </div>
+                </div>
+            </header>
+
+            <div id="view-container">
+                <!-- DASHBOARD -->
+                <div id="v-dash" class="v-section">
+                    <div class="stats-grid" id="s-grid"></div>
+                    <div style="display:grid; grid-template-columns: 2fr 1fr; gap: 1.5rem;">
+                        <div class="card"><h3>Analytics Report</h3><canvas id="c" height="180"></canvas></div>
+                        <div class="card">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem">
+                                <h3>AI Intelligence</h3><span class="badge" style="background:var(--ai); color:white">LIVE</span>
+                            </div>
+                            <div id="ai-logs"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- WORKFORCE -->
+                <div id="v-wrk" class="v-section hidden">
+                    <div class="card">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem">
+                            <h3>Employee Registry</h3>
+                            <div class="lang-toggle">
+                                <button class="btn btn-p" onclick="exportCSV()">Export CSV</button>
+                            </div>
+                        </div>
+                        <table class="table">
+                            <thead><tr><th>Employee</th><th>Branch</th><th>Role</th><th>Salary</th><th>Status</th></tr></thead>
+                            <tbody id="elist"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- CORE MODULES -->
+                <div id="v-recruit" class="v-section hidden"><div class="card"><h3>Recruitment Hub</h3><div id="job-list"></div></div></div>
+                <div id="v-pay" class="v-section hidden"><div class="card"><h3>Payroll Processing</h3><table class="table"><thead><tr><th>Name</th><th>Month</th><th>Amount</th><th>Status</th></tr></thead><tbody id="plist"></tbody></table></div></div>
+                <div id="v-leave" class="v-section hidden"><div class="card"><h3>Leave Requests</h3><table class="table"><thead><tr><th>Name</th><th>Dates</th><th>Type</th><th>Status</th></tr></thead><tbody id="llist"></tbody></table></div></div>
+                <div id="v-att" class="v-section hidden"><div class="card"><h3>Attendance Logs</h3><table class="table"><thead><tr><th>Name</th><th>Date</th><th>Check In</th><th>Status</th></tr></thead><tbody id="alist"></tbody></table></div></div>
+                <div id="v-perf" class="v-section hidden"><div class="card"><h3>AI Performance Analysis</h3><div id="perf-grid" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:1rem"></div></div></div>
+                <div id="v-rep" class="v-section hidden"><div class="card"><h3>Reporting Engine</h3><button class="btn btn-p" onclick="window.print()">Print Intelligence Report</button></div></div>
+                <div id="v-docs" class="v-section hidden"><div class="card"><h3>Documents Vault</h3><div id="doc-grid"></div></div></div>
+                <div id="v-logs" class="v-section hidden"><div class="card"><h3>Activity Logs</h3><table class="table"><thead><tr><th>User</th><th>Action</th><th>Target</th><th>Time</th></tr></thead><tbody id="loglist"></tbody></table></div></div>
+                <div id="v-set" class="v-section hidden"><div class="card"><h3>System Configuration</h3><div id="set-form"></div></div></div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const API = 'http://localhost:3002/api';
+        let charts = {};
+
+        async function login() {
+            const u = document.getElementById('u').value, p = document.getElementById('p').value;
+            const res = await fetch(`${API}/auth/login`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email:u, password:p}) });
+            if (res.ok) { document.getElementById('auth').style.display='none'; document.getElementById('app').style.display='flex'; init(); }
+        }
+
+        async function init() {
+            const branches = await (await fetch(`${API}/branches`)).json();
+            const sel = document.getElementById('branch-sel');
+            branches.forEach(b => { const opt = document.createElement('option'); opt.innerText = b; sel.appendChild(opt); });
+            view('dash');
+        }
+
+        function view(v) {
+            document.querySelectorAll('.v-section').forEach(s => s.classList.add('hidden'));
+            document.getElementById(`v-${v}`).classList.remove('hidden');
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            document.querySelector(`[data-v="${v}"]`).classList.add('active');
+            document.getElementById('v-title').innerText = v.toUpperCase();
+            loadView(v);
+        }
+
+        async function loadView(v) {
+            const branch = document.getElementById('branch-sel').value;
+            
+            if (v === 'dash' || v === 'wrk') {
+                const emps = await (await fetch(`${API}/employees?branch=${branch}`)).json();
+                document.getElementById('elist').innerHTML = emps.map(e => `<tr><td><b>${e.name}</b></td><td>${e.branch}</td><td>${e.role}</td><td>$${e.salary.toLocaleString()}</td><td><span class="badge badge-s">${e.status}</span></td></tr>`).join('');
+                const s = await (await fetch(`${API}/stats`)).json();
+                document.getElementById('s-grid').innerHTML = `
+                    <div class="card"><b>Workforce</b><h2>${s.total}</h2></div>
+                    <div class="card"><b>Total Branches</b><h2>${s.branches}</h2></div>
+                    <div class="card"><b>Cloud Status</b><h2 style="color:var(--secondary)">Synced</h2></div>
+                `;
+            }
+
+            if (v === 'dash') {
+                const ai = await (await fetch(`${API}/ai-insights`)).json();
+                document.getElementById('ai-logs').innerHTML = ai.map(i => `<div style="padding:10px; border-left:3px solid var(--ai); background:#F5F3FF; border-radius:8px; margin-bottom:8px; font-size:0.85rem"><b>${i.name}</b>: ${i.alert}</div>`).join('');
+                const ann = await (await fetch(`${API}/analytics`)).json();
+                if (charts.c) charts.c.destroy();
+                charts.c = new Chart(document.getElementById('c'), { type:'line', data:{ labels:ann.months.map(m=>m.label), datasets:[{label:'Growth', data:ann.months.map(m=>m.count), borderColor: '#4F46E5', tension:0.4}]}});
+            }
+
+            if (v === 'perf') {
+                const ai = await (await fetch(`${API}/ai-insights`)).json();
+                document.getElementById('perf-grid').innerHTML = ai.map(i => `<div class="card"><h4>${i.name}</h4><b style="color:var(--ai)">${i.alert}</b><p style="font-size:0.8rem; margin-top:5px;">${i.advice}</p></div>`).join('');
+            }
+
+            if (v === 'logs') {
+                const l = await (await fetch(`${API}/logs`)).json();
+                document.getElementById('loglist').innerHTML = l.map(i => `<tr><td>${i.user}</td><td><b>${i.action}</b></td><td>${i.target}</td><td>${new Date(i.timestamp).toLocaleTimeString()}</td></tr>`).join('');
+            }
+        }
+
+        function exportCSV() {
+            let csv = "Name,Branch,Role,Salary,Status\n";
+            const table = document.getElementById('elist');
+            for(let r of table.rows) {
+                let row = [];
+                for(let c of r.cells) row.push(c.innerText);
+                csv += row.join(",") + "\n";
+            }
+            const blob = new Blob([csv], {type:'text/csv'});
+            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'workforce.csv'; a.click();
+        }
+    </script>
+</body>
+</html>
