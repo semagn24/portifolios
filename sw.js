@@ -5,7 +5,19 @@ const urlsToCache = [
     './style.css',
     './script.js',
     './profile.jpg',
-    './manifest.json'
+    './manifest.json',
+    './sw-register.js',
+    './cv.html',
+    './images/food-ordering.png',
+    './images/transport-tracking.png',
+    './images/employee-management.png',
+    './images/course-registration.png',
+    './images/movie-streaming.png',
+    './projects/food-ordering.html',
+    './projects/transport-tracking.html',
+    './projects/employee-management.html',
+    './projects/course-registration.html',
+    './projects/movie-streaming.html'
 ];
 
 self.addEventListener('install', (e) => {

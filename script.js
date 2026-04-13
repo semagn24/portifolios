@@ -44,23 +44,35 @@ sections.forEach(section => {
 // Dynamic Year
 document.getElementById('year').textContent = new Date().getFullYear();
 
-// Simple Form Handling (Simulation)
+// Working Contact Form Handling (Using mailto for direct email)
 const contactForm = document.getElementById('contactForm');
 contactForm.addEventListener('submit', (e) => {
     e.preventDefault();
 
-    // Simulate sending
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const message = document.getElementById('message').value;
+
+    // Create a pre-filled email link
+    const subject = encodeURIComponent(`Portfolio Contact from ${name}`);
+    const body = encodeURIComponent(`You have received a new message from your portfolio website:\n\nName: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
+    const mailtoUrl = `mailto:semagnlegese@gmail.com?subject=${subject}&body=${body}`;
+
     const btn = contactForm.querySelector('button');
     const originalText = btn.textContent;
-    btn.textContent = 'Sending...';
+    btn.textContent = 'Opening Email Client...';
     btn.disabled = true;
 
+    // Pop open the default email client after a short animation
     setTimeout(() => {
-        alert('Thank you for your message! I will get back to you soon.');
+        window.location.href = mailtoUrl;
         contactForm.reset();
         btn.textContent = originalText;
         btn.disabled = false;
-    }, 1500);
+
+        // Optional: Suggest switching to Formspree if you prefer a backend without email app popups
+        // To do that, change the form action in index.html to: <form action="https://formspree.io/f/YOUR_ID" method="POST">
+    }, 1000);
 });
 
 // Highlight Active Nav Link
@@ -94,7 +106,7 @@ window.addEventListener('scroll', () => {
     sections.forEach(section => {
         const sectionTop = section.offsetTop;
         const sectionHeight = section.clientHeight;
-        if (pageYOffset >= (sectionTop - sectionHeight / 3)) {
+        if (window.scrollY >= (sectionTop - sectionHeight / 3)) {
             current = section.getAttribute('id');
         }
     });
@@ -143,7 +155,7 @@ if (navHamburger) {
     navHamburger.addEventListener('click', () => {
         navLinksContainer.classList.toggle('active');
     });
-    
+
     // Close menu when a link is clicked
     document.querySelectorAll('.nav-links a').forEach(link => {
         link.addEventListener('click', () => {
