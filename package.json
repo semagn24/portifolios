@@ -1,0 +1,14 @@
+{
+  "name": "semagn-portfolio-workspace",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Semagn Legese Mildega Portfolio Workspace",
+  "scripts": {
+    "dev": "npm run dev --prefix portfolio-next",
+    "build": "npm run build --prefix portfolio-next",
+    "start": "npm run start --prefix portfolio-next",
+    "dev:next": "npm run dev --prefix portfolio-next",
+    "dev:react": "npm run dev --prefix portfolio-react",
+    "build:react": "npm run build --prefix portfolio-react"
+  }
+}
