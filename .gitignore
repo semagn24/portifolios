@@ -3,6 +3,8 @@ node_modules/
 *.log
 dist/
 build/
+.next/
+out/
 .vscode/
 .DS_Store
 *.bat

@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Management System Demo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #667eea;
+            --primary-dark: #5568d3;
+            --secondary: #764ba2;
+            --bg: #f8f9fa;
+            --card: #ffffff;
+            --text: #2d3748;
+            --text-light: #718096;
+            --success: #48bb78;
+            --danger: #fc8181;
+            --border: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        header h1 {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+
+        .back-link {
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: white;
+        }
+
+        .main {
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+            text-align: center;
+            border-left: 4px solid var(--primary);
+        }
+
+        .stat-card .stat-num {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .stat-card .stat-label {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+        }
+
+        .panel {
+            background: var(--card);
+            border-radius: 1rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            background: linear-gradient(135deg, var(--primary)22, var(--secondary)22);
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            font-size: 1.1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .add-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr auto;
+            gap: 1rem;
+            padding: 1.5rem;
+            align-items: end;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+            color: var(--text-light);
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.7rem;
+            border: 2px solid var(--border);
+            border-radius: 0.5rem;
+            font-size: 0.95rem;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: var(--primary);
+        }
+
+        .btn {
+            padding: 0.7rem 1.4rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+        }
+
+        .btn-danger:hover {
+            filter: brightness(0.9);
+        }
+
+        .btn-edit {
+            background: var(--success);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+        }
+
+        .search-bar-row {
+            padding: 1rem 1.5rem;
+            display: flex;
+            gap: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .search-bar-row input {
+            flex: 1;
+            padding: 0.6rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 0.5rem;
+            font-size: 0.95rem;
+            font-family: inherit;
+            outline: none;
+        }
+
+        .search-bar-row input:focus {
+            border-color: var(--primary);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #f7fafc;
+        }
+
+        th {
+            padding: 0.875rem 1.5rem;
+            text-align: left;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border);
+            vertical-align: middle;
+        }
+
+        tr:hover td {
+            background: #f7fafc;
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: white;
+            margin-right: 0.5rem;
+            vertical-align: middle;
+        }
+
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 2rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .badge-active {
+            background: #c6f6d5;
+            color: #276749;
+        }
+
+        .badge-inactive {
+            background: #fed7d7;
+            color: #9b2c2c;
+        }
+
+        @media (max-width: 768px) {
+            .add-form {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            th:nth-child(n+4),
+            td:nth-child(n+4) {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>👥 Employee Management System</h1>
+        <a href="../index.html" class="back-link">← Portfolio</a>
+    </header>
+
+    <div class="main">
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-num" id="totalCount">0</div>
+                <div class="stat-label">Total Employees</div>
+            </div>
+            <div class="stat-card" style="border-color:#48bb78">
+                <div class="stat-num" style="color:#48bb78" id="activeCount">0</div>
+                <div class="stat-label">Active</div>
+            </div>
+            <div class="stat-card" style="border-color:#fc8181">
+                <div class="stat-num" style="color:#fc8181" id="inactiveCount">0</div>
+                <div class="stat-label">Inactive</div>
+            </div>
+            <div class="stat-card" style="border-color:#feca57">
+                <div class="stat-num" style="color:#e68a00" id="deptCount">0</div>
+                <div class="stat-label">Departments</div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">➕ Add New Employee</div>
+            <div class="add-form">
+                <div class="form-group"><label>Full Name</label><input type="text" id="empName" placeholder="John Doe">
+                </div>
+                <div class="form-group"><label>Department</label>
+                    <select id="empDept">
+                        <option>Engineering</option>
+                        <option>Marketing</option>
+                        <option>Design</option>
+                        <option>Finance</option>
+                        <option>HR</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>Role / Position</label><input type="text" id="empRole"
+                        placeholder="Developer"></div>
+                <div class="form-group"><label>Salary ($)</label><input type="number" id="empSalary"
+                        placeholder="50000"></div>
+                <button class="btn btn-primary" onclick="addEmployee()">Add</button>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">
+                📋 Employee Directory
+                <span style="font-size:0.85rem; color:var(--text-light); font-weight:500;" id="empCountLabel"></span>
+            </div>
+            <div class="search-bar-row">
+                <input type="text" placeholder="🔍 Search by name or department..." id="searchEmp"
+                    oninput="renderTable()">
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Department</th>
+                        <th>Role</th>
+                        <th>Salary</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="employeeTable"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const colors = ['#667eea', '#764ba2', '#f093fb', '#4facfe', '#43e97b', '#fa709a', '#feca57'];
+        let employees = [
+            { id: 1, name: 'Abebe Girma', dept: 'Engineering', role: 'Senior Developer', salary: 85000, active: true },
+            { id: 2, name: 'Tigist Haile', dept: 'Design', role: 'UI/UX Designer', salary: 72000, active: true },
+            { id: 3, name: 'Dawit Mamo', dept: 'Marketing', role: 'Marketing Manager', salary: 68000, active: false },
+            { id: 4, name: 'Hana Tadesse', dept: 'Finance', role: 'Accountant', salary: 60000, active: true },
+            { id: 5, name: 'Yonas Bekele', dept: 'Engineering', role: 'Backend Developer', salary: 78000, active: true },
+        ];
+        let nextId = 6;
+
+        function getColor(id) { return colors[id % colors.length]; }
+
+        function getInitials(name) { return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2); }
+
+        function renderTable() {
+            const query = document.getElementById('searchEmp').value.toLowerCase();
+            const filtered = employees.filter(e =>
+                e.name.toLowerCase().includes(query) || e.dept.toLowerCase().includes(query)
+            );
+            document.getElementById('employeeTable').innerHTML = filtered.map(e => `
+                <tr>
+                    <td>
+                        <span class="avatar" style="background:${getColor(e.id)}">${getInitials(e.name)}</span>
+                        <strong>${e.name}</strong>
+                    </td>
+                    <td>${e.dept}</td>
+                    <td>${e.role}</td>
+                    <td>$${e.salary.toLocaleString()}</td>
+                    <td><span class="badge ${e.active ? 'badge-active' : 'badge-inactive'}">${e.active ? 'Active' : 'Inactive'}</span></td>
+                    <td style="display:flex;gap:0.5rem">
+                        <button class="btn btn-edit" onclick="toggleStatus(${e.id})">${e.active ? '⏸ Deactivate' : '▶ Activate'}</button>
+                        <button class="btn btn-danger" onclick="deleteEmployee(${e.id})">🗑 Delete</button>
+                    </td>
+                </tr>
+            `).join('') || `<tr><td colspan="6" style="text-align:center;color:var(--text-light);padding:2rem">No employees found.</td></tr>`;
+
+            updateStats();
+        }
+
+        function updateStats() {
+            document.getElementById('totalCount').textContent = employees.length;
+            document.getElementById('activeCount').textContent = employees.filter(e => e.active).length;
+            document.getElementById('inactiveCount').textContent = employees.filter(e => !e.active).length;
+            document.getElementById('deptCount').textContent = new Set(employees.map(e => e.dept)).size;
+            document.getElementById('empCountLabel').textContent = employees.length + ' employees';
+        }
+
+        function addEmployee() {
+            const name = document.getElementById('empName').value.trim();
+            const dept = document.getElementById('empDept').value;
+            const role = document.getElementById('empRole').value.trim();
+            const salary = parseInt(document.getElementById('empSalary').value);
+            if (!name || !role || !salary) { alert('Please fill all fields!'); return; }
+            employees.unshift({ id: nextId++, name, dept, role, salary, active: true });
+            document.getElementById('empName').value = '';
+            document.getElementById('empRole').value = '';
+            document.getElementById('empSalary').value = '';
+            renderTable();
+        }
+
+        function deleteEmployee(id) {
+            if (confirm('Are you sure you want to delete this employee?')) {
+                employees = employees.filter(e => e.id !== id);
+                renderTable();
+            }
+        }
+
+        function toggleStatus(id) {
+            const emp = employees.find(e => e.id === id);
+            if (emp) emp.active = !emp.active;
+            renderTable();
+        }
+
+        renderTable();
+    </script>
+</body>
+
+</html>

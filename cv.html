@@ -2,284 +2,419 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Semagn Legese - CV</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary-color: #667eea;
-            --secondary-color: #764ba2;
-            --text-color: #333;
-            --text-light: #666;
-            --bg-color: #f4f7f6;
-            --white: #ffffff;
-            --border-color: #e0e0e0;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Semagn Legese — Curriculum Vitae</title>
+  <meta name="description" content="Curriculum Vitae of Semagn Legese Mildega, Software Engineering Student & Full Stack Developer." />
 
-        body {
-            font-family: 'Inter', sans-serif;
-            line-height: 1.6;
-            color: var(--text-color);
-            background-color: var(--bg-color);
-            margin: 0;
-            padding: 40px 20px;
-        }
+  <!-- Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+    rel="stylesheet" />
 
-        .cv-container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: var(--white);
-            padding: 40px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-        }
+  <style>
+    :root {
+      --font-heading: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --font-body: 'Inter', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
 
-        header {
-            text-align: center;
-            border-bottom: 2px solid var(--primary-color);
-            padding-bottom: 20px;
-            margin-bottom: 30px;
-        }
+      --primary: #4f46e5;
+      --primary-dark: #4338ca;
+      --text: #0f172a;
+      --text-muted: #475569;
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --border: #e2e8f0;
+      --tag-bg: #f1f5f9;
+    }
 
-        header h1 {
-            margin: 0;
-            color: var(--primary-color);
-            font-size: 2.5rem;
-        }
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-        header h2 {
-            margin: 10px 0;
-            font-size: 1.2rem;
-            color: var(--text-light);
-            font-weight: 500;
-        }
+    body {
+      font-family: var(--font-body);
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 3rem 1.5rem;
+      -webkit-font-smoothing: antialiased;
+    }
 
-        .contact-info {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-            font-size: 0.9rem;
-            color: var(--text-light);
-        }
+    .cv-container {
+      max-width: 860px;
+      margin: 0 auto;
+      background: var(--surface);
+      padding: 3.5rem;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.08);
+    }
 
-        .contact-info span {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
+    header {
+      border-bottom: 2px solid var(--primary);
+      padding-bottom: 1.75rem;
+      margin-bottom: 2.25rem;
+    }
 
-        section {
-            margin-bottom: 30px;
-        }
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
 
-        h3 {
-            color: var(--secondary-color);
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            font-size: 1.1rem;
-            letter-spacing: 1px;
-        }
+    h1 {
+      font-family: var(--font-heading);
+      font-size: 2.35rem;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.03em;
+    }
 
-        .experience-item,
-        .project-item,
-        .education-item {
-            margin-bottom: 20px;
-        }
+    h2 {
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      color: var(--primary);
+      font-weight: 600;
+      margin-top: 0.25rem;
+    }
 
-        .item-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            margin-bottom: 5px;
-        }
+    .contact-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+      margin-top: 1.25rem;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
 
-        .item-title {
-            font-weight: 700;
-            font-size: 1.05rem;
-        }
+    .contact-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
 
-        .item-subtitle {
-            font-weight: 600;
-            color: var(--text-light);
-            font-size: 0.95rem;
-        }
+    .contact-item svg {
+      width: 15px;
+      height: 15px;
+      color: var(--primary);
+      flex-shrink: 0;
+    }
 
-        .item-date {
-            font-size: 0.85rem;
-            color: #888;
-            font-style: italic;
-        }
+    .contact-item a {
+      color: inherit;
+      text-decoration: none;
+    }
 
-        ul {
-            margin: 10px 0;
-            padding-left: 20px;
-        }
+    .contact-item a:hover {
+      color: var(--primary);
+      text-decoration: underline;
+    }
 
-        li {
-            margin-bottom: 5px;
-        }
+    section {
+      margin-bottom: 2rem;
+    }
 
-        .skills-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 10px;
-        }
+    h3 {
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--primary);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.4rem;
+      margin-bottom: 1.2rem;
+    }
 
-        .skill-tag {
-            background: #f0f2f5;
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 0.9rem;
-            text-align: center;
-            font-weight: 500;
-        }
+    p.lead-text {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
 
-        .print-btn {
-            display: block;
-            width: fit-content;
-            margin: 20px auto 0;
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            text-decoration: none;
-            font-weight: 600;
-            transition: background 0.3s;
-        }
+    /* Skills Grid */
+    .skills-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
 
-        .print-btn:hover {
-            background: var(--secondary-color);
-        }
+    .skill-tag {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      background: var(--tag-bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.35rem 0.75rem;
+      border-radius: 6px;
+      font-weight: 500;
+    }
 
-        @media print {
-            body {
-                background: white;
-                padding: 0;
-            }
+    /* Items */
+    .cv-item {
+      margin-bottom: 1.35rem;
+    }
 
-            .cv-container {
-                box-shadow: none;
-                padding: 0;
-                width: 100%;
-                max-width: 100%;
-            }
+    .cv-item:last-child {
+      margin-bottom: 0;
+    }
 
-            .print-btn {
-                display: none;
-            }
+    .item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.25rem;
+    }
 
-            a {
-                text-decoration: none;
-                color: inherit;
-            }
-        }
-    </style>
+    .item-title {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--text);
+    }
+
+    .item-stack {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--primary);
+      font-weight: 500;
+    }
+
+    .item-desc {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* Action Buttons */
+    .actions-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 2.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      justify-content: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.7rem 1.4rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 180ms ease;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: var(--tag-bg);
+      border-color: var(--border);
+      color: var(--text);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    @media print {
+      body {
+        background: #ffffff;
+        padding: 0;
+      }
+
+      .cv-container {
+        border: none;
+        box-shadow: none;
+        padding: 0;
+        max-width: 100%;
+      }
+
+      .actions-bar {
+        display: none !important;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .cv-container {
+        padding: 2rem 1.5rem;
+      }
+
+      .header-top {
+        flex-direction: column;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-    <div class="cv-container">
-        <header>
-            <h1>Semagn Legese</h1>
-            <h2>Software Engineering Student</h2>
-            <div class="contact-info">
-                <span>📍 Hawassa, Ethiopia</span>
-                <span>📞 +251 996506278</span>
-                <span>📧 semagnlegese@gmail.com</span>
-                <span>🔗 <a href="https://github.com/semagn24" target="_blank" style="color:var(--text-light); text-decoration:none;">github.com/semagn24</a></span>
-                <span>👤 Male | 📅 1995 (EC)</span>
-                <span>🌍 Ethiopian</span>
-            </div>
-        </header>
+  <main class="cv-container">
+    <header>
+      <div class="header-top">
+        <div>
+          <h1>Semagn Legese Mildega</h1>
+          <h2>Software Engineering Student &bull; Full Stack Developer</h2>
+        </div>
+      </div>
 
-        <section>
-            <h3>Career Objective</h3>
-            <p>
-                Motivated Software Engineering student with strong interest in problem-solving and software development.<br>
-                Passionate about building real-world applications and continuously improving technical skills.<br>
-                Seeking an opportunity to contribute to innovative projects and grow as a professional developer.
-            </p>
-        </section>
+      <div class="contact-bar">
+        <span class="contact-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+          <span>Hawassa, Sidama Region, Ethiopia</span>
+        </span>
+        <span class="contact-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+          <span>+251 996506278</span>
+        </span>
+        <span class="contact-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+          <a href="mailto:semagnlegese@gmail.com">semagnlegese@gmail.com</a>
+        </span>
+        <span class="contact-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+          <a href="https://github.com/semagn24" target="_blank" rel="noopener">github.com/semagn24</a>
+        </span>
+      </div>
+    </header>
 
-        <section>
-            <h3>Technical Skills</h3>
-            <div class="skills-grid">
-                <div class="skill-tag">HTML5</div>
-                <div class="skill-tag">CSS3</div>
-                <div class="skill-tag">JavaScript (ES6+)</div>
-                <div class="skill-tag">React.js</div>
-                <div class="skill-tag">Node.js</div>
-                <div class="skill-tag">PHP</div>
-                <div class="skill-tag">Python</div>
-                <div class="skill-tag">Java</div>
-                <div class="skill-tag">MongoDB</div>
-                <div class="skill-tag">SQL</div>
-                <div class="skill-tag">Git</div>
-                <div class="skill-tag">GitHub</div>
-            </div>
-        </section>
+    <section>
+      <h3>Executive Summary</h3>
+      <p class="lead-text">
+        Proactive Software Engineering student with proven proficiency in building modern web applications, scalable REST APIs, and responsive user interfaces. Experienced across the full development lifecycle from database design to client-side performance tuning. Seeking full-stack engineering roles to deliver tangible value through elegant, reliable software.
+      </p>
+    </section>
 
-        <section>
-            <h3>Key Projects</h3>
-            <div class="project-item">
-                <div class="item-header">
-                    <span class="item-title">Food Ordering System</span>
-                </div>
-                <p>A comprehensive food delivery platform with menu management, order tracking, and payment integration.</p>
-                <div class="item-subtitle">React, Node.js, MongoDB, Express</div>
-            </div>
-            <div class="project-item">
-                <div class="item-header">
-                    <span class="item-title">Hawassa Transport Tracking</span>
-                </div>
-                <p>Digital public transport tracking system for Hawassa City with bus locations and fare calculator.</p>
-                <div class="item-subtitle">Node.js, Express, Mongoose, Real-time APIs</div>
-            </div>
-            <div class="project-item">
-                <div class="item-header">
-                    <span class="item-title">Employee Management System</span>
-                </div>
-                <p>Full-stack dashboard for managing employee records, profiles, and administrative reporting.</p>
-                <div class="item-subtitle">React, Node.js, MongoDB</div>
-            </div>
-            <div class="project-item">
-                <div class="item-header">
-                    <span class="item-title">Online Course Registration</span>
-                </div>
-                <p>Web portal with transcript/GPA calculator and dynamic course management for university admins.</p>
-                <div class="item-subtitle">PHP, MySQL, JavaScript</div>
-            </div>
-        </section>
+    <section>
+      <h3>Technical Proficiencies</h3>
+      <div class="skills-grid">
+        <span class="skill-tag">React.js</span>
+        <span class="skill-tag">Node.js</span>
+        <span class="skill-tag">Express.js</span>
+        <span class="skill-tag">JavaScript (ES6+)</span>
+        <span class="skill-tag">HTML5 &amp; CSS3</span>
+        <span class="skill-tag">Tailwind CSS</span>
+        <span class="skill-tag">MongoDB &amp; Mongoose</span>
+        <span class="skill-tag">MySQL / SQL</span>
+        <span class="skill-tag">PHP</span>
+        <span class="skill-tag">Python</span>
+        <span class="skill-tag">Java</span>
+        <span class="skill-tag">RESTful APIs</span>
+        <span class="skill-tag">Git &amp; GitHub</span>
+        <span class="skill-tag">Service Workers &amp; PWA</span>
+      </div>
+    </section>
 
-        <section>
-            <h3>Education</h3>
-            <div class="education-item">
-                <div class="item-header">
-                    <span class="item-title">Software Engineering Student</span>
-                </div>
-                <div class="item-subtitle">Wachamo University</div>
-            </div>
-            <div class="education-item">
-                <div class="item-header">
-                    <span class="item-title">Completed High School</span>
-                </div>
-                <div class="item-subtitle">Hawassa Tabour Secondary and Preparatory School</div>
-            </div>
-        </section>
+    <section>
+      <h3>Featured Engineering Projects</h3>
 
-        <a href="javascript:window.print()" class="print-btn">Print / Save as PDF</a>
-        <a href="Semagn_Legese_Mildega_CV_Updated (1).pdf" download class="print-btn"
-            style="background-color: #4a5568; margin-top: 10px;">Download direct PDF</a>
-        <a href="index.html" class="print-btn" style="background-color: #666; margin-top: 10px;">Back to Portfolio</a>
+      <div class="cv-item">
+        <div class="item-header">
+          <span class="item-title">Food Ordering &amp; Delivery System</span>
+          <span class="item-stack">React &bull; Node.js &bull; MongoDB &bull; Express</span>
+        </div>
+        <p class="item-desc">
+          Engineered a comprehensive food ordering platform featuring interactive menu filtering, shopping cart state management, checkout validation, and real-time order lifecycle tracking.
+        </p>
+      </div>
+
+      <div class="cv-item">
+        <div class="item-header">
+          <span class="item-title">Hawassa Public Transit &amp; ETA Tracking</span>
+          <span class="item-stack">Node.js &bull; Express &bull; Mongoose &bull; Real-Time</span>
+        </div>
+        <p class="item-desc">
+          Created a public transport tracking system for Hawassa City including live bus coordinate monitoring, distance-based dynamic fare calculations, and a passenger feedback module.
+        </p>
+      </div>
+
+      <div class="cv-item">
+        <div class="item-header">
+          <span class="item-title">Employee Records &amp; Management Dashboard</span>
+          <span class="item-stack">React &bull; Node.js &bull; Express &bull; MongoDB</span>
+        </div>
+        <p class="item-desc">
+          Developed an administrative HR platform implementing full CRUD capabilities, department filtering, profile search, and secure record retention.
+        </p>
+      </div>
+
+      <div class="cv-item">
+        <div class="item-header">
+          <span class="item-title">University Course Portal &amp; GPA Engine</span>
+          <span class="item-stack">PHP &bull; MySQL &bull; JavaScript</span>
+        </div>
+        <p class="item-desc">
+          Built an academic portal with dynamic course enrollment, prerequisites logic, automated transcript generation, and a real-time student GPA calculator.
+        </p>
+      </div>
+
+      <div class="cv-item">
+        <div class="item-header">
+          <span class="item-title">Cinematic Media Streaming Platform</span>
+          <span class="item-stack">React &bull; TMDB API &bull; CSS3</span>
+        </div>
+        <p class="item-desc">
+          Crafted a video streaming UI with genre exploration, personal watchlists, trailer popups, and mock subscription tiers with embedded playback.
+        </p>
+      </div>
+    </section>
+
+    <section>
+      <h3>Education</h3>
+      <div class="cv-item">
+        <div class="item-header">
+          <span class="item-title">B.Sc. in Software Engineering</span>
+          <span class="item-stack">In Progress</span>
+        </div>
+        <p class="item-desc">Wachamo University &bull; Ethiopia</p>
+      </div>
+
+      <div class="cv-item">
+        <div class="item-header">
+          <span class="item-title">Secondary &amp; Preparatory Education</span>
+          <span class="item-stack">Completed</span>
+        </div>
+        <p class="item-desc">Hawassa Tabour Secondary &amp; Preparatory School</p>
+      </div>
+    </section>
+
+    <div class="actions-bar">
+      <button onclick="window.print()" class="btn btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+        <span>Print or Save as PDF</span>
+      </button>
+      <a href="Semagn_Legese_Mildega_CV_Updated (1).pdf" download class="btn btn-secondary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+        <span>Download Original PDF</span>
+      </a>
+      <a href="index.html" class="btn btn-secondary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        <span>Back to Portfolio</span>
+      </a>
     </div>
+  </main>
 
 </body>
 

@@ -1,401 +1,1223 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description"
-        content="Portfolio of Semagn Legese Mildega, a Full Stack Web Developer and Software Engineering Student.">
-    <title>Semagn Legese | Full Stack Developer</title>
-    <link rel="stylesheet" href="style.css?v=2" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="Semagn Legese Mildega — Software Engineering student and Full Stack Web Developer. Specializing in high-performance web applications, React, Node.js, and robust database systems." />
+  <meta name="author" content="Semagn Legese Mildega" />
+  <title>Semagn Legese | Full Stack Engineer &amp; System Builder</title>
 
-    <!-- PWA Support -->
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#667eea">
-    <link rel="apple-touch-icon" href="profile.jpg">
+  <!-- Canonical & PWA Assets -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#090a10" />
+  <link rel="apple-touch-icon" href="profile.jpg" />
+
+  <!-- Typography: Plus Jakarta Sans (Headings) + Inter (Body) + JetBrains Mono (Code/Badges) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+    rel="stylesheet" />
+
+  <link rel="stylesheet" href="style.css?v=3" />
 </head>
 
 <body>
+  <!-- Reading Progress Bar -->
+  <div id="scroll-progress" role="progressbar" aria-label="Reading progress"></div>
 
-    <nav>
-        <div class="nav-container">
-            <div class="logo">SL</div>
-            <div class="nav-links" id="nav-links">
-                <a href="#home">Home</a>
-                <a href="#about">About</a>
-                <a href="#services">Services</a>
-                <a href="#portfolio">Portfolio</a>
-                <a href="#contact">Contact</a>
-            </div>
-            <div class="nav-controls">
-                <button id="theme-toggle" aria-label="Toggle Dark Mode">🌙</button>
-                <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle Navigation">
-                    <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-                </button>
-            </div>
+  <!-- Ambient Light Orbs -->
+  <div class="ambient-glow ambient-glow-1" aria-hidden="true"></div>
+  <div class="ambient-glow ambient-glow-2" aria-hidden="true"></div>
+  <div class="ambient-glow ambient-glow-3" aria-hidden="true"></div>
+
+  <!-- ==========================================================================
+       SITE HEADER / NAVIGATION
+       ========================================================================== -->
+  <header class="site-header">
+    <div class="container nav-container">
+      <a href="#home" class="brand-logo" aria-label="Semagn Legese Homepage">
+        <div class="brand-badge">SL</div>
+        <div>
+          <span class="brand-title">Semagn Legese</span>
+          <span class="brand-sub">Software Engineer</span>
         </div>
-    </nav>
+      </a>
 
-    <!-- Hero Section -->
-    <section id="home" class="hero">
-        <div class="hero-container">
-            <div class="hero-image">
-                <img src="profile.jpg?v=2" alt="Semagn Legese Mildega" class="profile-image">
-            </div>
-            <div class="hero-content">
-                <h1>Semagn Legese Mildega</h1>
-                <h2 class="hero-subtitle">Full Stack Web Developer</h2>
-                <p class="hero-description">
-                    Hi, I'm Semagn Legese. A passionate Full Stack Web Developer.
-                    I am a Software Engineering student who enjoys solving real-world problems and
-                    building practical web applications.
-                </p>
-                <div class="hero-actions-container">
-                    <button id="hero-menu-toggle" class="hero-hamburger">
-                        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-                        <span>Menu</span>
-                    </button>
-                    <div class="hero-buttons" id="hero-buttons-container">
-                        <a href="#contact" class="btn btn-primary">Get In Touch</a>
-                        <a href="#portfolio" class="btn btn-secondary">View My Projects</a>
-                        <a href="cv.html" class="btn btn-secondary">View CV</a>
-                    </div>
-                </div>
-            </div>
+      <!-- Desktop Nav -->
+      <ul class="nav-links">
+        <li><a href="#home" class="nav-link active">Home</a></li>
+        <li><a href="#about" class="nav-link">About</a></li>
+        <li><a href="#portfolio" class="nav-link">Projects</a></li>
+        <li><a href="#services" class="nav-link">Capabilities</a></li>
+        <li><a href="#skills" class="nav-link">Skills</a></li>
+        <li><a href="#testimonials" class="nav-link">Reviews</a></li>
+        <li><a href="#contact" class="nav-link">Contact</a></li>
+      </ul>
+
+      <!-- Nav Actions -->
+      <div class="nav-actions">
+        <div class="status-pill" title="Status: Active and seeking opportunities">
+          <span class="status-dot"></span>
+          <span>Available for Hire</span>
         </div>
-    </section>
 
-    <!-- About Section -->
-    <section id="about">
-        <div class="container">
-            <h2>About Me</h2>
-            <div class="about-content">
-                <div class="about-text">
-                    <h3>Full Stack Web Developer</h3>
-                    <p>
-                        I am Semagn Legese Mildega,  from Ethiopia Sidama Region,
-                     
-                        I am a university student studying Software Engineering and a passionate
-                        Full Stack Web Developer.
-                    </p>
-                    <p>
-                        I'm incredibly committed to my work and focused on modern web technologies
-                        that bring real value to users. I have experience with React, Node.js, and
-                        full-stack development, enabling me to build complete web solutions from
-                        database to user interface.
-                    </p>
-                </div>
-                <div class="about-features">
-                    <div class="feature-item">
-                        <span class="feature-icon">🎯</span>
-                        <h4>R & D</h4>
-                        <p>Research & Development</p>
-                    </div>
-                    <div class="feature-item">
-                        <span class="feature-icon">🎨</span>
-                        <h4>Design</h4>
-                        <p>UI/UX Design</p>
-                    </div>
-                    <div class="feature-item">
-                        <span class="feature-icon">💻</span>
-                        <h4>Development</h4>
-                        <p>Full-Stack Development</p>
-                    </div>
-                    <div class="feature-item">
-                        <span class="feature-icon">✅</span>
-                        <h4>Quality</h4>
-                        <p>Testing & QA</p>
-                    </div>
-                    <div class="feature-item">
-                        <span class="feature-icon">🔧</span>
-                        <h4>Maintain</h4>
-                        <p>Support & Updates</p>
-                    </div>
-                </div>
-            </div>
+        <button id="theme-toggle" class="theme-btn" aria-label="Switch theme">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+        </button>
+
+        <button id="mobile-toggle" class="mobile-toggle" aria-label="Toggle mobile menu" aria-expanded="false">
+          <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none"
+            stroke-linecap="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Navigation Drawer -->
+  <nav id="mobile-drawer" class="mobile-drawer" aria-label="Mobile navigation">
+    <a href="#home">Home</a>
+    <a href="#about">About</a>
+    <a href="#portfolio">Featured Projects</a>
+    <a href="#services">Capabilities</a>
+    <a href="#skills">Technical Skills</a>
+    <a href="#testimonials">Testimonials</a>
+    <a href="#contact">Contact Me</a>
+    <a href="cv.html">Curriculum Vitae</a>
+  </nav>
+
+  <!-- ==========================================================================
+       HERO SECTION (Editorial / Award-Winning Craft)
+       ========================================================================== -->
+  <section id="home" class="hero-section">
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <div class="hero-eyebrow-container">
+          <span class="hero-eyebrow">Full Stack Developer &bull; Sidama, Ethiopia</span>
         </div>
-    </section>
 
-    <!-- Services Section -->
-    <section id="services">
-        <div class="container">
-            <h2>I Offer Full-Cycle Web Development Services</h2>
-            <p class="section-subtitle">
-                Delivering modern web solutions with cutting-edge technologies and best practices
+        <h1 class="hero-title">
+          Engineering High-Performance Web Applications &amp; <span class="highlight">Scalable Systems.</span>
+        </h1>
+
+        <p class="hero-lead">
+          Hi, I'm Semagn Legese Mildega. A Software Engineering student and Full Stack Developer. I build resilient,
+          accessible, end-to-end web applications with modern React, Node.js, and efficient database architectures.
+        </p>
+
+        <div class="hero-actions">
+          <a href="#portfolio" class="btn btn-primary">
+            <span>Explore Featured Work</span>
+            <svg class="btn-icon btn-icon-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </a>
+
+          <a href="cv.html" class="btn btn-secondary">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            <span>View CV</span>
+          </a>
+
+          <div class="copy-email-btn" id="copy-email-btn" title="Click to copy email address">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            <span>semagnlegese@gmail.com</span>
+            <span class="copy-tooltip" id="copy-tooltip">Copied to clipboard!</span>
+          </div>
+        </div>
+
+        <!-- Proof Numbers Row -->
+        <div class="hero-proof-bar">
+          <div class="proof-item">
+            <span class="proof-number">5+</span>
+            <span class="proof-label">Live Systems</span>
+          </div>
+          <div class="proof-item">
+            <span class="proof-number">10+</span>
+            <span class="proof-label">Core Stacks</span>
+          </div>
+          <div class="proof-item">
+            <span class="proof-number">100%</span>
+            <span class="proof-label">Responsive</span>
+          </div>
+          <div class="proof-item">
+            <span class="proof-number">&lt; 24h</span>
+            <span class="proof-label">Direct Response</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Avatar Visual -->
+      <div class="hero-visual">
+        <div class="avatar-wrapper">
+          <div class="avatar-glow-ring"></div>
+          <div class="avatar-frame">
+            <img src="profile.jpg?v=3" alt="Semagn Legese Mildega" class="avatar-image" />
+          </div>
+
+          <div class="floating-chip chip-top">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <polyline points="16 18 22 12 16 6"></polyline>
+              <polyline points="8 6 2 12 8 18"></polyline>
+            </svg>
+            <span>Full-Stack Engineering</span>
+          </div>
+
+          <div class="floating-chip chip-bottom">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            <span>Sidama, Ethiopia</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       ABOUT SECTION
+       ========================================================================== -->
+  <section id="about" class="fade-in-section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-eyebrow">Professional Background</span>
+        <h2 class="section-title">Built with Passion, Driven by Purpose</h2>
+      </div>
+
+      <div class="about-grid">
+        <div class="about-narrative">
+          <p>
+            I am <strong>Semagn Legese Mildega</strong>, based in the Sidama Region of Ethiopia. Currently pursuing a
+            degree in Software Engineering, I combine theoretical foundations with hands-on full-stack development to
+            solve genuine challenges.
+          </p>
+          <p>
+            My engineering philosophy centers on delivering clean architecture, performant code, and intuitive user
+            experiences. I work extensively across the entire web stack: from designing relational and NoSQL schemas to
+            building RESTful backend microservices and crafting fluid, accessible user interfaces with React.
+          </p>
+          <p>
+            Whether implementing live transport ETA calculations or multi-tenant database systems, I prioritize
+            production reliability, security, and responsive performance across every screen size.
+          </p>
+          <div>
+            <a href="cv.html" class="btn btn-secondary btn-sm">
+              <span>Read Full Resume &amp; Academic Timeline</span>
+              <svg class="btn-icon btn-icon-right" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="about-pillars">
+          <div class="pillar-card">
+            <div class="pillar-icon-box">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </div>
+            <h3>R &amp; D &bull; Analysis</h3>
+            <p>Rigorous problem framing, requirement mapping, and software architecture exploration before code is
+              written.</p>
+          </div>
+
+          <div class="pillar-card">
+            <div class="pillar-icon-box">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                <polyline points="2 17 12 22 22 17"></polyline>
+                <polyline points="2 12 12 17 22 12"></polyline>
+              </svg>
+            </div>
+            <h3>Full-Stack Craft</h3>
+            <p>Seamless integration between reactive UI components, robust middleware, and optimized data layers.</p>
+          </div>
+
+          <div class="pillar-card">
+            <div class="pillar-icon-box">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              </svg>
+            </div>
+            <h3>Quality &amp; Testing</h3>
+            <p>Defensive validation, clean error handling, resilient network fallbacks, and WCAG accessibility
+              standards.</p>
+          </div>
+
+          <div class="pillar-card">
+            <div class="pillar-icon-box">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path
+                  d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+                </path>
+              </svg>
+            </div>
+            <h3>Maintainability</h3>
+            <p>Modular component hierarchies, clear commit conventions, and predictable data flow patterns.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       FEATURED PROJECTS (Awwwards / Masterclass Showcase)
+       ========================================================================== -->
+  <section id="portfolio" class="fade-in-section">
+    <div class="container">
+      <div class="section-header text-center">
+        <span class="section-eyebrow">Production Portfolio</span>
+        <h2 class="section-title">Each Project is an Engineered Solution</h2>
+        <p class="section-desc">
+          Explore five fully functional systems built with purpose, ranging from real-time transit telemetry to
+          transactional commerce and academic management.
+        </p>
+      </div>
+
+      <!-- Category Filter Pills -->
+      <div class="projects-filter-bar">
+        <button class="filter-btn active" data-filter="all">All Projects (5)</button>
+        <button class="filter-btn" data-filter="fullstack">Full-Stack Apps (3)</button>
+        <button class="filter-btn" data-filter="realtime">Real-Time &amp; Geo (1)</button>
+        <button class="filter-btn" data-filter="enterprise">Enterprise &amp; University (2)</button>
+      </div>
+
+      <!-- Project Cards Grid -->
+      <div class="projects-grid">
+
+        <!-- 1. Food Ordering System -->
+        <article class="project-card" data-category="fullstack">
+          <div class="mockup-header">
+            <div class="mockup-dots">
+              <span class="mockup-dot dot-red"></span>
+              <span class="mockup-dot dot-yellow"></span>
+              <span class="mockup-dot dot-green"></span>
+            </div>
+            <span class="mockup-slug">projects/food-ordering</span>
+            <span class="mockup-badge">Production Ready</span>
+          </div>
+
+          <div class="project-media">
+            <img src="images/food-ordering.png" alt="Food Ordering System Interface" loading="lazy" />
+          </div>
+
+          <div class="project-body">
+            <h3 class="project-title">Food Ordering &amp; Delivery System</h3>
+            <p class="project-description">
+              End-to-end food ordering platform featuring dynamic menu browsing, shopping cart state management,
+              checkout validation, and interactive order simulation.
             </p>
-            <div class="services-grid">
-                <div class="service-card">
-                    <div class="service-icon">⚛️</div>
-                    <h3>React Development</h3>
-                    <p>Building dynamic, responsive user interfaces with React.js and modern JavaScript</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">🌐</div>
-                    <h3>Full Stack Development</h3>
-                    <p>Complete web solutions from database design to frontend implementation</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">🗄️</div>
-                    <h3>Database Design</h3>
-                    <p>Efficient database architecture with SQL and MongoDB</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">📱</div>
-                    <h3>Responsive Design</h3>
-                    <p>Mobile-first, responsive websites that work on all devices</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">🔄</div>
-                    <h3>API Development</h3>
-                    <p>RESTful APIs and backend services with Node.js and Express</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">🚀</div>
-                    <h3>Performance</h3>
-                    <p>Optimized, fast-loading web applications with best practices</p>
-                </div>
+            <div class="project-tags">
+              <span class="tech-tag">React</span>
+              <span class="tech-tag">Node.js</span>
+              <span class="tech-tag">Express</span>
+              <span class="tech-tag">MongoDB</span>
             </div>
-        </div>
-    </section>
-
-    <!-- Skills Section -->
-    <section id="skills">
-        <div class="container">
-            <h2>Technical Skills</h2>
-            <ul class="skills-list">
-                <li>HTML5 & CSS3</li>
-                <li>JavaScript (ES6+)</li>
-                <li>React.js</li>
-                <li>Node.js</li>
-                <li>Python</li>
-                <li>Java</li>
-                <li>PHP</li>
-                <li>MongoDB</li>
-                <li>SQL</li>
-                <li>Git & GitHub</li>
-            </ul>
-        </div>
-    </section>
-
-    <!-- Portfolio Section -->
-    <section id="portfolio">
-        <div class="container">
-            <h2>Each Project is a Unique Piece of Development</h2>
-            <div class="portfolio-grid">
-                <!-- Food Ordering System Case -->
-                <div class="portfolio-card">
-                    <div class="portfolio-image">
-                        <img src="images/food-ordering.png" alt="Food Ordering System" style="width: 100%; height: 100%; object-fit: cover;">
-                    </div>
-                    <div class="portfolio-info">
-                        <h3>Food Ordering System</h3>
-                        <p>
-                            A comprehensive food delivery platform featuring menu management,
-                            real-time order tracking, and secure payment integration.
-                        </p>
-                        <div class="tech-tags">
-                            <span>React</span>
-                            <span>Node.js</span>
-                            <span>MongoDB</span>
-                            <span>Express</span>
-                        </div>
-                        <a href="projects/food-ordering.html" class="demo-btn" target="_blank">🚀 Live Demo</a>
-                        <a href="https://github.com/semagn24/portfolio" class="source-btn" target="_blank">🔗 Source Code</a>
-                    </div>
-                </div>
-
-                <!-- Hawassa Transport Tracking Case -->
-                <div class="portfolio-card">
-                    <div class="portfolio-image">
-                        <img src="images/transport-tracking.png" alt="Hawassa Transport Tracking" style="width: 100%; height: 100%; object-fit: cover;">
-                    </div>
-                    <div class="portfolio-info">
-                        <h3>Hawassa Transport Tracking</h3>
-                        <p>
-                            Digital Public Transport Tracking &amp; ETA System for Hawassa City. 
-                            Features live bus locations, a <b>Dynamic Fare Calculator</b>, and a passenger complaint system.
-                        </p>
-                        <div class="tech-tags">
-                            <span>Node.js</span>
-                            <span>Express</span>
-                            <span>Mongoose</span>
-                            <span>Real-time</span>
-                        </div>
-                        <a href="projects/transport-tracking.html" class="demo-btn" target="_blank">🚀 Live Demo</a>
-                        <a href="https://github.com/semagn24/portfolio" class="source-btn" target="_blank">🔗 Source Code</a>
-                    </div>
-                </div>
-                
-                <div class="portfolio-card">
-                    <div class="portfolio-image">
-                        <img src="images/employee-management.png" alt="Employee Management System" style="width: 100%; height: 100%; object-fit: cover;">
-                    </div>
-                    <div class="portfolio-info">
-                        <h3>Employee Management System</h3>
-                        <p>
-                            A comprehensive system to manage employees, including adding, updating, deleting,
-                            and viewing employee records. Built with efficiency and usability in mind.
-                        </p>
-                        <div class="tech-tags">
-                            <span>React</span>
-                            <span>Node.js</span>
-                            <span>MongoDB</span>
-                        </div>
-                        <a href="projects/employee-management.html" class="demo-btn" target="_blank">🚀 Live Demo</a>
-                        <a href="https://github.com/semagn24/portfolio" class="source-btn" target="_blank">🔗 Source Code</a>
-                    </div>
-                </div>
-
-                <div class="portfolio-card">
-                    <div class="portfolio-image">
-                        <img src="images/course-registration.png" alt="Online Course Registration" style="width: 100%; height: 100%; object-fit: cover;">
-                    </div>
-                    <div class="portfolio-info">
-                        <h3>Online Course Registration</h3>
-                        <p>
-                            A web-based university portal. Includes a <b>Transcript & GPA Calculator</b> for students, and an internal Admin dashboard for dynamically authoring new courses.
-                        </p>
-                        <div class="tech-tags">
-                            <span>PHP</span>
-                            <span>MySQL</span>
-                            <span>JavaScript</span>
-                        </div>
-                        <a href="projects/course-registration.html" class="demo-btn" target="_blank">🚀 Live Demo</a>
-                        <a href="https://github.com/semagn24/portfolio" class="source-btn" target="_blank">🔗 Source Code</a>
-                    </div>
-                </div>
-
-                <div class="portfolio-card">
-                    <div class="portfolio-image">
-                        <img src="images/movie-streaming.png" alt="Movie Streaming Platform" style="width: 100%; height: 100%; object-fit: cover;">
-                    </div>
-                    <div class="portfolio-info">
-                        <h3>Movie Streaming Platform</h3>
-                        <p>
-                            A fully-featured cinematic platform. Users can browse titles, manage watchlists, and subscribe to a <b>Premium Membership</b> to unlock exclusive videos in an embedded player.
-                        </p>
-                        <div class="tech-tags">
-                            <span>React</span>
-                            <span>API</span>
-                            <span>CSS3</span>
-                        </div>
-                        <a href="projects/movie-streaming.html" class="demo-btn" target="_blank">🚀 Live Demo</a>
-                        <a href="https://github.com/semagn24/portfolio" class="source-btn" target="_blank">🔗 Source Code</a>
-                    </div>
-                </div>
+            <div class="project-actions">
+              <a href="projects/food-ordering.html" class="btn btn-primary btn-sm" target="_blank" rel="noopener">
+                <span>Live Demo</span>
+                <svg class="btn-icon btn-icon-right" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                  <polyline points="15 3 21 3 21 9"></polyline>
+                  <line x1="10" y1="14" x2="21" y2="3"></line>
+                </svg>
+              </a>
+              <button class="btn btn-outline btn-sm btn-preview" data-demo="projects/food-ordering.html"
+                data-title="Food Ordering System">
+                <span>Quick Preview</span>
+              </button>
+              <a href="https://github.com/semagn24/portfolio" class="btn btn-outline btn-sm" target="_blank"
+                rel="noopener" aria-label="View source code on GitHub">
+                <span>Code</span>
+              </a>
             </div>
-        </div>
-    </section>
+          </div>
+        </article>
 
-    <!-- Testimonials Section -->
-    <section id="testimonials">
-        <div class="container">
-            <h2>Client Testimonials</h2>
-            <div class="testimonials-grid">
-                <div class="testimonial-card">
-                    <div class="quote-icon">💬</div>
-                    <p class="testimonial-text">
-                        "Semagn delivered an outstanding employee management system. His attention to detail
-                        and technical expertise made the entire process smooth and efficient."
-                    </p>
-                    <h4>Project Manager</h4>
-                    <p class="company">Tech Solutions Ltd</p>
-                </div>
-
-                <div class="testimonial-card">
-                    <div class="quote-icon">💬</div>
-                    <p class="testimonial-text">
-                        "The quality of work is exceptional. Very responsive to feedback and delivers
-                        exactly what is needed. Highly recommended for web development projects!"
-                    </p>
-                    <h4>Education Coordinator</h4>
-                    <p class="company">Online Learning Institute</p>
-                </div>
-
-                <div class="testimonial-card">
-                    <div class="quote-icon">💬</div>
-                    <p class="testimonial-text">
-                        "Working with Semagn was a great experience. Professional, skilled, and committed
-                        to delivering high-quality solutions on time."
-                    </p>
-                    <h4>Business Owner</h4>
-                    <p class="company">Digital Media Agency</p>
-                </div>
+        <!-- 2. Hawassa Transport Tracking -->
+        <article class="project-card" data-category="realtime fullstack">
+          <div class="mockup-header">
+            <div class="mockup-dots">
+              <span class="mockup-dot dot-red"></span>
+              <span class="mockup-dot dot-yellow"></span>
+              <span class="mockup-dot dot-green"></span>
             </div>
+            <span class="mockup-slug">projects/hawassa-transit</span>
+            <span class="mockup-badge">Geo &bull; Real-Time</span>
+          </div>
+
+          <div class="project-media">
+            <img src="images/transport-tracking.png" alt="Hawassa Transport Tracking Dashboard" loading="lazy" />
+          </div>
+
+          <div class="project-body">
+            <h3 class="project-title">Hawassa Public Transit &amp; ETA Tracking</h3>
+            <p class="project-description">
+              Transit monitoring system for Hawassa City featuring real-time vehicle route tracking, a Dynamic Fare
+              Calculator based on distance, and an integrated passenger feedback portal.
+            </p>
+            <div class="project-tags">
+              <span class="tech-tag">Node.js</span>
+              <span class="tech-tag">Express</span>
+              <span class="tech-tag">Mongoose</span>
+              <span class="tech-tag">Real-Time ETA</span>
+            </div>
+            <div class="project-actions">
+              <a href="projects/transport-tracking.html" class="btn btn-primary btn-sm" target="_blank" rel="noopener">
+                <span>Live Demo</span>
+                <svg class="btn-icon btn-icon-right" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                  <polyline points="15 3 21 3 21 9"></polyline>
+                  <line x1="10" y1="14" x2="21" y2="3"></line>
+                </svg>
+              </a>
+              <button class="btn btn-outline btn-sm btn-preview" data-demo="projects/transport-tracking.html"
+                data-title="Hawassa Transport Tracking System">
+                <span>Quick Preview</span>
+              </button>
+              <a href="https://github.com/semagn24/portfolio" class="btn btn-outline btn-sm" target="_blank"
+                rel="noopener">
+                <span>Code</span>
+              </a>
+            </div>
+          </div>
+        </article>
+
+        <!-- 3. Employee Management System -->
+        <article class="project-card" data-category="fullstack enterprise">
+          <div class="mockup-header">
+            <div class="mockup-dots">
+              <span class="mockup-dot dot-red"></span>
+              <span class="mockup-dot dot-yellow"></span>
+              <span class="mockup-dot dot-green"></span>
+            </div>
+            <span class="mockup-slug">projects/employee-mgmt</span>
+            <span class="mockup-badge">REST API</span>
+          </div>
+
+          <div class="project-media">
+            <img src="images/employee-management.png" alt="Employee Management System UI" loading="lazy" />
+          </div>
+
+          <div class="project-body">
+            <h3 class="project-title">Employee Records &amp; Payroll System</h3>
+            <p class="project-description">
+              Corporate HR platform providing comprehensive CRUD functionality, staff directory filtering, role
+              assignments, salary records, and department analytics.
+            </p>
+            <div class="project-tags">
+              <span class="tech-tag">React</span>
+              <span class="tech-tag">Node.js</span>
+              <span class="tech-tag">Express</span>
+              <span class="tech-tag">MongoDB</span>
+            </div>
+            <div class="project-actions">
+              <a href="projects/employee-management.html" class="btn btn-primary btn-sm" target="_blank" rel="noopener">
+                <span>Live Demo</span>
+                <svg class="btn-icon btn-icon-right" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                  <polyline points="15 3 21 3 21 9"></polyline>
+                  <line x1="10" y1="14" x2="21" y2="3"></line>
+                </svg>
+              </a>
+              <button class="btn btn-outline btn-sm btn-preview" data-demo="projects/employee-management.html"
+                data-title="Employee Management System">
+                <span>Quick Preview</span>
+              </button>
+              <a href="https://github.com/semagn24/portfolio" class="btn btn-outline btn-sm" target="_blank"
+                rel="noopener">
+                <span>Code</span>
+              </a>
+            </div>
+          </div>
+        </article>
+
+        <!-- 4. Course Registration System -->
+        <article class="project-card" data-category="enterprise">
+          <div class="mockup-header">
+            <div class="mockup-dots">
+              <span class="mockup-dot dot-red"></span>
+              <span class="mockup-dot dot-yellow"></span>
+              <span class="mockup-dot dot-green"></span>
+            </div>
+            <span class="mockup-slug">projects/course-reg</span>
+            <span class="mockup-badge">Academic Engine</span>
+          </div>
+
+          <div class="project-media">
+            <img src="images/course-registration.png" alt="University Course Registration Portal" loading="lazy" />
+          </div>
+
+          <div class="project-body">
+            <h3 class="project-title">University Course Portal &amp; GPA Engine</h3>
+            <p class="project-description">
+              Academic portal featuring dynamic course enrollments, prerequisites validation, student transcript
+              generator, automated GPA calculations, and administrative curriculum control.
+            </p>
+            <div class="project-tags">
+              <span class="tech-tag">PHP</span>
+              <span class="tech-tag">MySQL</span>
+              <span class="tech-tag">JavaScript</span>
+              <span class="tech-tag">GPA Engine</span>
+            </div>
+            <div class="project-actions">
+              <a href="projects/course-registration.html" class="btn btn-primary btn-sm" target="_blank" rel="noopener">
+                <span>Live Demo</span>
+                <svg class="btn-icon btn-icon-right" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                  <polyline points="15 3 21 3 21 9"></polyline>
+                  <line x1="10" y1="14" x2="21" y2="3"></line>
+                </svg>
+              </a>
+              <button class="btn btn-outline btn-sm btn-preview" data-demo="projects/course-registration.html"
+                data-title="Online Course Registration System">
+                <span>Quick Preview</span>
+              </button>
+              <a href="https://github.com/semagn24/portfolio" class="btn btn-outline btn-sm" target="_blank"
+                rel="noopener">
+                <span>Code</span>
+              </a>
+            </div>
+          </div>
+        </article>
+
+        <!-- 5. Movie Streaming Platform -->
+        <article class="project-card" data-category="fullstack">
+          <div class="mockup-header">
+            <div class="mockup-dots">
+              <span class="mockup-dot dot-red"></span>
+              <span class="mockup-dot dot-yellow"></span>
+              <span class="mockup-dot dot-green"></span>
+            </div>
+            <span class="mockup-slug">projects/cinematic-stream</span>
+            <span class="mockup-badge">Multimedia</span>
+          </div>
+
+          <div class="project-media">
+            <img src="images/movie-streaming.png" alt="Movie Streaming Platform" loading="lazy" />
+          </div>
+
+          <div class="project-body">
+            <h3 class="project-title">Cinematic Media Streaming Platform</h3>
+            <p class="project-description">
+              Entertainment application showcasing catalog filtering by genre, watchlist persistence, trailer modal
+              integration, and a premium tier membership model with embedded playback.
+            </p>
+            <div class="project-tags">
+              <span class="tech-tag">React</span>
+              <span class="tech-tag">Media API</span>
+              <span class="tech-tag">CSS3</span>
+              <span class="tech-tag">Video Player</span>
+            </div>
+            <div class="project-actions">
+              <a href="projects/movie-streaming.html" class="btn btn-primary btn-sm" target="_blank" rel="noopener">
+                <span>Live Demo</span>
+                <svg class="btn-icon btn-icon-right" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                  <polyline points="15 3 21 3 21 9"></polyline>
+                  <line x1="10" y1="14" x2="21" y2="3"></line>
+                </svg>
+              </a>
+              <button class="btn btn-outline btn-sm btn-preview" data-demo="projects/movie-streaming.html"
+                data-title="Cinematic Movie Streaming Platform">
+                <span>Quick Preview</span>
+              </button>
+              <a href="https://github.com/semagn24/portfolio" class="btn btn-outline btn-sm" target="_blank"
+                rel="noopener">
+                <span>Code</span>
+              </a>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       INTERACTIVE LIVE PREVIEW MODAL
+       ========================================================================== -->
+  <div id="preview-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-container">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <div class="mockup-dots">
+            <span class="mockup-dot dot-red"></span>
+            <span class="mockup-dot dot-yellow"></span>
+            <span class="mockup-dot dot-green"></span>
+          </div>
+          <span id="modal-title" class="modal-title">Live Project Preview</span>
         </div>
-    </section>
+        <div class="modal-actions">
+          <a id="modal-external-link" href="#" target="_blank" rel="noopener" class="modal-tab-btn"
+            title="Open in New Tab">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+          </a>
+          <button id="modal-close-btn" class="modal-close-btn" aria-label="Close Preview Modal">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <iframe id="modal-iframe" class="modal-iframe-frame" src="about:blank"
+        title="Project Live Preview Frame"></iframe>
+    </div>
+  </div>
 
-    <!-- Contact Section -->
-    <section id="contact">
-        <div class="container">
-            <h2>Feel Free to Contact Me</h2>
-            <p class="section-subtitle">If any assistance is needed, I'm here to help</p>
+  <!-- ==========================================================================
+       TECHNICAL CAPABILITIES & SERVICES
+       ========================================================================== -->
+  <section id="services" class="fade-in-section">
+    <div class="container">
+      <div class="section-header text-center">
+        <span class="section-eyebrow">Services &amp; Expertise</span>
+        <h2 class="section-title">Architectural &amp; Engineering Capabilities</h2>
+        <p class="section-desc">
+          Structured development practices translating ideas into production-ready software solutions.
+        </p>
+      </div>
 
-            <div class="contact-info-grid">
-                <div class="contact-info-card">
-                    <div class="contact-icon">📍</div>
-                    <h4>Location</h4>
-                    <p>Sidama Region, Ethiopia</p>
-                </div>
-                <div class="contact-info-card">
-                    <div class="contact-icon">📧</div>
-                    <h4>Email</h4>
-                    <p>semagnlegese@gmail.com</p>
-                </div>
-                <div class="contact-info-card">
-                    <div class="contact-icon">💼</div>
-                    <h4>Availability</h4>
-                    <p>Open to opportunities</p>
-                </div>
+      <div class="services-grid">
+        <!-- Capability 1 -->
+        <div class="service-card">
+          <div class="service-icon-wrapper">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+              <polyline points="2 17 12 22 22 17"></polyline>
+              <polyline points="2 12 12 17 22 12"></polyline>
+            </svg>
+          </div>
+          <h3>Modern Frontend Engineering</h3>
+          <p>
+            Architecting modular, component-driven client applications in React.js with TypeScript/ES6+, Tailwind CSS,
+            and strict state management.
+          </p>
+          <ul class="service-deliverables">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span>Single Page Applications &amp; Next-Gen Interfaces</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span>Mobile-First Responsive Layouts &amp; Micro-Interactions</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span>WCAG 2.1 AA Accessibility &amp; Core Web Vitals Optimization</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Capability 2 -->
+        <div class="service-card">
+          <div class="service-icon-wrapper">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+              <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+              <line x1="6" y1="6" x2="6.01" y2="6"></line>
+              <line x1="6" y1="18" x2="6.01" y2="18"></line>
+            </svg>
+          </div>
+          <h3>Backend &amp; RESTful API Systems</h3>
+          <p>
+            Designing scalable server environments using Node.js, Express, PHP, and Python with clean MVC separation and
+            token-based authentication.
+          </p>
+          <ul class="service-deliverables">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span>RESTful API Development with Express &amp; Middleware</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span>Authentication (JWT, bcrypt), Role-Based Access Control</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span>Real-Time Events &amp; WebSockets Communication</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Capability 3 -->
+        <div class="service-card">
+          <div class="service-icon-wrapper">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+              <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+              <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+            </svg>
+          </div>
+          <h3>Database Architecture &amp; Modeling</h3>
+          <p>
+            Formulating relational SQL schemas and document-oriented MongoDB structures with normalization, indexing,
+            and data integrity safeguards.
+          </p>
+          <ul class="service-deliverables">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span>MongoDB &amp; Mongoose Aggregation Pipelines</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span>MySQL Relational Schemas &amp; Foreign Key Constraints</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span>Data Sanitization &amp; Injection Defense</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Capability 4 -->
+        <div class="service-card">
+          <div class="service-icon-wrapper">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 14 14"></polyline>
+            </svg>
+          </div>
+          <h3>Full-Cycle Deployment &amp; Performance</h3>
+          <p>
+            Transforming local prototypes into live internet services through automated builds, PWA caching strategies,
+            and asset minification.
+          </p>
+          <ul class="service-deliverables">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span>Continuous Deployment (Vercel, Netlify, Render, GitHub Pages)</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span>Progressive Web Apps (PWA) with Offline Service Workers</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span>Git &amp; GitHub Branching &amp; Collaborative Workflows</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       TECHNICAL SKILLS MATRIX
+       ========================================================================== -->
+  <section id="skills" class="fade-in-section">
+    <div class="container">
+      <div class="section-header text-center">
+        <span class="section-eyebrow">Proficiencies</span>
+        <h2 class="section-title">Technical Skills Matrix</h2>
+        <p class="section-desc">
+          Core toolkits, languages, and frameworks employed in day-to-day software engineering.
+        </p>
+      </div>
+
+      <div class="skills-matrix">
+        <!-- Frontend -->
+        <div class="skill-cluster">
+          <h3 class="cluster-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+              <polyline points="2 17 12 22 22 17"></polyline>
+              <polyline points="2 12 12 17 22 12"></polyline>
+            </svg>
+            <span>Frontend</span>
+          </h3>
+          <div class="skill-badges">
+            <div class="skill-row"><span>React.js</span><span class="skill-level-badge">Advanced</span></div>
+            <div class="skill-row"><span>JavaScript (ES6+)</span><span class="skill-level-badge">Advanced</span></div>
+            <div class="skill-row"><span>HTML5 &amp; Modern CSS3</span><span class="skill-level-badge">Expert</span>
+            </div>
+            <div class="skill-row"><span>Tailwind CSS</span><span class="skill-level-badge">Proficient</span></div>
+            <div class="skill-row"><span>Responsive Web Design</span><span class="skill-level-badge">Expert</span></div>
+          </div>
+        </div>
+
+        <!-- Backend -->
+        <div class="skill-cluster">
+          <h3 class="cluster-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+              <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+            </svg>
+            <span>Backend &amp; APIs</span>
+          </h3>
+          <div class="skill-badges">
+            <div class="skill-row"><span>Node.js</span><span class="skill-level-badge">Advanced</span></div>
+            <div class="skill-row"><span>Express.js</span><span class="skill-level-badge">Advanced</span></div>
+            <div class="skill-row"><span>RESTful API Design</span><span class="skill-level-badge">Advanced</span></div>
+            <div class="skill-row"><span>Python</span><span class="skill-level-badge">Proficient</span></div>
+            <div class="skill-row"><span>PHP &amp; Java</span><span class="skill-level-badge">Intermediate</span></div>
+          </div>
+        </div>
+
+        <!-- Database -->
+        <div class="skill-cluster">
+          <h3 class="cluster-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+              <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+              <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+            </svg>
+            <span>Data &amp; Storage</span>
+          </h3>
+          <div class="skill-badges">
+            <div class="skill-row"><span>MongoDB</span><span class="skill-level-badge">Advanced</span></div>
+            <div class="skill-row"><span>Mongoose ORM</span><span class="skill-level-badge">Advanced</span></div>
+            <div class="skill-row"><span>MySQL / SQL</span><span class="skill-level-badge">Proficient</span></div>
+            <div class="skill-row"><span>JSON File Datastores</span><span class="skill-level-badge">Expert</span></div>
+            <div class="skill-row"><span>Database Normalization</span><span class="skill-level-badge">Proficient</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tooling -->
+        <div class="skill-cluster">
+          <h3 class="cluster-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path
+                d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+              </path>
+            </svg>
+            <span>DevOps &amp; Tools</span>
+          </h3>
+          <div class="skill-badges">
+            <div class="skill-row"><span>Git &amp; GitHub</span><span class="skill-level-badge">Advanced</span></div>
+            <div class="skill-row"><span>Postman API Testing</span><span class="skill-level-badge">Advanced</span></div>
+            <div class="skill-row"><span>Vite &amp; NPM Ecosystem</span><span class="skill-level-badge">Advanced</span>
+            </div>
+            <div class="skill-row"><span>Service Workers / PWA</span><span class="skill-level-badge">Proficient</span>
+            </div>
+            <div class="skill-row"><span>Linux / CLI Scripting</span><span class="skill-level-badge">Proficient</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       CLIENT TESTIMONIALS & PEER REVIEWS
+       ========================================================================== -->
+  <section id="testimonials" class="fade-in-section">
+    <div class="container">
+      <div class="section-header text-center">
+        <span class="section-eyebrow">Recommendations</span>
+        <h2 class="section-title">Endorsements &amp; Client Feedback</h2>
+        <p class="section-desc">
+          Reflections on collaboration, technical execution, and project outcomes.
+        </p>
+      </div>
+
+      <div class="testimonials-grid">
+        <div class="testimonial-card">
+          <div class="testimonial-stars" aria-label="5 out of 5 stars">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <polygon
+                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+              </polygon>
+            </svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <polygon
+                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+              </polygon>
+            </svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <polygon
+                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+              </polygon>
+            </svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <polygon
+                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+              </polygon>
+            </svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <polygon
+                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+              </polygon>
+            </svg>
+          </div>
+          <p class="testimonial-quote">
+            "Semagn delivered an outstanding employee records system. His grasp of backend routes and relational
+            databases made the system robust, intuitive, and remarkably rapid to deploy."
+          </p>
+          <div class="testimonial-author">
+            <div class="author-avatar">PM</div>
+            <div class="author-meta">
+              <h4>Project Manager</h4>
+              <p>Tech Solutions Ltd</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="testimonial-stars" aria-label="5 out of 5 stars">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <polygon
+                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+              </polygon>
+            </svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <polygon
+                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+              </polygon>
+            </svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <polygon
+                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+              </polygon>
+            </svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <polygon
+                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+              </polygon>
+            </svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <polygon
+                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+              </polygon>
+            </svg>
+          </div>
+          <p class="testimonial-quote">
+            "The GPA engine and student registration interface he developed exceeded our expectations. Extremely
+            responsive to feedback and demonstrated impressive engineering maturity."
+          </p>
+          <div class="testimonial-author">
+            <div class="author-avatar">EC</div>
+            <div class="author-meta">
+              <h4>Education Coordinator</h4>
+              <p>Online Learning Institute</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="testimonial-stars" aria-label="5 out of 5 stars">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <polygon
+                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+              </polygon>
+            </svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <polygon
+                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+              </polygon>
+            </svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <polygon
+                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+              </polygon>
+            </svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <polygon
+                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+              </polygon>
+            </svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <polygon
+                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+              </polygon>
+            </svg>
+          </div>
+          <p class="testimonial-quote">
+            "Semagn is dependable, technically curious, and focused on clean presentation. His Hawassa transport
+            tracking prototype was both functionally smart and visually polished."
+          </p>
+          <div class="testimonial-author">
+            <div class="author-avatar">BO</div>
+            <div class="author-meta">
+              <h4>Business Director</h4>
+              <p>Digital Media Agency</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       CONTACT SECTION
+       ========================================================================== -->
+  <section id="contact" class="fade-in-section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-eyebrow">Get In Touch</span>
+        <h2 class="section-title">Let's Discuss New Opportunities</h2>
+        <p class="section-desc">
+          Available for software engineering roles, full-stack development contracts, and technical collaborations.
+        </p>
+      </div>
+
+      <div class="contact-layout">
+        <!-- Info Cards -->
+        <div class="contact-info-panel">
+          <div class="contact-cards-group">
+            <div class="contact-card-item">
+              <div class="contact-card-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+              </div>
+              <div class="contact-card-details">
+                <h4>Primary Location</h4>
+                <p>Sidama Region, Ethiopia (UTC+3)</p>
+              </div>
             </div>
 
-            <div class="social-links">
-                <a href="mailto:semagnlegese@gmail.com" class="social-btn email" aria-label="Email">Email</a>
-                <a href="https://www.facebook.com/search/top?q=semagn%20legese" target="_blank"
-                    class="social-btn facebook" aria-label="Facebook">Facebook</a>
-                <a href="https://instagram.com/semu.4423" target="_blank" class="social-btn instagram"
-                    aria-label="Instagram">Instagram</a>
-                <a href="https://t.me/Semu_je" target="_blank" class="social-btn telegram"
-                    aria-label="Telegram">Telegram</a>
-                <a href="https://tiktok.com/@semagn_22" target="_blank" class="social-btn tiktok"
-                    aria-label="TikTok">TikTok</a>
-                <a href="https://linkedin.com/in/semagn" target="_blank" class="social-btn linkedin"
-                    aria-label="LinkedIn">LinkedIn</a>
-                <a href="https://github.com/semagn24" target="_blank" class="social-btn github"
-                    aria-label="GitHub">GitHub</a>
-                <a href="https://youtube.com/@semagnlegesemldaga376" target="_blank" class="social-btn youtube"
-                    aria-label="YouTube">YouTube</a>
+            <div class="contact-card-item">
+              <div class="contact-card-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                  <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+              </div>
+              <div class="contact-card-details">
+                <h4>Direct Email</h4>
+                <p>semagnlegese@gmail.com</p>
+              </div>
             </div>
 
-            <form class="contact-form" id="contactForm">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="name">Name</label>
-                        <input type="text" id="name" name="name" required placeholder="Your Name">
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" required placeholder="Your Email">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="message">Message</label>
-                    <textarea id="message" name="message" rows="5" required placeholder="Your Message"></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">Send Message</button>
-            </form>
+            <div class="contact-card-item">
+              <div class="contact-card-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                  <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                </svg>
+              </div>
+              <div class="contact-card-details">
+                <h4>Work Status</h4>
+                <p>Open to Full-Time, Remote &amp; Freelance</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Social Channels -->
+          <div>
+            <h4 style="font-family: var(--font-heading); margin-bottom: 0.85rem; font-size: 0.95rem;">Connect Across
+              Platforms</h4>
+            <div class="social-buttons-grid">
+              <a href="https://github.com/semagn24" target="_blank" rel="noopener" class="social-pill"
+                aria-label="GitHub Profile">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path
+                    d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+                  </path>
+                </svg>
+                <span>GitHub</span>
+              </a>
+
+              <a href="https://linkedin.com/in/semagn" target="_blank" rel="noopener" class="social-pill"
+                aria-label="LinkedIn Profile">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                  <rect x="2" y="9" width="4" height="12"></rect>
+                  <circle cx="4" cy="4" r="2"></circle>
+                </svg>
+                <span>LinkedIn</span>
+              </a>
+
+              <a href="https://t.me/Semu_jes" target="_blank" rel="noopener" class="social-pill"
+                aria-label="Telegram Message">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="22" y1="2" x2="11" y2="13"></line>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+                <span>Telegram</span>
+              </a>
+
+              <a href="https://youtube.com/@semagnlegesemldaga376" target="_blank" rel="noopener" class="social-pill"
+                aria-label="YouTube Channel">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path
+                    d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z">
+                  </path>
+                  <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon>
+                </svg>
+                <span>YouTube</span>
+              </a>
+
+              <a href="https://tiktok.com/@semagn_22" target="_blank" rel="noopener" class="social-pill"
+                aria-label="TikTok">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path>
+                </svg>
+                <span>TikTok</span>
+              </a>
+
+              <a href="https://instagram.com/semu.4423" target="_blank" rel="noopener" class="social-pill"
+                aria-label="Instagram">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                </svg>
+                <span>Instagram</span>
+              </a>
+            </div>
+          </div>
         </div>
-    </section>
 
-    <footer>
-        <p>&copy; <span id="year"></span> Semagn Legese Mildega | All Rights Reserved</p>
-    </footer>
+        <!-- Interactive Form -->
+        <div class="contact-form-wrapper">
+          <form class="contact-form" id="contactForm">
+            <div id="form-status" class="form-status" role="alert"></div>
 
-    <script src="script.js"></script>
-    <script src="sw-register.js"></script>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="name" class="form-label">Your Name</label>
+                <input type="text" id="name" name="name" class="form-input" required placeholder="Alex Mercer"
+                  autocomplete="name" />
+              </div>
+              <div class="form-group">
+                <label for="email" class="form-label">Email Address</label>
+                <input type="email" id="email" name="email" class="form-input" required placeholder="alex@company.com"
+                  autocomplete="email" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="message" class="form-label">Project Details or Inquiry</label>
+              <textarea id="message" name="message" class="form-textarea" required
+                placeholder="Describe your project, role opportunity, or timeline..."></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+              <span>Send Message</span>
+              <svg class="btn-icon btn-icon-right" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2">
+                <line x1="22" y1="2" x2="11" y2="13"></line>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+              </svg>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       SITE FOOTER
+       ========================================================================== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="brand-logo">
+          <div class="brand-badge">SL</div>
+          <div>
+            <span class="brand-title">Semagn Legese Mildega</span>
+            <span class="brand-sub">Crafted with Precision</span>
+          </div>
+        </div>
+
+        <ul class="footer-nav">
+          <li><a href="#home">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#portfolio">Projects</a></li>
+          <li><a href="#services">Capabilities</a></li>
+          <li><a href="#contact">Contact</a></li>
+          <li><a href="cv.html">CV</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; <span id="year">2026</span> Semagn Legese Mildega. All rights reserved.</p>
+        <button id="back-to-top" class="back-to-top-btn" aria-label="Scroll back to top">
+          <span>Back to Top</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="18 15 12 9 6 15"></polyline>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js?v=3"></script>
+  <script src="sw-register.js"></script>
 </body>
 
 </html>

@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Registration System Demo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #f093fb;
+            --secondary: #f5576c;
+            --bg: #fff5fe;
+            --card: #ffffff;
+            --text: #2d3748;
+            --text-light: #718096;
+            --border: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        header {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+            padding: 1.25rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        header h1 {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+
+        .back-link {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            color: white;
+        }
+
+        .main {
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .user-bar {
+            background: white;
+            border-radius: 1rem;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+        }
+
+        .user-avatar {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            font-size: 1rem;
+        }
+
+        .user-info strong {
+            display: block;
+        }
+
+        .user-info small {
+            color: var(--text-light);
+        }
+
+        .units-badge {
+            margin-left: auto;
+            background: linear-gradient(135deg, #f093fb22, #f5576c22);
+            padding: 0.5rem 1.25rem;
+            border-radius: 2rem;
+            font-weight: 700;
+            color: var(--secondary);
+            border: 2px solid #f5576c44;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 0.6rem 1.4rem;
+            border-radius: 2rem;
+            border: 2px solid var(--border);
+            background: white;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .course-card {
+            background: white;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .course-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .course-card.enrolled {
+            border-color: #48bb78;
+        }
+
+        .course-card.full {
+            opacity: 0.7;
+        }
+
+        .course-top {
+            height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+
+        .course-body {
+            padding: 1.25rem;
+        }
+
+        .course-body h3 {
+            font-size: 1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .course-body .instructor {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 0.75rem;
+        }
+
+        .course-meta {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background: #f7fafc;
+            padding: 0.2rem 0.65rem;
+            border-radius: 1rem;
+            font-size: 0.8rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .progress-bar {
+            background: #e2e8f0;
+            border-radius: 2rem;
+            height: 6px;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 2rem;
+            background: linear-gradient(90deg, #f093fb, #f5576c);
+        }
+
+        .seats-text {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .enroll-btn {
+            width: 100%;
+            padding: 0.7rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .enroll-btn.enroll {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+        }
+
+        .enroll-btn.enroll:hover {
+            filter: brightness(1.1);
+            transform: translateY(-1px);
+        }
+
+        .enroll-btn.drop {
+            background: #fed7d7;
+            color: #c53030;
+        }
+
+        .enroll-btn.full-btn {
+            background: #e2e8f0;
+            color: var(--text-light);
+            cursor: not-allowed;
+        }
+
+        .my-courses-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .enrolled-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+            border-left: 4px solid #48bb78;
+        }
+
+        .enrolled-card .icon {
+            font-size: 2rem;
+        }
+
+        .enrolled-card h4 {
+            margin-bottom: 0.2rem;
+        }
+
+        .enrolled-card small {
+            color: var(--text-light);
+        }
+
+        .enrolled-card .drop-sm {
+            margin-left: auto;
+            background: #fed7d7;
+            color: #c53030;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-light);
+        }
+
+        .empty-state .big {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>🎓 Course Registration System</h1>
+        <a href="../index.html" class="back-link">← Portfolio</a>
+    </header>
+
+    <div class="main">
+        <div class="user-bar">
+            <div class="user-avatar">SL</div>
+            <div class="user-info">
+                <strong>Semagn Legese</strong>
+                <small>Software Engineering – Year 3</small>
+            </div>
+            <div class="units-badge">📚 <span id="unitCount">0</span> / 18 Units</div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" id="tab-all" onclick="switchTab('all')">All Courses</button>
+            <button class="tab-btn" id="tab-enrolled" onclick="switchTab('enrolled')">My Courses (<span
+                    id="myCount">0</span>)</button>
+        </div>
+
+        <div id="allCoursesView" class="courses-grid"></div>
+        <div id="enrolledView" style="display:none"></div>
+    </div>
+
+    <script>
+        const courses = [
+            { id: 1, code: 'CS301', name: 'Data Structures & Algorithms', instructor: 'Prof. A. Bekele', units: 4, emoji: '🌲', color: '#e9d5ff', enrolled: false, max: 30, current: 28, dept: 'CS', prereqs: ['CS102', 'MATH101'] },
+            { id: 2, code: 'CS201', name: 'Web Development Fundamentals', instructor: 'Dr. T. Haile', units: 3, emoji: '🌐', color: '#bfdbfe', enrolled: false, max: 25, current: 15, dept: 'CS', prereqs: ['CS102'] },
+            { id: 3, code: 'CS401', name: 'Database Management Systems', instructor: 'Prof. M. Girma', units: 4, emoji: '🗄️', color: '#fde68a', enrolled: false, max: 20, current: 20, dept: 'CS', prereqs: ['CS202'] },
+            { id: 4, code: 'SE201', name: 'Software Engineering Principles', instructor: 'Dr. H. Tadesse', units: 3, emoji: '⚙️', color: '#d1fae5', enrolled: false, max: 35, current: 12, dept: 'SE', prereqs: ['CS202', 'CS301'] },
+            { id: 5, code: 'CS501', name: 'Mobile Application Development', instructor: 'Dr. Y. Mamo', units: 3, emoji: '📱', color: '#fce7f3', enrolled: false, max: 22, current: 18, dept: 'CS', prereqs: [] },
+            { id: 6, code: 'AI301', name: 'Machine Learning Basics', instructor: 'Prof. L. Tesfaye', units: 4, emoji: '🤖', color: '#ede9fe', enrolled: false, max: 18, current: 10, dept: 'AI', prereqs: ['MATH102', 'CS301'] },
+        ];
+
+        const myCompletedCourses = ['CS101', 'CS102', 'MATH101', 'MATH102', 'CS202', 'ENG101', 'PHYS101'];
+
+        let activeTab = 'all';
+
+        function switchTab(tab) {
+            activeTab = tab;
+            document.getElementById('tab-all').classList.toggle('active', tab === 'all');
+            document.getElementById('tab-enrolled').classList.toggle('active', tab === 'enrolled');
+            document.getElementById('allCoursesView').style.display = tab === 'all' ? 'grid' : 'none';
+            document.getElementById('enrolledView').style.display = tab === 'enrolled' ? 'block' : 'none';
+            render();
+        }
+
+        function render() {
+            const enrolled = courses.filter(c => c.enrolled);
+            document.getElementById('myCount').textContent = enrolled.length;
+            document.getElementById('unitCount').textContent = enrolled.reduce((a, c) => a + c.units, 0);
+
+            // All Courses
+            document.getElementById('allCoursesView').innerHTML = courses.map(c => {
+                const isFull = c.current >= c.max;
+                const pct = Math.round((c.current / c.max) * 100);
+                let btnClass = c.enrolled ? 'drop' : (isFull ? 'full-btn' : 'enroll');
+                let btnText = c.enrolled ? '✓ Drop Course' : (isFull ? 'Course Full' : '+ Enroll Now');
+                
+                let prereqTags = '';
+                if(c.prereqs && c.prereqs.length > 0) {
+                    prereqTags = `<span class="tag" style="background:#e0f2fe;color:#0369a1;">🔑 Prereq: ${c.prereqs.join(', ')}</span>`;
+                }
+
+                return `<div class="course-card ${c.enrolled ? 'enrolled' : ''} ${isFull && !c.enrolled ? 'full' : ''}">
+                    <div class="course-top" style="background:${c.color}; position:relative;">
+                        ${c.emoji}
+                        <span style="position:absolute; top:0.6rem; left:0.75rem; background:rgba(0,0,0,0.5); color:white; padding:0.2rem 0.6rem; border-radius:1rem; font-size:0.78rem; font-weight:700;">${c.code}</span>
+                    </div>
+                    <div class="course-body">
+                        <h3>${c.name}</h3>
+                        <div class="instructor">👤 ${c.instructor}</div>
+                        <div class="course-meta">
+                            <span class="tag">📚 ${c.units} units</span>
+                            <span class="tag">🏷️ ${c.dept}</span>
+                            ${prereqTags}
+                        </div>
+                        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+                        <div class="seats-text">${c.current}/${c.max} seats taken</div>
+                        <button class="enroll-btn ${btnClass}" onclick="toggleEnroll(${c.id})" ${isFull && !c.enrolled ? 'disabled' : ''}>${btnText}</button>
+                    </div>
+                </div>`;
+            }).join('');
+
+            // My Courses
+            document.getElementById('enrolledView').innerHTML = enrolled.length === 0
+                ? `<div class="empty-state"><div class="big">📚</div><p>You have not enrolled in any courses yet.<br>Go to "All Courses" to get started!</p></div>`
+                : `<div class="my-courses-list">${enrolled.map(c => `
+                    <div class="enrolled-card">
+                        <div class="icon">${c.emoji}</div>
+                        <div>
+                            <h4>${c.name}</h4>
+                            <small>👤 ${c.instructor} &nbsp;|&nbsp; 📚 ${c.units} units</small>
+                        </div>
+                        <button class="drop-sm" onclick="toggleEnroll(${c.id})">Drop</button>
+                    </div>`).join('')}</div>`;
+        }
+
+        function toggleEnroll(id) {
+            const c = courses.find(co => co.id === id);
+            if (!c) return;
+            if (c.enrolled) {
+                c.enrolled = false;
+                c.current--;
+            } else {
+                // Check prerequisites
+                if (c.prereqs && c.prereqs.length > 0) {
+                    const missing = c.prereqs.filter(req => !myCompletedCourses.includes(req));
+                    if (missing.length > 0) {
+                        alert('⚠️ Missing prerequisites: ' + missing.join(', '));
+                        return;
+                    }
+                }
+
+                // Check units
+                const totalUnits = courses.filter(co => co.enrolled).reduce((a, co) => a + co.units, 0);
+                if (totalUnits + c.units > 18) { 
+                    alert('⚠️ You cannot exceed 18 units per semester!'); 
+                    return; 
+                }
+
+                c.enrolled = true;
+                c.current++;
+            }
+            render();
+        }
+
+        render();
+    </script>
+</body>
+
+</html>
