@@ -1,729 +1,1692 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <title>Hawassa Transport Tracking System</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hawassa Transit Telematics — Live Fleet Command & Telemetry</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #4facfe;
-            --secondary: #00f2fe;
-            --bg: #0f172a;
-            --card: #1e293b;
-            --text: #f1f5f9;
-            --text-light: #94a3b8;
-            --border: #334155;
-            --success: #48bb78;
-            --warning: #fbd38d;
-            --danger: #fc8181;
+            --bg-void: #07090e;
+            --bg-surface: #0e1320;
+            --bg-surface-elevated: #141c2e;
+            --bg-surface-glass: rgba(14, 19, 32, 0.85);
+            --border-subtle: rgba(255, 255, 255, 0.07);
+            --border-highlight: rgba(6, 182, 212, 0.3);
+            
+            --emerald-bright: #10b981;
+            --emerald-glow: rgba(16, 185, 129, 0.2);
+            --cyan-accent: #06b6d4;
+            --cyan-glow: rgba(6, 182, 212, 0.25);
+            --amber-warn: #f59e0b;
+            --amber-glow: rgba(245, 158, 11, 0.2);
+            --rose-danger: #f43f5e;
+            --rose-glow: rgba(244, 63, 94, 0.2);
+            
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-tertiary: #64748b;
+            
+            --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
+            --font-body: 'Inter', system-ui, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 18px;
+            --radius-full: 9999px;
+            
+            --shadow-subtle: 0 4px 20px rgba(0, 0, 0, 0.4);
+            --shadow-glow: 0 0 25px rgba(6, 182, 212, 0.15);
         }
 
-        * {
+        *, *::before, *::after {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            color: var(--text);
+            background-color: var(--bg-void);
+            color: var(--text-primary);
+            font-family: var(--font-body);
             min-height: 100vh;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 15% 10%, rgba(6, 182, 212, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 85% 80%, rgba(16, 185, 129, 0.06) 0%, transparent 45%);
+            background-attachment: fixed;
         }
 
+        /* Themed browser surfaces */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-void);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: var(--radius-full);
+            border: 2px solid var(--bg-void);
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155;
+        }
+        ::selection {
+            background: rgba(6, 182, 212, 0.25);
+            color: #ffffff;
+        }
+        :focus-visible {
+            outline: 2px solid var(--cyan-accent);
+            outline-offset: 3px;
+        }
+
+        /* Navigation Header */
         header {
-            background: linear-gradient(135deg, #4facfe, #00f2fe);
-            color: #0f172a;
-            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--bg-surface-glass);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 0.9rem 2rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 2px 20px rgba(79, 172, 254, 0.3);
         }
 
-        header h1 {
-            font-size: 1.3rem;
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(16, 185, 129, 0.2));
+            border: 1px solid rgba(6, 182, 212, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--cyan-accent);
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
+        }
+
+        .brand-text h1 {
+            font-family: var(--font-display);
+            font-size: 1.05rem;
             font-weight: 800;
+            letter-spacing: -0.01em;
+            color: #ffffff;
         }
 
-        .live-indicator {
+        .brand-text p {
+            font-size: 0.72rem;
+            color: var(--text-secondary);
+            font-family: var(--font-mono);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .back-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.45rem 0.9rem;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-full);
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .back-pill:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .header-status {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+        }
+
+        .telemetry-ping {
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            font-weight: 700;
-            font-size: 0.9rem;
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            padding: 0.35rem 0.85rem;
+            border-radius: var(--radius-full);
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--emerald-bright);
+            font-weight: 600;
         }
 
-        .live-dot {
-            width: 10px;
-            height: 10px;
-            background: #48bb78;
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--emerald-bright);
             border-radius: 50%;
-            animation: pulse 1.5s infinite;
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            animation: radar-pulse 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
         }
 
-        @keyframes pulse {
-
-            0%,
-            100% {
-                box-shadow: 0 0 0 0 rgba(72, 187, 120, .7)
-            }
-
-            50% {
-                box-shadow: 0 0 0 8px rgba(72, 187, 120, 0)
-            }
+        @keyframes radar-pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
         }
 
-        .tabs {
+        .clock-badge {
+            font-family: var(--font-mono);
+            font-size: 0.82rem;
+            color: var(--text-secondary);
             display: flex;
-            gap: 0.5rem;
-            padding: 1rem 2rem;
-            border-bottom: 1px solid var(--border);
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        /* Top Command Subnav / Tabs */
+        .subnav-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 2rem;
+            background: rgba(11, 15, 25, 0.7);
+            border-bottom: 1px solid var(--border-subtle);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .tabs-group {
+            display: flex;
+            gap: 0.4rem;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 0.3rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-subtle);
         }
 
         .tab-btn {
             background: none;
             border: none;
-            color: var(--text-light);
-            padding: 0.5rem 1.25rem;
-            border-radius: 2rem;
+            color: var(--text-secondary);
+            padding: 0.5rem 1.1rem;
+            border-radius: var(--radius-sm);
             cursor: pointer;
+            font-family: var(--font-display);
             font-weight: 600;
-            font-family: inherit;
-            transition: all 0.3s;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .tab-btn:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.05);
         }
 
         .tab-btn.active {
-            background: rgba(79, 172, 254, 0.15);
-            color: var(--primary);
+            background: var(--cyan-accent);
+            color: #07090e;
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.35);
         }
 
-        .main {
-            max-width: 1100px;
-            margin: 1.5rem auto;
-            padding: 0 1.5rem;
+        .quick-metrics {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            color: var(--text-tertiary);
         }
 
-        .stats-row {
+        .quick-metrics span {
+            color: var(--cyan-accent);
+            font-weight: 600;
+        }
+
+        /* Main Workspace Container */
+        .workspace {
+            max-width: 1360px;
+            margin: 1.75rem auto;
+            padding: 0 1.75rem 3rem;
+        }
+
+        /* KPI Dashboard Metric Cards */
+        .kpi-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: repeat(4, 1fr);
             gap: 1rem;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.75rem;
         }
 
-        .stat {
-            background: var(--card);
-            border-radius: 0.75rem;
-            padding: 1.1rem;
-            border: 1px solid var(--border);
-            text-align: center;
-        }
-
-        .stat .val {
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: var(--primary);
-        }
-
-        .stat .lbl {
-            font-size: 0.8rem;
-            color: var(--text-light);
-            margin-top: 0.2rem;
-        }
-
-        .grid2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.25rem;
-        }
-
-        @media(max-width:700px) {
-            .grid2 {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .panel {
-            background: var(--card);
-            border-radius: 1rem;
-            border: 1px solid var(--border);
+        .kpi-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 1.25rem 1.4rem;
+            position: relative;
             overflow: hidden;
+            transition: transform 0.2s ease, border-color 0.2s ease;
         }
 
-        .panel-head {
-            padding: 1rem 1.25rem;
-            border-bottom: 1px solid var(--border);
-            font-weight: 800;
+        .kpi-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--card-accent, var(--cyan-accent)), transparent);
+        }
+
+        .kpi-top {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            font-size: 0.95rem;
+            margin-bottom: 0.6rem;
         }
 
-        .bus-list {
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
-        .bus-item {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 1rem 1.25rem;
-            border-bottom: 1px solid var(--border);
-            transition: background 0.2s;
-            cursor: pointer;
-        }
-
-        .bus-item:hover {
-            background: rgba(79, 172, 254, 0.05);
-        }
-
-        .bus-item-left {
-            flex: 1;
-        }
-
-        .bus-plate {
-            font-weight: 800;
-            font-size: 0.95rem;
-        }
-
-        .bus-route {
-            font-size: 0.8rem;
-            color: var(--text-light);
-            margin-top: 0.15rem;
-        }
-
-        .bus-driver {
+        .kpi-label {
             font-size: 0.78rem;
-            color: var(--text-light);
-        }
-
-        .bus-right {
-            text-align: right;
-        }
-
-        .status-badge {
-            padding: 0.25rem 0.7rem;
-            border-radius: 2rem;
-            font-size: 0.78rem;
-            font-weight: 700;
-        }
-
-        .s-moving {
-            background: rgba(72, 187, 120, 0.15);
-            color: var(--success);
-        }
-
-        .s-stopped {
-            background: rgba(252, 129, 129, 0.15);
-            color: var(--danger);
-        }
-
-        .s-arrived {
-            background: rgba(251, 211, 141, 0.15);
-            color: var(--warning);
-        }
-
-        .eta-text {
-            font-size: 0.78rem;
-            color: var(--text-light);
-            margin-top: 0.25rem;
-        }
-
-        .pass-bar {
-            width: 60px;
-            height: 4px;
-            background: var(--border);
-            border-radius: 2px;
-            margin-top: 0.4rem;
-        }
-
-        .pass-fill {
-            height: 100%;
-            background: var(--primary);
-            border-radius: 2px;
-        }
-
-        .map-wrap {
-            height: 400px;
-            background: var(--bg);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .map-grid-lines {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-image: linear-gradient(rgba(79, 172, 254, 0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(79, 172, 254, 0.04) 1px, transparent 1px);
-            background-size: 40px 40px;
-        }
-
-        .city-label {
-            position: absolute;
-            font-size: 0.7rem;
-            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-secondary);
             font-weight: 600;
         }
 
-        .bus-dot {
-            position: absolute;
+        .kpi-icon {
             width: 32px;
             height: 32px;
-            background: linear-gradient(135deg, #4facfe, #00f2fe);
-            border-radius: 50%;
-            border: 2px solid white;
+            border-radius: var(--radius-sm);
+            background: rgba(255, 255, 255, 0.04);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1rem;
-            box-shadow: 0 0 15px rgba(79, 172, 254, 0.5);
+            color: var(--card-accent, var(--cyan-accent));
+        }
+
+        .kpi-val {
+            font-family: var(--font-mono);
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1.1;
+            color: #ffffff;
+            margin-bottom: 0.25rem;
+        }
+
+        .kpi-footer {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .kpi-footer.positive {
+            color: var(--emerald-bright);
+        }
+
+        /* Two Column Telematics View */
+        .telematics-grid {
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            gap: 1.5rem;
+        }
+
+        /* Panels */
+        .glass-panel {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-subtle);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel-header {
+            padding: 1.1rem 1.4rem;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .panel-title {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .panel-title svg {
+            color: var(--cyan-accent);
+        }
+
+        .filter-pills {
+            display: flex;
+            gap: 0.35rem;
+        }
+
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            font-size: 0.72rem;
+            font-weight: 600;
+            padding: 0.25rem 0.65rem;
+            border-radius: var(--radius-full);
             cursor: pointer;
-            transition: all 0.8s ease;
-            transform: translate(-50%, -50%);
+            transition: all 0.15s ease;
         }
 
-        .bus-dot:hover {
-            transform: translate(-50%, -50%) scale(1.3);
+        .filter-btn:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.08);
         }
 
-        .bus-tooltip {
-            display: none;
+        .filter-btn.active {
+            background: rgba(6, 182, 212, 0.15);
+            border-color: rgba(6, 182, 212, 0.4);
+            color: var(--cyan-accent);
+        }
+
+        /* Interactive Radar Map */
+        .map-container {
+            height: 480px;
+            position: relative;
+            background: #080c15;
+            overflow: hidden;
+        }
+
+        .map-grid-mesh {
             position: absolute;
-            bottom: calc(100% + 8px);
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(6, 182, 212, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(6, 182, 212, 0.05) 1px, transparent 1px);
+            background-size: 36px 36px;
+        }
+
+        .map-radar-sweep {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 700px;
+            height: 700px;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            border: 1px dashed rgba(6, 182, 212, 0.15);
+            pointer-events: none;
+        }
+
+        .map-radar-sweep::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 350px;
+            height: 350px;
+            background: conic-gradient(from 0deg, rgba(6, 182, 212, 0.12) 0deg, transparent 60deg);
+            transform-origin: top left;
+            animation: radar-spin 8s linear infinite;
+        }
+
+        @keyframes radar-spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Transit Roads and Nodes */
+        .road-vector {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 4px;
+            pointer-events: none;
+        }
+
+        .station-node {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .station-pin {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #1e293b;
+            border: 2px solid #64748b;
+            transition: all 0.2s ease;
+        }
+
+        .station-node:hover .station-pin {
+            background: var(--cyan-accent);
+            border-color: #ffffff;
+            box-shadow: 0 0 12px var(--cyan-accent);
+            transform: scale(1.3);
+        }
+
+        .station-label {
+            font-size: 0.68rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin-top: 4px;
+            white-space: nowrap;
+            background: rgba(8, 12, 21, 0.85);
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid var(--border-subtle);
+            pointer-events: none;
+            transition: color 0.2s ease;
+        }
+
+        .station-node:hover .station-label {
+            color: #ffffff;
+            border-color: var(--cyan-accent);
+        }
+
+        /* Bus Marker on Map */
+        .bus-marker {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            z-index: 20;
+            transition: left 0.8s cubic-bezier(0.16, 1, 0.3, 1), top 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .bus-beacon {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-md);
+            background: var(--bg-surface-elevated);
+            border: 1.5px solid var(--cyan-accent);
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--cyan-accent);
+            transition: all 0.2s ease;
+        }
+
+        .bus-marker:hover .bus-beacon {
+            transform: scale(1.15);
+            border-color: #ffffff;
+            box-shadow: 0 0 25px rgba(6, 182, 212, 0.8);
+        }
+
+        .bus-beacon.stopped {
+            border-color: var(--rose-danger);
+            color: var(--rose-danger);
+            box-shadow: 0 0 15px rgba(244, 63, 94, 0.35);
+        }
+
+        .bus-beacon.arrived {
+            border-color: var(--amber-warn);
+            color: var(--amber-warn);
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.35);
+        }
+
+        .bus-map-tooltip {
+            position: absolute;
+            bottom: calc(100% + 10px);
             left: 50%;
             transform: translateX(-50%);
-            background: white;
-            color: #1a202c;
-            padding: 0.5rem 0.75rem;
-            border-radius: 0.5rem;
+            background: var(--bg-surface-elevated);
+            border: 1px solid var(--border-highlight);
+            box-shadow: var(--shadow-subtle);
+            border-radius: var(--radius-sm);
+            padding: 0.6rem 0.85rem;
             white-space: nowrap;
-            font-size: 0.78rem;
-            font-weight: 700;
-            z-index: 10;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            pointer-events: none;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease;
+            z-index: 30;
         }
 
-        .bus-dot:hover .bus-tooltip {
-            display: block;
+        .bus-marker:hover .bus-map-tooltip {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(-4px);
         }
 
-        .route-list {
-            padding: 0.75rem 0;
+        .bus-map-tooltip h4 {
+            font-family: var(--font-mono);
+            font-size: 0.82rem;
+            color: #ffffff;
+            margin-bottom: 2px;
         }
 
-        .route-item {
-            padding: 0.875rem 1.25rem;
-            border-bottom: 1px solid var(--border);
+        .bus-map-tooltip p {
+            font-size: 0.72rem;
+            color: var(--text-secondary);
         }
 
-        .route-item h4 {
+        /* Bus Fleet Telemetry List */
+        .fleet-list {
+            max-height: 480px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .fleet-item {
+            padding: 1.1rem 1.4rem;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            transition: background 0.2s ease;
+            cursor: pointer;
+        }
+
+        .fleet-item:hover {
+            background: rgba(255, 255, 255, 0.025);
+        }
+
+        .fleet-item.active-selection {
+            background: rgba(6, 182, 212, 0.08);
+            border-left: 3px solid var(--cyan-accent);
+        }
+
+        .fleet-item-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .fleet-bus-badge {
+            width: 42px;
+            height: 42px;
+            border-radius: var(--radius-md);
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--cyan-accent);
+        }
+
+        .fleet-details h3 {
+            font-family: var(--font-mono);
             font-size: 0.95rem;
             font-weight: 700;
-            margin-bottom: 0.3rem;
-        }
-
-        .route-stops {
+            color: #ffffff;
             display: flex;
-            gap: 0;
             align-items: center;
-            flex-wrap: wrap;
-            margin-top: 0.5rem;
+            gap: 0.5rem;
         }
 
-        .stop {
+        .route-subtext {
             font-size: 0.78rem;
-            color: var(--text-light);
+            color: var(--text-secondary);
+            margin-top: 2px;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
         }
 
-        .stop-arrow {
-            color: var(--primary);
-            margin: 0 0.3rem;
-            font-size: 0.78rem;
+        .driver-subtext {
+            font-size: 0.72rem;
+            color: var(--text-tertiary);
+            margin-top: 2px;
         }
 
-        .route-meta {
-            font-size: 0.8rem;
-            color: var(--text-light);
-            margin-top: 0.35rem;
+        .fleet-metrics-right {
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.35rem;
         }
 
-        .complaint-form {
-            padding: 1.25rem;
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.25rem 0.65rem;
+            border-radius: var(--radius-full);
+            font-size: 0.72rem;
+            font-family: var(--font-mono);
+            font-weight: 600;
         }
 
-        .cf-group {
+        .status-pill.moving {
+            background: rgba(16, 185, 129, 0.12);
+            color: var(--emerald-bright);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .status-pill.stopped {
+            background: rgba(244, 63, 94, 0.12);
+            color: var(--rose-danger);
+            border: 1px solid rgba(244, 63, 94, 0.3);
+        }
+
+        .status-pill.arrived {
+            background: rgba(245, 158, 11, 0.12);
+            color: var(--amber-warn);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .capacity-bar-wrap {
+            width: 80px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+            margin-top: 4px;
+        }
+
+        .capacity-bar-fill {
+            height: 100%;
+            border-radius: var(--radius-full);
+            background: var(--cyan-accent);
+            transition: width 0.4s ease;
+        }
+
+        .capacity-bar-fill.high {
+            background: var(--rose-danger);
+        }
+        .capacity-bar-fill.medium {
+            background: var(--amber-warn);
+        }
+
+        /* Routes & Stations Tab */
+        .routes-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.25rem;
+        }
+
+        .route-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .route-card:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .route-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             margin-bottom: 1rem;
         }
 
-        .cf-group label {
-            display: block;
-            font-size: 0.84rem;
-            font-weight: 600;
-            color: var(--text-light);
-            margin-bottom: 0.35rem;
+        .route-tag {
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            padding: 0.25rem 0.65rem;
+            background: rgba(6, 182, 212, 0.12);
+            color: var(--cyan-accent);
+            border-radius: var(--radius-full);
+            border: 1px solid rgba(6, 182, 212, 0.3);
         }
 
-        .cf-group input,
-        .cf-group textarea,
-        .cf-group select {
-            width: 100%;
-            padding: 0.7rem 0.9rem;
-            background: #0f172a;
-            border: 2px solid var(--border);
-            border-radius: 0.75rem;
-            color: var(--text);
-            font-family: inherit;
-            font-size: 0.9rem;
-            outline: none;
-            transition: border 0.3s;
+        .route-stops-timeline {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin: 1.25rem 0;
+            padding: 0.85rem;
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-subtle);
         }
 
-        .cf-group input:focus,
-        .cf-group textarea:focus,
-        .cf-group select:focus {
-            border-color: var(--primary);
+        .route-node-pill {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.25rem 0.6rem;
+            border-radius: var(--radius-sm);
         }
 
-        .submit-complaint {
-            width: 100%;
-            padding: 0.8rem;
-            background: linear-gradient(135deg, #4facfe, #00f2fe);
-            color: #0f172a;
-            border: none;
-            border-radius: 0.75rem;
-            font-weight: 800;
-            font-family: inherit;
-            cursor: pointer;
-            font-size: 0.95rem;
-            transition: all 0.3s;
+        .route-arrow {
+            color: var(--cyan-accent);
+            font-size: 0.75rem;
         }
 
-        .submit-complaint:hover {
-            filter: brightness(1.1);
-        }
-
-        .complaints-wrap {
-            padding: 0.75rem 0;
-        }
-
-        .complaint-card {
-            padding: 1rem 1.25rem;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .complaint-card .meta {
+        .route-meta-strip {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
             font-size: 0.8rem;
-            color: var(--text-light);
-            margin-bottom: 0.4rem;
+            color: var(--text-secondary);
+            font-family: var(--font-mono);
+            border-top: 1px solid var(--border-subtle);
+            padding-top: 0.85rem;
         }
 
-        .complaint-card .msg {
-            font-size: 0.9rem;
+        /* Dynamic Fare Calculator Tab */
+        .calculator-layout {
+            max-width: 680px;
+            margin: 0 auto;
         }
 
-        .toast {
+        .form-row {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-row label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            margin-bottom: 0.45rem;
+        }
+
+        .custom-select, .custom-input, .custom-textarea {
+            width: 100%;
+            background: var(--bg-surface-elevated);
+            border: 1px solid var(--border-subtle);
+            color: #ffffff;
+            font-family: var(--font-body);
+            font-size: 0.92rem;
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-md);
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .custom-select:focus, .custom-input:focus, .custom-textarea:focus {
+            border-color: var(--cyan-accent);
+            box-shadow: 0 0 12px rgba(6, 182, 212, 0.2);
+        }
+
+        .primary-action-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--cyan-accent), #0284c7);
+            color: #07090e;
+            border: none;
+            padding: 0.85rem 1.5rem;
+            border-radius: var(--radius-md);
+            font-family: var(--font-display);
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .primary-action-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 22px rgba(6, 182, 212, 0.45);
+        }
+
+        .fare-result-display {
+            margin-top: 1.5rem;
+            padding: 1.75rem;
+            background: rgba(16, 185, 129, 0.06);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: var(--radius-lg);
+            text-align: center;
+            display: none;
+        }
+
+        .fare-amount-huge {
+            font-family: var(--font-mono);
+            font-size: 3.2rem;
+            font-weight: 800;
+            color: var(--emerald-bright);
+            line-height: 1;
+            margin: 0.5rem 0;
+        }
+
+        /* Complaints Tab */
+        .complaints-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 1.5rem;
+        }
+
+        .complaints-stream {
+            max-height: 480px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+            padding: 1.25rem;
+        }
+
+        .complaint-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 1rem 1.2rem;
+        }
+
+        .complaint-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            font-family: var(--font-mono);
+            margin-bottom: 0.45rem;
+        }
+
+        .complaint-body {
+            font-size: 0.88rem;
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+
+        /* Toast notifications */
+        .toast-notif {
             position: fixed;
             bottom: 2rem;
             right: 2rem;
-            background: #1e293b;
-            color: white;
-            padding: 0.875rem 1.5rem;
-            border-radius: 1rem;
-            border: 1px solid var(--border);
-            font-weight: 600;
-            transform: translateY(100px);
+            background: var(--bg-surface-elevated);
+            color: #ffffff;
+            border: 1px solid var(--border-highlight);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border-radius: var(--radius-md);
+            padding: 0.9rem 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.88rem;
+            font-weight: 500;
+            transform: translateY(120%);
             opacity: 0;
-            transition: all 0.4s;
-            z-index: 999;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 1000;
         }
 
-        .toast.show {
+        .toast-notif.active {
             transform: translateY(0);
             opacity: 1;
         }
 
-        .page {
-            display: none;
+        /* Responsive Breakpoints */
+        @media (max-width: 1024px) {
+            .telematics-grid {
+                grid-template-columns: 1fr;
+            }
+            .kpi-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .complaints-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
-        .page.active {
-            display: block;
+        @media (max-width: 640px) {
+            header {
+                padding: 0.75rem 1rem;
+            }
+            .subnav-bar {
+                padding: 0.75rem 1rem;
+            }
+            .workspace {
+                padding: 0 1rem 2rem;
+            }
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+            .routes-grid {
+                grid-template-columns: 1fr;
+            }
+            .map-container {
+                height: 360px;
+            }
         }
     </style>
 </head>
-
 <body>
+
+    <!-- Header Navigation -->
     <header>
-        <h1>🚌 Hawassa Transport Tracking System</h1>
-        <div class="live-indicator">
-            <div class="live-dot"></div>LIVE &nbsp;|&nbsp; <span id="clockDisplay"></span>
+        <div class="header-left">
+            <a href="../index.html" class="brand">
+                <div class="brand-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="3" width="20" height="14" rx="2"/>
+                        <line x1="8" y1="21" x2="16" y2="21"/>
+                        <line x1="12" y1="17" x2="12" y2="21"/>
+                        <circle cx="7" cy="14" r="1"/>
+                        <circle cx="17" cy="14" r="1"/>
+                    </svg>
+                </div>
+                <div class="brand-text">
+                    <h1>Hawassa Transit Ops</h1>
+                    <p>Municipal Telematics Control</p>
+                </div>
+            </a>
+            <a href="../index.html" class="back-pill">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back to Portfolio
+            </a>
+        </div>
+
+        <div class="header-status">
+            <div class="telemetry-ping">
+                <div class="pulse-dot"></div>
+                <span>TELEMETRY LIVE</span>
+            </div>
+            <div class="clock-badge">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                </svg>
+                <span id="liveClock">--:--:--</span>
+            </div>
         </div>
     </header>
-    <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('dashboard',this)">📊 Dashboard</button>
-        <button class="tab-btn" onclick="switchTab('routes',this)">🗺️ Routes</button>
-        <button class="tab-btn" onclick="switchTab('complaint',this)">📝 Complaints</button>
-        <button class="tab-btn" onclick="switchTab('fare',this)">💰 Calculator</button>
+
+    <!-- Subnav & Telemetry Stream Bar -->
+    <div class="subnav-bar">
+        <div class="tabs-group">
+            <button class="tab-btn active" onclick="switchView('dashboard', this)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7"/>
+                    <rect x="14" y="3" width="7" height="7"/>
+                    <rect x="14" y="14" width="7" height="7"/>
+                    <rect x="3" y="14" width="7" height="7"/>
+                </svg>
+                Live Fleet Radar
+            </button>
+            <button class="tab-btn" onclick="switchView('routes', this)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="6" cy="19" r="3"/>
+                    <path d="M9 19h8.5a4.5 4.5 0 0 0 0-9H7a3 3 0 0 1 0-6h11"/>
+                    <circle cx="18" cy="4" r="3"/>
+                </svg>
+                Transit Corridors
+            </button>
+            <button class="tab-btn" onclick="switchView('fare', this)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="1" x2="12" y2="23"/>
+                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                </svg>
+                Fare Calculator
+            </button>
+            <button class="tab-btn" onclick="switchView('complaints', this)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                </svg>
+                Incident Dispatch
+            </button>
+        </div>
+
+        <div class="quick-metrics">
+            <div>GPS SATELLITES: <span>18 LOCKED</span></div>
+            <div>AVG SPEED: <span>24.5 KM/H</span></div>
+            <div>ON-TIME RATE: <span>94.2%</span></div>
+        </div>
     </div>
 
-    <div class="main">
-        <!-- DASHBOARD -->
-        <div id="page-dashboard" class="page active">
-            <div class="stats-row" id="statsRow"></div>
-            <div class="grid2">
-                <div class="panel">
-                    <div class="panel-head">🚌 Active Buses <span id="busCountBadge"
-                            style="font-size:0.8rem;color:var(--text-light);font-weight:500"></span></div>
-                    <div class="bus-list" id="busList"></div>
+    <!-- Workspace Container -->
+    <main class="workspace">
+
+        <!-- KPI SUMMARY CARDS -->
+        <section class="kpi-grid">
+            <div class="kpi-card" style="--card-accent: var(--cyan-accent);">
+                <div class="kpi-top">
+                    <span class="kpi-label">Active Fleet Units</span>
+                    <div class="kpi-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="3" width="20" height="14" rx="2"/>
+                            <line x1="8" y1="21" x2="16" y2="21"/>
+                            <circle cx="7" cy="14" r="1"/>
+                            <circle cx="17" cy="14" r="1"/>
+                        </svg>
+                    </div>
                 </div>
-                <div class="panel">
-                    <div class="panel-head">🗺️ Live Map</div>
-                    <div class="map-wrap" id="mapWrap">
-                        <div class="map-grid-lines"></div>
-                        <div class="city-label" style="top:5%;left:5%">Hawassa University</div>
-                        <div class="city-label" style="top:50%;left:60%">City Center</div>
-                        <div class="city-label" style="top:80%;left:30%">Lake Hawassa</div>
-                        <div class="city-label" style="top:20%;left:70%">Tabor Hill</div>
+                <div class="kpi-val" id="kpiTotalBuses">5</div>
+                <div class="kpi-footer">100% telemetry online</div>
+            </div>
+
+            <div class="kpi-card" style="--card-accent: var(--emerald-bright);">
+                <div class="kpi-top">
+                    <span class="kpi-label">In-Transit Moving</span>
+                    <div class="kpi-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="5 3 19 12 5 21 5 3"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="kpi-val" id="kpiMovingBuses" style="color: var(--emerald-bright)">3</div>
+                <div class="kpi-footer positive">Optimal traffic flow</div>
+            </div>
+
+            <div class="kpi-card" style="--card-accent: var(--rose-danger);">
+                <div class="kpi-top">
+                    <span class="kpi-label">Holding / Terminal</span>
+                    <div class="kpi-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="6" y="4" width="4" height="16"/>
+                            <rect x="14" y="4" width="4" height="16"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="kpi-val" id="kpiHoldingBuses" style="color: var(--rose-danger)">2</div>
+                <div class="kpi-footer">Scheduled boarding</div>
+            </div>
+
+            <div class="kpi-card" style="--card-accent: #a855f7;">
+                <div class="kpi-top">
+                    <span class="kpi-label">Total Passengers</span>
+                    <div class="kpi-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="kpi-val" id="kpiPassengers">108</div>
+                <div class="kpi-footer">61% average capacity</div>
+            </div>
+        </section>
+
+        <!-- DASHBOARD VIEW -->
+        <div id="view-dashboard" class="view-panel">
+            <div class="telematics-grid">
+                <!-- Live Map -->
+                <div class="glass-panel">
+                    <div class="panel-header">
+                        <div class="panel-title">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/>
+                                <line x1="8" y1="2" x2="8" y2="18"/>
+                                <line x1="16" y1="6" x2="16" y2="22"/>
+                            </svg>
+                            Hawassa Municipal Satellite Radar
+                        </div>
+                        <div class="filter-pills">
+                            <button class="filter-btn active" onclick="filterBuses('all', this)">All</button>
+                            <button class="filter-btn" onclick="filterBuses('moving', this)">Moving</button>
+                            <button class="filter-btn" onclick="filterBuses('stopped', this)">Stopped</button>
+                        </div>
+                    </div>
+                    <div class="map-container" id="radarMap">
+                        <div class="map-grid-mesh"></div>
+                        <div class="map-radar-sweep"></div>
+                        
+                        <!-- Simulated Roads -->
+                        <div class="road-vector" style="top: 25%; left: 8%; width: 84%; height: 3px;"></div>
+                        <div class="road-vector" style="top: 60%; left: 12%; width: 76%; height: 3px;"></div>
+                        <div class="road-vector" style="top: 15%; left: 45%; width: 3px; height: 75%;"></div>
+                        <div class="road-vector" style="top: 20%; left: 75%; width: 3px; height: 60%;"></div>
+
+                        <!-- Fixed Transit Stations -->
+                        <div class="station-node" style="top: 22%; left: 12%;" onclick="showToast('Station: Hawassa University Central Gate')">
+                            <div class="station-pin"></div>
+                            <span class="station-label">Hawassa Univ Gate</span>
+                        </div>
+                        <div class="station-node" style="top: 25%; left: 45%;" onclick="showToast('Station: Piazza Commercial Corridor')">
+                            <div class="station-pin"></div>
+                            <span class="station-label">Piazza Hub</span>
+                        </div>
+                        <div class="station-node" style="top: 60%; left: 75%;" onclick="showToast('Station: Hawassa Lake Resort & Park')">
+                            <div class="station-pin"></div>
+                            <span class="station-label">Lake Hawassa</span>
+                        </div>
+                        <div class="station-node" style="top: 75%; left: 32%;" onclick="showToast('Station: Atote Grand Terminal')">
+                            <div class="station-pin"></div>
+                            <span class="station-label">Atote Terminal</span>
+                        </div>
+                        <div class="station-node" style="top: 18%; left: 80%;" onclick="showToast('Station: Tabor Hill Panoramic Station')">
+                            <div class="station-pin"></div>
+                            <span class="station-label">Tabor Junction</span>
+                        </div>
+
+                        <!-- Dynamic Bus Markers will be rendered here by JS -->
+                        <div id="dynamicBusMarkers"></div>
+                    </div>
+                </div>
+
+                <!-- Bus Telemetry Feed -->
+                <div class="glass-panel">
+                    <div class="panel-header">
+                        <div class="panel-title">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <line x1="2" y1="12" x2="22" y2="12"/>
+                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                            </svg>
+                            Fleet Telemetry Stream
+                        </div>
+                        <span id="fleetCountBadge" style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-tertiary);">5 UNITS MONITORED</span>
+                    </div>
+                    <div class="fleet-list" id="fleetItemsContainer">
+                        <!-- Populated by JS -->
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- ROUTES -->
-        <div id="page-routes" class="page">
-            <div class="panel">
-                <div class="panel-head">🗺️ All Routes</div>
-                <div class="route-list" id="routeList"></div>
+        <!-- TRANSIT CORRIDORS VIEW -->
+        <div id="view-routes" class="view-panel" style="display: none;">
+            <div class="routes-grid" id="routesListContainer">
+                <!-- Populated by JS -->
             </div>
         </div>
 
-        <!-- COMPLAINTS -->
-        <div id="page-complaint" class="page">
-            <div class="grid2">
-                <div class="panel">
-                    <div class="panel-head">📝 Submit Complaint</div>
-                    <div class="complaint-form">
-                        <div class="cf-group"><label>Your Name</label><input type="text" id="cName"
-                                placeholder="Optional"></div>
-                        <div class="cf-group"><label>Bus Plate Number</label>
-                            <select id="cPlate">
-                                <option value="">-- Select Bus --</option>
+        <!-- FARE CALCULATOR VIEW -->
+        <div id="view-fare" class="view-panel" style="display: none;">
+            <div class="glass-panel calculator-layout">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="4" width="20" height="16" rx="2"/>
+                            <line x1="6" y1="8" x2="6" y2="8"/>
+                            <line x1="10" y1="8" x2="10" y2="8"/>
+                            <line x1="14" y1="8" x2="14" y2="8"/>
+                        </svg>
+                        Official Municipal Distance Tariff Estimator
+                    </div>
+                </div>
+                <div style="padding: 1.75rem;">
+                    <div class="form-row">
+                        <label>Transit Corridor</label>
+                        <select id="fareRouteSelect" class="custom-select" onchange="onFareRouteChanged()">
+                            <option value="">-- Choose Corridor --</option>
+                        </select>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-row">
+                            <label>Origin Stop</label>
+                            <select id="fareFromStop" class="custom-select">
+                                <option value="">-- Select Origin --</option>
                             </select>
                         </div>
-                        <div class="cf-group"><label>Message *</label><textarea id="cMsg" rows="4"
-                                placeholder="Describe the issue..."></textarea></div>
-                        <button class="submit-complaint" onclick="submitComplaint()">Submit Complaint</button>
+                        <div class="form-row">
+                            <label>Destination Stop</label>
+                            <select id="fareToStop" class="custom-select">
+                                <option value="">-- Select Destination --</option>
+                            </select>
+                        </div>
                     </div>
-                </div>
-                <div class="panel">
-                    <div class="panel-head">📋 Recent Complaints</div>
-                    <div class="complaints-wrap" id="complaintsList"></div>
+
+                    <button class="primary-action-btn" onclick="computeFareEstimate()">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="m9 12 2 2 4-4"/>
+                        </svg>
+                        Compute Regulated Fare
+                    </button>
+
+                    <div id="fareComputationOutput" class="fare-result-display">
+                        <div style="font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-secondary); font-weight: 600;">
+                            Estimated Fare Tariff
+                        </div>
+                        <div class="fare-amount-huge"><span id="computedFareValue">0</span> <span style="font-size: 1.25rem; font-weight: 600;">ETB</span></div>
+                        <div id="computedFareDistance" style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--emerald-bright);"></div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- FARE CALCULATOR -->
-        <div id="page-fare" class="page">
-            <div class="panel" style="max-width:600px; margin:0 auto;">
-                <div class="panel-head">💰 Calculate Route Fare</div>
-                <div class="complaint-form">
-                    <div class="cf-group"><label>Select Route</label>
-                        <select id="fRoute" onchange="updateStops()"><option value="">-- Choose Route --</option></select>
+        <!-- INCIDENT DISPATCH TAB -->
+        <div id="view-complaints" class="view-panel" style="display: none;">
+            <div class="complaints-grid">
+                <!-- Complaint Form -->
+                <div class="glass-panel">
+                    <div class="panel-header">
+                        <div class="panel-title">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14 2 14 8 20 8"/>
+                                <line x1="16" y1="13" x2="8" y2="13"/>
+                                <line x1="16" y1="17" x2="8" y2="17"/>
+                                <polyline points="10 9 9 9 8 9"/>
+                            </svg>
+                            File Incident or Feedback
+                        </div>
                     </div>
-                    <div class="cf-group"><label>From Stop</label>
-                        <select id="fFrom"><option value="">-- Choose Stop --</option></select>
+                    <div style="padding: 1.5rem;">
+                        <div class="form-row">
+                            <label>Passenger Name / Handle</label>
+                            <input type="text" id="incidentName" class="custom-input" placeholder="e.g. Dawit T. or Anonymous">
+                        </div>
+                        <div class="form-row">
+                            <label>Bus Unit License Plate</label>
+                            <select id="incidentBusPlate" class="custom-select">
+                                <option value="">-- Select Bus Unit --</option>
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <label>Incident Details *</label>
+                            <textarea id="incidentMessage" class="custom-textarea" rows="4" placeholder="Detail the event, driver conduct, delay, or lost item..."></textarea>
+                        </div>
+                        <button class="primary-action-btn" onclick="submitPassengerIncident()">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="22" y1="2" x2="11" y2="13"/>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                            </svg>
+                            Dispatch Incident Log
+                        </button>
                     </div>
-                    <div class="cf-group"><label>To Stop</label>
-                        <select id="fTo"><option value="">-- Choose Stop --</option></select>
+                </div>
+
+                <!-- Recent Incident Feed -->
+                <div class="glass-panel">
+                    <div class="panel-header">
+                        <div class="panel-title">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                                <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                            </svg>
+                            Municipal Incident Dispatch Log
+                        </div>
+                        <span id="incidentCountBadge" style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-tertiary);">2 LOGS</span>
                     </div>
-                    <button class="submit-complaint" onclick="calculateFare()">Calculate Fare</button>
-                    
-                    <div id="fareResult" style="margin-top:2rem; text-align:center; display:none;">
-                        <h3 style="color:var(--text-light); margin-bottom:0.5rem;">Estimated Cost</h3>
-                        <div style="font-size:3rem; font-weight:800; color:#48bb78;"><span id="fareAmount">0</span> <span style="font-size:1.5rem;">ETB</span></div>
-                        <p style="color:var(--text-light); margin-top:0.5rem;" id="fareDistance"></p>
+                    <div class="complaints-stream" id="incidentsContainer">
+                        <!-- Populated by JS -->
                     </div>
                 </div>
             </div>
         </div>
+
+    </main>
+
+    <!-- Global Toast Feedback -->
+    <div class="toast-notif" id="toastBox">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--cyan-accent)" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+        <span id="toastMsg">Operation successful</span>
     </div>
 
-    <div class="toast" id="toast"></div>
-
     <script>
-        const API = 'http://localhost:3004/api';
-        let buses = [];
-        let allRoutes = [];
+        // Data Structures
+        const corridors = [
+            { id: 1, name: 'Corridor 1 (Red Line)', from: 'Piazza Central', to: 'Hawassa University', stops: ['Piazza Central', 'Atote Terminal', 'Tabor Junction', 'Hawassa University'], distance: 5.2, fare: 10 },
+            { id: 2, name: 'Corridor 2 (Blue Line)', from: 'Bus Station', to: 'Lake Resort Hub', stops: ['Bus Station', 'City Center', 'Lake Resort Hub'], distance: 3.8, fare: 8 },
+            { id: 3, name: 'Corridor 3 (Green Line)', from: 'General Hospital', to: 'Grand Market', stops: ['General Hospital', 'Tula District', 'Grand Market'], distance: 6.5, fare: 12 },
+            { id: 4, name: 'Corridor 4 (Gold Express)', from: 'Airport Terminal', to: 'City Center Plaza', stops: ['Airport Terminal', 'Industrial Park', 'City Center Plaza'], distance: 15.0, fare: 25 },
+        ];
 
-        function statusClass(s) { return s === 'moving' ? 's-moving' : s === 'arrived' ? 's-arrived' : 's-stopped'; }
-        function statusLabel(s) { return s === 'moving' ? '🟢 Moving' : s === 'arrived' ? '🟡 Arrived' : '🔴 Stopped'; }
+        let fleet = [
+            { id: 1, plateNumber: 'HWA-1234', routeId: 1, route: corridors[0], driver: 'Abebe Girma', capacity: 30, passengers: 21, status: 'moving', speed: 28, eta: 5, lat: 25, lng: 30, currentStop: 'Atote Terminal' },
+            { id: 2, plateNumber: 'HWA-5678', routeId: 1, route: corridors[0], driver: 'Bekele Tadesse', capacity: 30, passengers: 29, status: 'stopped', speed: 0, eta: 12, lat: 45, lng: 50, currentStop: 'Tabor Junction' },
+            { id: 3, plateNumber: 'HWA-9012', routeId: 2, route: corridors[1], driver: 'Tadesse Mamo', capacity: 45, passengers: 17, status: 'moving', speed: 32, eta: 7, lat: 70, lng: 65, currentStop: 'City Center' },
+            { id: 4, plateNumber: 'HWA-3456', routeId: 3, route: corridors[2], driver: 'Girma Wolde', capacity: 30, passengers: 6, status: 'arrived', speed: 0, eta: 0, lat: 80, lng: 35, currentStop: 'Grand Market' },
+            { id: 5, plateNumber: 'HWA-7890', routeId: 4, route: corridors[3], driver: 'Dawit Solomon', capacity: 50, passengers: 44, status: 'moving', speed: 41, eta: 18, lat: 15, lng: 78, currentStop: 'Industrial Park' },
+        ];
 
-        async function loadBuses() {
-            try {
-                const res = await fetch(`${API}/buses`);
-                buses = await res.json();
-                renderStats();
-                renderBusList();
-                renderMap();
-                populateBusDropdown();
-            } catch (e) {
-                document.getElementById('busList').innerHTML = '<p style="padding:1.5rem;color:var(--text-light)">⚠️ Cannot connect. Make sure server is running on port 3004.</p>';
-            }
+        let incidents = [
+            { id: 1, name: 'Selamawit B.', busPlate: 'HWA-1234', message: 'Vehicle cabin is spotlessly clean, but experienced mild 4-minute delay near Atote junction.', time: '10:45 AM' },
+            { id: 2, name: 'Anonymous Passenger', busPlate: 'HWA-5678', message: 'Driver observed safe following distance; requested air ventilation adjusted.', time: '09:15 AM' }
+        ];
+
+        let currentFilter = 'all';
+
+        // Realtime Clock
+        function updateLiveClock() {
+            const now = new Date();
+            document.getElementById('liveClock').textContent = now.toLocaleTimeString('en-US', { hour12: false });
+        }
+        setInterval(updateLiveClock, 1000);
+        updateLiveClock();
+
+        // View Switching
+        function switchView(viewName, btn) {
+            document.querySelectorAll('.view-panel').forEach(v => v.style.display = 'none');
+            const target = document.getElementById(`view-${viewName}`);
+            if (target) target.style.display = 'block';
+
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+
+            if (viewName === 'routes') renderRoutes();
+            if (viewName === 'fare') initFareOptions();
+            if (viewName === 'complaints') renderIncidents();
         }
 
-        function renderStats() {
-            const moving = buses.filter(b => b.status === 'moving').length;
-            const stopped = buses.filter(b => b.status === 'stopped').length;
-            const totalPass = buses.reduce((a, b) => a + b.passengers, 0);
-            document.getElementById('statsRow').innerHTML = `
-            <div class="stat"><div class="val">${buses.length}</div><div class="lbl">Total Buses</div></div>
-            <div class="stat"><div class="val" style="color:var(--success)">${moving}</div><div class="lbl">🟢 Moving</div></div>
-            <div class="stat"><div class="val" style="color:var(--danger)">${stopped}</div><div class="lbl">🔴 Stopped</div></div>
-            <div class="stat"><div class="val">${totalPass}</div><div class="lbl">Total Passengers</div></div>
-        `;
-            document.getElementById('busCountBadge').textContent = buses.length + ' buses';
+        // Filter Buses
+        function filterBuses(filter, btn) {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderFleetList();
+            renderMapMarkers();
         }
 
-        function renderBusList() {
-            document.getElementById('busList').innerHTML = buses.map(b => {
+        // Render KPI & Summary
+        function renderKpis() {
+            const moving = fleet.filter(b => b.status === 'moving').length;
+            const holding = fleet.filter(b => b.status !== 'moving').length;
+            const totalPass = fleet.reduce((acc, b) => acc + b.passengers, 0);
+
+            document.getElementById('kpiTotalBuses').textContent = fleet.length;
+            document.getElementById('kpiMovingBuses').textContent = moving;
+            document.getElementById('kpiHoldingBuses').textContent = holding;
+            document.getElementById('kpiPassengers').textContent = totalPass;
+            document.getElementById('fleetCountBadge').textContent = `${fleet.length} UNITS MONITORED`;
+        }
+
+        // Render Fleet List
+        function renderFleetList() {
+            const container = document.getElementById('fleetItemsContainer');
+            const filtered = currentFilter === 'all' 
+                ? fleet 
+                : fleet.filter(b => b.status === currentFilter);
+
+            container.innerHTML = filtered.map(b => {
                 const pct = Math.round((b.passengers / b.capacity) * 100);
-                return `<div class="bus-item">
-                <div style="font-size:1.8rem">🚌</div>
-                <div class="bus-item-left">
-                    <div class="bus-plate">${b.plateNumber}</div>
-                    <div class="bus-route">${b.route?.from} → ${b.route?.to}</div>
-                    <div class="bus-driver">👤 ${b.driver} | 📍 ${b.currentStop}</div>
-                </div>
-                <div class="bus-right">
-                    <span class="status-badge ${statusClass(b.status)}">${statusLabel(b.status)}</span>
-                    <div class="eta-text">ETA: ~${b.eta} min</div>
-                    <div class="pass-bar"><div class="pass-fill" style="width:${pct}%"></div></div>
-                    <div style="font-size:0.72rem;color:var(--text-light)">${b.passengers}/${b.capacity}</div>
-                </div>
-            </div>`;
+                const barClass = pct > 85 ? 'high' : pct > 60 ? 'medium' : '';
+                const statusLabel = b.status === 'moving' ? 'IN TRANSIT' : b.status === 'arrived' ? 'AT TERMINAL' : 'STOPPED';
+
+                return `
+                    <div class="fleet-item" onclick="focusBusOnMap(${b.id})">
+                        <div class="fleet-item-info">
+                            <div class="fleet-bus-badge">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="2" y="3" width="20" height="14" rx="2"/>
+                                    <line x1="8" y1="21" x2="16" y2="21"/>
+                                    <circle cx="7" cy="14" r="1"/>
+                                    <circle cx="17" cy="14" r="1"/>
+                                </svg>
+                            </div>
+                            <div class="fleet-details">
+                                <h3>${b.plateNumber} <span style="font-size:0.75rem; color:var(--text-secondary); font-weight:400;">(${b.speed} km/h)</span></h3>
+                                <div class="route-subtext">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a8 8 0 0 0-8 8c0 5 8 12 8 12s8-7 8-12a8 8 0 0 0-8-8z"/><circle cx="12" cy="10" r="3"/></svg>
+                                    ${b.route?.from} → ${b.route?.to}
+                                </div>
+                                <div class="driver-subtext">Operator: ${b.driver} &bull; Next: ${b.currentStop}</div>
+                            </div>
+                        </div>
+                        <div class="fleet-metrics-right">
+                            <span class="status-pill ${b.status}">${statusLabel}</span>
+                            <div style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-tertiary);">
+                                ETA: ~${b.eta}m &bull; ${b.passengers}/${b.capacity} pax
+                            </div>
+                            <div class="capacity-bar-wrap">
+                                <div class="capacity-bar-fill ${barClass}" style="width: ${pct}%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
             }).join('');
         }
 
-        function renderMap() {
-            const wrap = document.getElementById('mapWrap');
-            wrap.querySelectorAll('.bus-dot').forEach(d => d.remove());
-            buses.forEach(b => {
-                const dot = document.createElement('div');
-                dot.className = 'bus-dot';
-                dot.style.left = b.lat + '%';
-                dot.style.top = b.lng + '%';
-                dot.innerHTML = `🚌<div class="bus-tooltip">${b.plateNumber}<br>👤 ${b.driver}<br>⏱️ ~${b.eta} min ETA<br>👥 ${b.passengers}/${b.capacity}</div>`;
-                wrap.appendChild(dot);
-            });
+        // Render Map Markers
+        function renderMapMarkers() {
+            const container = document.getElementById('dynamicBusMarkers');
+            const filtered = currentFilter === 'all' 
+                ? fleet 
+                : fleet.filter(b => b.status === currentFilter);
+
+            container.innerHTML = filtered.map(b => `
+                <div class="bus-marker" id="marker-${b.id}" style="left: ${b.lat}%; top: ${b.lng}%;" onclick="showToast('${b.plateNumber} (${b.driver}) &bull; ${b.currentStop}')">
+                    <div class="bus-beacon ${b.status}">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="3" width="20" height="14" rx="2"/>
+                            <circle cx="7" cy="14" r="1"/>
+                            <circle cx="17" cy="14" r="1"/>
+                        </svg>
+                    </div>
+                    <div class="bus-map-tooltip">
+                        <h4>${b.plateNumber} &bull; ${b.speed} km/h</h4>
+                        <p>${b.route?.name} &bull; Next: ${b.currentStop}</p>
+                        <p style="color:var(--cyan-accent); margin-top:2px;">${b.passengers}/${b.capacity} passengers &bull; ETA: ~${b.eta}m</p>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        async function loadRoutes() {
-            try {
-                const res = await fetch(`${API}/routes`);
-                allRoutes = await res.json();
-                document.getElementById('routeList').innerHTML = allRoutes.map(r => `
-                <div class="route-item">
-                    <h4>${r.name}: ${r.from} → ${r.to}</h4>
-                    <div class="route-meta">📏 ${r.distance} km &nbsp;|&nbsp; 💰 ${r.fare} ETB &nbsp;|&nbsp; 🚌 ${buses.filter(b => b.routeId === r.id).length} buses</div>
-                    <div class="route-stops">${r.stops.map((s, i) => `<span class="stop">${s}</span>${i < r.stops.length - 1 ? '<span class="stop-arrow">→</span>' : ''}`).join('')}</div>
-                </div>`).join('');
-                document.getElementById('fRoute').innerHTML = '<option value="">-- Choose Route --</option>' + allRoutes.map(r => `<option value="${r.id}">${r.name} (${r.from} - ${r.to})</option>`).join('');
-            } catch (e) { }
-        }
-
-        function populateBusDropdown() {
-            document.getElementById('cPlate').innerHTML = '<option value="">-- Select Bus --</option>' +
-                buses.map(b => `<option value="${b.plateNumber}">${b.plateNumber} (${b.route?.name || ''})</option>`).join('');
-        }
-
-        async function loadComplaints() {
-            try {
-                const res = await fetch(`${API}/complaints`);
-                const complaints = await res.json();
-                document.getElementById('complaintsList').innerHTML = complaints.length === 0
-                    ? '<p style="padding:1.5rem;color:var(--text-light)">No complaints yet.</p>'
-                    : complaints.slice().reverse().map(c => `
-                    <div class="complaint-card">
-                        <div class="meta">👤 ${c.name} | 🚌 ${c.busPlate} | ${new Date(c.createdAt).toLocaleString()}</div>
-                        <div class="msg">${c.message}</div>
-                    </div>`).join('');
-            } catch (e) { }
-        }
-
-        async function submitComplaint() {
-            const name = document.getElementById('cName').value.trim();
-            const busPlate = document.getElementById('cPlate').value;
-            const message = document.getElementById('cMsg').value.trim();
-            if (!message) { showToast('⚠️ Please enter a message!'); return; }
-            try {
-                const res = await fetch(`${API}/complaints`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, busPlate, message }) });
-                if (res.ok) {
-                    document.getElementById('cName').value = '';
-                    document.getElementById('cMsg').value = '';
-                    document.getElementById('cPlate').value = '';
-                    loadComplaints();
-                    showToast('✅ Complaint submitted!');
-                }
-            } catch (e) { showToast('❌ Server error'); }
-        }
-
-        function updateStops() {
-            const rid = parseInt(document.getElementById('fRoute').value);
-            const route = allRoutes.find(r => r.id === rid);
-            if(route) {
-                const opts = '<option value="">-- Choose Stop --</option>' + route.stops.map((s,i) => `<option value="${i}">${s}</option>`).join('');
-                document.getElementById('fFrom').innerHTML = opts;
-                document.getElementById('fTo').innerHTML = opts;
-                document.getElementById('fareResult').style.display='none';
+        // Focus Bus on Map
+        function focusBusOnMap(id) {
+            const bus = fleet.find(b => b.id === id);
+            if (!bus) return;
+            showToast(`Tracking Unit ${bus.plateNumber}: ${bus.currentStop} (~${bus.eta} min ETA)`);
+            const marker = document.getElementById(`marker-${id}`);
+            if (marker) {
+                marker.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
         }
 
-        function calculateFare() {
-            const rid = parseInt(document.getElementById('fRoute').value);
-            const fromIdx = parseInt(document.getElementById('fFrom').value);
-            const toIdx = parseInt(document.getElementById('fTo').value);
-            if(isNaN(rid) || isNaN(fromIdx) || isNaN(toIdx)) { showToast('⚠️ Please select route and stops'); return; }
-            if(fromIdx === toIdx) { showToast('⚠️ Stops must be different'); return; }
-            const route = allRoutes.find(r => r.id === rid);
-            const stopsDiff = Math.abs(toIdx - fromIdx);
-            const totalStops = route.stops.length - 1;
-            const ratio = stopsDiff / totalStops;
-            const estimatedFare = Math.max(5, Math.ceil(route.fare * ratio));
-            const estimatedDist = (route.distance * ratio).toFixed(1);
-            
-            document.getElementById('fareAmount').textContent = estimatedFare;
-            document.getElementById('fareDistance').textContent = `Distance: ~${estimatedDist} km`;
-            document.getElementById('fareResult').style.display = 'block';
+        // Simulated GPS Movement & Passenger Variance
+        function simulateTelematicsTick() {
+            fleet.forEach(b => {
+                if (b.status === 'moving') {
+                    // Small natural movement delta
+                    b.lat += (Math.random() - 0.5) * 3;
+                    b.lng += (Math.random() - 0.5) * 3;
+                    // Keep clamped inside map bounds
+                    if (b.lat < 8) b.lat = 8;
+                    if (b.lat > 92) b.lat = 92;
+                    if (b.lng < 12) b.lng = 12;
+                    if (b.lng > 88) b.lng = 88;
+
+                    // Dynamic speed variation
+                    b.speed = Math.floor(22 + Math.random() * 18);
+
+                    // Random passenger board/alight
+                    if (Math.random() > 0.6) {
+                        b.passengers += Math.floor(Math.random() * 5) - 2;
+                        if (b.passengers < 2) b.passengers = 2;
+                        if (b.passengers > b.capacity) b.passengers = b.capacity;
+                    }
+                }
+            });
+
+            renderKpis();
+            renderFleetList();
+            renderMapMarkers();
         }
 
-        function switchTab(tab, btn) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(`page-${tab}`).classList.add('active');
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            if (tab === 'routes' || tab === 'fare') loadRoutes();
-            if (tab === 'complaint') loadComplaints();
+        // Routes Tab
+        function renderRoutes() {
+            const container = document.getElementById('routesListContainer');
+            container.innerHTML = corridors.map(r => {
+                const assignedBuses = fleet.filter(b => b.routeId === r.id);
+                return `
+                    <div class="route-card">
+                        <div class="route-header">
+                            <div>
+                                <h3 style="font-family: var(--font-display); font-size: 1.05rem; font-weight: 700;">${r.name}</h3>
+                                <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 2px;">${r.from} &harr; ${r.to}</div>
+                            </div>
+                            <span class="route-tag">${assignedBuses.length} UNITS</span>
+                        </div>
+                        <div class="route-stops-timeline">
+                            ${r.stops.map((s, i) => `
+                                <span class="route-node-pill">${s}</span>
+                                ${i < r.stops.length - 1 ? '<span class="route-arrow">&rarr;</span>' : ''}
+                            `).join('')}
+                        </div>
+                        <div class="route-meta-strip">
+                            <div>DISTANCE: <span style="color:#ffffff;">${r.distance} km</span></div>
+                            <div>STANDARD FARE: <span style="color:var(--emerald-bright);">${r.fare} ETB</span></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
         }
 
-        function showToast(msg) {
-            const t = document.getElementById('toast');
-            t.textContent = msg;
-            t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 3000);
+        // Fare Calculation Tab
+        function initFareOptions() {
+            const select = document.getElementById('fareRouteSelect');
+            if (select.options.length <= 1) {
+                select.innerHTML = '<option value="">-- Choose Corridor --</option>' + 
+                    corridors.map(c => `<option value="${c.id}">${c.name} (${c.from} &rarr; ${c.to})</option>`).join('');
+            }
         }
 
-        function updateClock() { document.getElementById('clockDisplay').textContent = new Date().toLocaleTimeString(); }
+        function onFareRouteChanged() {
+            const routeId = parseInt(document.getElementById('fareRouteSelect').value);
+            const route = corridors.find(c => c.id === routeId);
+            const fromSelect = document.getElementById('fareFromStop');
+            const toSelect = document.getElementById('fareToStop');
 
-        // Auto-refresh buses every 5 seconds
-        loadBuses();
-        setInterval(loadBuses, 5000);
-        setInterval(updateClock, 1000);
-        updateClock();
+            if (!route) {
+                fromSelect.innerHTML = '<option value="">-- Select Origin --</option>';
+                toSelect.innerHTML = '<option value="">-- Select Destination --</option>';
+                document.getElementById('fareComputationOutput').style.display = 'none';
+                return;
+            }
+
+            const options = '<option value="">-- Select Stop --</option>' + 
+                route.stops.map((s, idx) => `<option value="${idx}">${s}</option>`).join('');
+
+            fromSelect.innerHTML = options;
+            toSelect.innerHTML = options;
+            document.getElementById('fareComputationOutput').style.display = 'none';
+        }
+
+        function computeFareEstimate() {
+            const routeId = parseInt(document.getElementById('fareRouteSelect').value);
+            const fromIdx = parseInt(document.getElementById('fareFromStop').value);
+            const toIdx = parseInt(document.getElementById('fareToStop').value);
+
+            if (isNaN(routeId) || isNaN(fromIdx) || isNaN(toIdx)) {
+                showToast('Please select transit corridor and both stops.');
+                return;
+            }
+            if (fromIdx === toIdx) {
+                showToast('Origin and destination stops must differ.');
+                return;
+            }
+
+            const route = corridors.find(c => c.id === routeId);
+            const diff = Math.abs(toIdx - fromIdx);
+            const totalHops = route.stops.length - 1;
+            const ratio = diff / totalHops;
+            const calculatedFare = Math.max(5, Math.ceil(route.fare * ratio));
+            const calculatedDist = (route.distance * ratio).toFixed(1);
+
+            document.getElementById('computedFareValue').textContent = calculatedFare;
+            document.getElementById('computedFareDistance').textContent = `Transit Segment: ${diff} stop(s) &bull; ~${calculatedDist} km regulated distance`;
+            document.getElementById('fareComputationOutput').style.display = 'block';
+            showToast(`Calculated fare tariff: ${calculatedFare} ETB`);
+        }
+
+        // Incident Management Tab
+        function renderIncidents() {
+            const select = document.getElementById('incidentBusPlate');
+            if (select.options.length <= 1) {
+                select.innerHTML = '<option value="">-- Select Bus Unit --</option>' + 
+                    fleet.map(b => `<option value="${b.plateNumber}">${b.plateNumber} (${b.route?.name || 'Corridor'})</option>`).join('');
+            }
+
+            const container = document.getElementById('incidentsContainer');
+            container.innerHTML = incidents.slice().reverse().map(item => `
+                <div class="complaint-item">
+                    <div class="complaint-header">
+                        <span style="color:#ffffff; font-weight:600;">${item.name}</span>
+                        <span>BUS ${item.busPlate} &bull; ${item.time}</span>
+                    </div>
+                    <div class="complaint-body">${item.message}</div>
+                </div>
+            `).join('');
+
+            document.getElementById('incidentCountBadge').textContent = `${incidents.length} LOGS`;
+        }
+
+        function submitPassengerIncident() {
+            const name = document.getElementById('incidentName').value.trim() || 'Anonymous Passenger';
+            const busPlate = document.getElementById('incidentBusPlate').value || 'Unassigned Unit';
+            const message = document.getElementById('incidentMessage').value.trim();
+
+            if (!message) {
+                showToast('Please describe the incident or feedback.');
+                return;
+            }
+
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+
+            incidents.push({
+                id: incidents.length + 1,
+                name: name,
+                busPlate: busPlate,
+                message: message,
+                time: timeStr
+            });
+
+            document.getElementById('incidentName').value = '';
+            document.getElementById('incidentBusPlate').value = '';
+            document.getElementById('incidentMessage').value = '';
+
+            renderIncidents();
+            showToast('Incident dispatch logged successfully!');
+        }
+
+        // Toast Feedback System
+        let toastTimeout;
+        function showToast(text) {
+            const box = document.getElementById('toastBox');
+            document.getElementById('toastMsg').textContent = text;
+            box.classList.add('active');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                box.classList.remove('active');
+            }, 3200);
+        }
+
+        // Initialization
+        renderKpis();
+        renderFleetList();
+        renderMapMarkers();
+        setInterval(simulateTelematicsTick, 4500);
     </script>
 </body>
-
 </html>

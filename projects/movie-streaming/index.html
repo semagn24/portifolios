@@ -3,180 +3,1853 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CinemaElite - Stream Beyond limits</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>CinemaElite — Next-Gen Ultra-HD Streaming & Cinematic Discovery</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        :root { --p: #E50914; --bg: #0B0B0B; --card: #1C1C1C; --text: #FFFFFF; }
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
-        
-        .nav { background: rgba(11,11,11,0.95); backdrop-filter: blur(10px); padding: 1.25rem 4rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top:0; z-index:1000; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .main { padding: 2rem 4rem; }
-        
-        /* HERO */
-        .hero { height: 70vh; width: 100%; border-radius: 30px; background: linear-gradient(to top, var(--bg), transparent), url('https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?auto=format&fit=crop&q=80&w=1200') center/cover; display: flex; align-items: flex-end; padding: 4rem; margin-bottom: 3rem; }
-        .hero-content { max-width: 600px; }
-        
-        /* MOVIE GRID */
-        .category { margin-bottom: 4rem; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
-        .m-card { position: relative; border-radius: 20px; overflow: hidden; height: 400px; cursor: pointer; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-        .m-card:hover { transform: scale(1.05); z-index: 10; border: 2px solid var(--p); }
-        .m-img { width: 100%; height: 100%; object-fit: cover; }
-        .m-overlay { position: absolute; inset:0; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); display: flex; flex-direction: column; justify-content: flex-end; padding: 1.5rem; opacity: 0; transition: 0.3s; }
-        .m-card:hover .m-overlay { opacity: 1; }
-        
-        /* PLAYER MODAL */
-        #player { position: fixed; inset:0; background: black; display: none; flex-direction: column; z-index: 3000; }
-        .player-header { padding: 2rem 4rem; display: flex; justify-content: space-between; align-items: center; }
-        video { width: 100%; height: 70vh; outline: none; }
+        :root {
+            --bg-void: #06080e;
+            --bg-surface: #0c101d;
+            --bg-surface-elevated: #12192d;
+            --bg-card: #151e36;
+            --bg-card-hover: #1c2744;
+            --bg-glass: rgba(12, 16, 29, 0.88);
+            --bg-glass-strong: rgba(6, 8, 14, 0.94);
+            
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --border-highlight: rgba(255, 255, 255, 0.16);
+            --border-focus: rgba(229, 9, 20, 0.5);
+            
+            --crimson-accent: #e50914;
+            --crimson-light: #ff334b;
+            --crimson-glow: rgba(229, 9, 20, 0.35);
+            
+            --gold-star: #f59e0b;
+            --gold-glow: rgba(245, 158, 11, 0.25);
+            
+            --cyan-accent: #06b6d4;
+            --cyan-glow: rgba(6, 182, 212, 0.25);
+            
+            --emerald-badge: #10b981;
+            
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-tertiary: #64748b;
+            
+            --font-display: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --radius-full: 9999px;
+            
+            --shadow-subtle: 0 4px 20px rgba(0, 0, 0, 0.5);
+            --shadow-float: 0 16px 40px rgba(0, 0, 0, 0.7);
+            --shadow-crimson: 0 8px 30px rgba(229, 9, 20, 0.3);
+            
+            --transition-smooth: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+        }
 
-        .btn { padding: 0.8rem 1.6rem; border-radius: 50px; border: none; font-weight: 700; cursor: pointer; transition: 0.3s; font-family: inherit; }
-        .btn-p { background: var(--p); color: white; }
-        .btn-s { background: white; color: black; }
-        
-        #auth { position: fixed; inset:0; background: var(--bg); display:flex; align-items:center; justify-content:center; z-index: 4000; }
-        .login { background: var(--card); padding: 3.5rem; border-radius: 30px; width: 440px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
-        .field { width:100%; padding:1rem; background: #2A2A2A; border:none; border-radius:14px; margin-bottom:1rem; color:white; font-family:inherit; }
-        .hidden { display: none !important; }
-        
-        .badge { background: var(--p); padding: 0.2rem 0.6rem; border-radius: 5px; font-size: 0.75rem; font-weight: 800; float: right; }
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-void);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            min-height: 100vh;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 5%, rgba(229, 9, 20, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 85%, rgba(6, 182, 212, 0.06) 0%, transparent 45%);
+            background-attachment: fixed;
+        }
+
+        /* Themed browser surfaces */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-void);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e2740;
+            border-radius: var(--radius-full);
+            border: 2px solid var(--bg-void);
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #2d3b5e;
+        }
+        ::selection {
+            background: rgba(229, 9, 20, 0.3);
+            color: #ffffff;
+        }
+        :focus-visible {
+            outline: 2px solid var(--crimson-accent);
+            outline-offset: 3px;
+        }
+
+        /* Header Navigation */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 0.85rem 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 2.5rem;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: var(--radius-md);
+            background: linear-gradient(135deg, var(--crimson-accent), #990000);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-crimson);
+            color: #ffffff;
+            flex-shrink: 0;
+        }
+
+        .brand-title {
+            font-family: var(--font-display);
+            font-size: 1.35rem;
+            font-weight: 900;
+            letter-spacing: -0.03em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 0.15rem;
+        }
+
+        .brand-title span {
+            color: var(--crimson-accent);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-family: var(--font-display);
+            font-size: 0.875rem;
+            font-weight: 600;
+            padding: 0.5rem 0.9rem;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .nav-btn:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-btn.active {
+            color: var(--text-primary);
+            background: rgba(229, 9, 20, 0.15);
+            border: 1px solid rgba(229, 9, 20, 0.3);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+        }
+
+        .search-box {
+            position: relative;
+            width: 280px;
+        }
+
+        .search-box input {
+            width: 100%;
+            background: var(--bg-surface-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-full);
+            padding: 0.55rem 1rem 0.55rem 2.4rem;
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            outline: none;
+            transition: var(--transition-smooth);
+        }
+
+        .search-box input:focus {
+            border-color: var(--crimson-accent);
+            box-shadow: 0 0 16px var(--crimson-glow);
+            width: 320px;
+        }
+
+        .search-box svg {
+            position: absolute;
+            left: 0.85rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-tertiary);
+            pointer-events: none;
+        }
+
+        .watchlist-pill {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--bg-surface-elevated);
+            border: 1px solid var(--border-subtle);
+            padding: 0.45rem 0.9rem;
+            border-radius: var(--radius-full);
+            color: var(--text-primary);
+            font-size: 0.825rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .watchlist-pill:hover {
+            border-color: var(--border-highlight);
+            background: var(--bg-card);
+        }
+
+        .count-badge {
+            background: var(--crimson-accent);
+            color: #ffffff;
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 0.1rem 0.45rem;
+            border-radius: var(--radius-full);
+            min-width: 18px;
+            text-align: center;
+        }
+
+        .vip-status {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(229, 9, 20, 0.15));
+            border: 1px solid rgba(245, 158, 11, 0.35);
+            padding: 0.45rem 0.85rem;
+            border-radius: var(--radius-full);
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--gold-star);
+        }
+
+        /* Hero Billboard Section */
+        .hero-billboard {
+            position: relative;
+            min-height: 72vh;
+            width: 100%;
+            display: flex;
+            align-items: flex-end;
+            padding: 5rem 3.5rem 4rem;
+            margin-bottom: 2.5rem;
+            overflow: hidden;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .hero-backdrop {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center 30%;
+            transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease;
+            z-index: 1;
+        }
+
+        .hero-backdrop::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                180deg, 
+                rgba(6, 8, 14, 0.35) 0%, 
+                rgba(6, 8, 14, 0.65) 50%, 
+                var(--bg-void) 100%
+            ),
+            linear-gradient(
+                90deg, 
+                var(--bg-void) 0%, 
+                rgba(6, 8, 14, 0.85) 35%, 
+                transparent 75%
+            );
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 680px;
+        }
+
+        .hero-meta-strip {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.65rem;
+            margin-bottom: 1rem;
+        }
+
+        .pill-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.25rem 0.65rem;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .pill-crimson {
+            background: var(--crimson-accent);
+            color: #ffffff;
+        }
+
+        .pill-glass {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: var(--text-primary);
+        }
+
+        .pill-gold {
+            background: rgba(245, 158, 11, 0.15);
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            color: var(--gold-star);
+        }
+
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: clamp(2.4rem, 5vw, 4rem);
+            font-weight: 900;
+            line-height: 1.05;
+            letter-spacing: -0.04em;
+            margin-bottom: 1.1rem;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+        }
+
+        .hero-desc {
+            font-size: 1.05rem;
+            color: #d1d5db;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            max-width: 620px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+        }
+
+        .hero-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            font-family: var(--font-display);
+            font-size: 0.95rem;
+            font-weight: 700;
+            padding: 0.85rem 1.75rem;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            border: none;
+            transition: var(--transition-smooth);
+            text-decoration: none;
+            outline: none;
+        }
+
+        .btn-primary {
+            background: var(--crimson-accent);
+            color: #ffffff;
+            box-shadow: var(--shadow-crimson);
+        }
+
+        .btn-primary:hover {
+            background: var(--crimson-light);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 32px rgba(229, 9, 20, 0.5);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.22);
+            border-color: rgba(255, 255, 255, 0.35);
+            transform: translateY(-2px);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            padding: 0.85rem 1.25rem;
+        }
+
+        .btn-ghost:hover {
+            color: var(--text-primary);
+            border-color: var(--border-highlight);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Hero Carousel Switcher */
+        .hero-indicators {
+            position: absolute;
+            right: 3.5rem;
+            bottom: 4rem;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+        }
+
+        .hero-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: var(--radius-full);
+            background: rgba(255, 255, 255, 0.25);
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            border: none;
+        }
+
+        .hero-dot.active {
+            width: 32px;
+            background: var(--crimson-accent);
+            box-shadow: 0 0 12px var(--crimson-glow);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 3rem 5rem;
+        }
+
+        /* Filter & Controls Bar */
+        .controls-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-bottom: 2.25rem;
+            padding-bottom: 1.25rem;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .filter-chips {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .chip {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            font-family: var(--font-display);
+            font-size: 0.825rem;
+            font-weight: 600;
+            padding: 0.45rem 1rem;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .chip:hover {
+            color: var(--text-primary);
+            border-color: var(--border-highlight);
+            background: var(--bg-surface-elevated);
+        }
+
+        .chip.active {
+            background: var(--crimson-accent);
+            border-color: var(--crimson-accent);
+            color: #ffffff;
+            box-shadow: 0 0 16px rgba(229, 9, 20, 0.3);
+        }
+
+        .sort-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .sort-label {
+            font-size: 0.825rem;
+            color: var(--text-tertiary);
+            font-weight: 500;
+        }
+
+        .sort-select {
+            background: var(--bg-surface-elevated);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 0.825rem;
+            padding: 0.45rem 2rem 0.45rem 0.9rem;
+            border-radius: var(--radius-sm);
+            outline: none;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            transition: var(--transition-smooth);
+        }
+
+        .sort-select:focus {
+            border-color: var(--crimson-accent);
+        }
+
+        /* Section Heading */
+        .section-header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-tagline {
+            color: var(--text-tertiary);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* Movie Grid */
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 1.75rem;
+            margin-bottom: 4rem;
+        }
+
+        /* Cinema Card */
+        .movie-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 1px solid var(--border-subtle);
+            position: relative;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .movie-card:hover {
+            transform: translateY(-7px) scale(1.015);
+            border-color: rgba(229, 9, 20, 0.4);
+            box-shadow: var(--shadow-float), 0 0 24px rgba(229, 9, 20, 0.2);
+            z-index: 10;
+        }
+
+        .poster-frame {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 2 / 3;
+            overflow: hidden;
+            background: var(--bg-surface);
+        }
+
+        .poster-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .movie-card:hover .poster-img {
+            transform: scale(1.08);
+        }
+
+        .poster-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                180deg, 
+                rgba(0, 0, 0, 0.2) 0%, 
+                transparent 40%, 
+                rgba(6, 8, 14, 0.95) 100%
+            );
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 1rem;
+            opacity: 0.92;
+            transition: var(--transition-smooth);
+        }
+
+        .movie-card:hover .poster-overlay {
+            opacity: 1;
+        }
+
+        .card-top-badges {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .rating-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            padding: 0.25rem 0.55rem;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--gold-star);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .quick-fav-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: var(--radius-full);
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .quick-fav-btn:hover {
+            background: var(--crimson-accent);
+            border-color: var(--crimson-accent);
+            transform: scale(1.15);
+        }
+
+        .quick-fav-btn.active {
+            background: var(--crimson-accent);
+            border-color: var(--crimson-accent);
+            color: #ffffff;
+        }
+
+        .card-center-play {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.7);
+            width: 54px;
+            height: 54px;
+            border-radius: var(--radius-full);
+            background: var(--crimson-accent);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 25px rgba(229, 9, 20, 0.6);
+            opacity: 0;
+            transition: var(--transition-smooth);
+            pointer-events: none;
+        }
+
+        .movie-card:hover .card-center-play {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .card-bottom-info {
+            width: 100%;
+        }
+
+        .card-genre {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--cyan-accent);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.3rem;
+        }
+
+        .card-title {
+            font-family: var(--font-display);
+            font-size: 1.05rem;
+            font-weight: 700;
+            line-height: 1.25;
+            color: #ffffff;
+            margin-bottom: 0.35rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-specs {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            color: var(--text-secondary);
+        }
+
+        .spec-item {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        /* Movie Details Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(3, 5, 10, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            z-index: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-highlight);
+            border-radius: var(--radius-xl);
+            max-width: 900px;
+            width: 100%;
+            overflow: hidden;
+            box-shadow: var(--shadow-float);
+            position: relative;
+            transform: scale(0.95);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-overlay.active .modal-card {
+            transform: scale(1);
+        }
+
+        .modal-hero {
+            position: relative;
+            height: 340px;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: flex-end;
+            padding: 2.5rem;
+        }
+
+        .modal-hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(12, 16, 29, 0.2) 0%, var(--bg-surface) 100%);
+        }
+
+        .modal-hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .modal-close-btn {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            z-index: 10;
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-full);
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .modal-close-btn:hover {
+            background: var(--crimson-accent);
+            border-color: var(--crimson-accent);
+        }
+
+        .modal-body {
+            padding: 2.5rem;
+        }
+
+        .modal-meta-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2.5rem;
+        }
+
+        .modal-desc-heading {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        .modal-desc-text {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .tech-spec-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 1.25rem;
+        }
+
+        .tech-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-subtle);
+            font-size: 0.825rem;
+        }
+
+        .tech-row:last-child {
+            border-bottom: none;
+        }
+
+        .tech-k {
+            color: var(--text-tertiary);
+            font-weight: 500;
+        }
+
+        .tech-v {
+            font-family: var(--font-mono);
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* Theater Player Modal */
+        #theaterModal {
+            position: fixed;
+            inset: 0;
+            background: #000000;
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+        }
+
+        #theaterModal.active {
+            display: flex;
+        }
+
+        .theater-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.25rem 2.5rem;
+            background: linear-gradient(180deg, rgba(0,0,0,0.9) 0%, transparent 100%);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 20;
+        }
+
+        .theater-back-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            font-family: var(--font-display);
+            font-size: 0.875rem;
+            font-weight: 700;
+            padding: 0.5rem 1.15rem;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .theater-back-btn:hover {
+            background: var(--crimson-accent);
+            border-color: var(--crimson-accent);
+        }
+
+        .theater-title {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .theater-controls-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .video-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: #000000;
+            overflow: hidden;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            max-height: 82vh;
+            outline: none;
+        }
+
+        .theater-footer {
+            padding: 1.5rem 2.5rem;
+            background: var(--bg-surface);
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Toast Feedback */
+        .toast-box {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--bg-surface-elevated);
+            border: 1px solid var(--border-highlight);
+            box-shadow: var(--shadow-float);
+            padding: 0.9rem 1.5rem;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            z-index: 2000;
+            transform: translateY(120px);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .toast-box.active {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast-icon {
+            color: var(--crimson-accent);
+            display: flex;
+            align-items: center;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 5rem 2rem;
+            background: var(--bg-surface);
+            border-radius: var(--radius-lg);
+            border: 1px dashed var(--border-subtle);
+            margin: 2rem 0;
+        }
+
+        .empty-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 1.25rem;
+            color: var(--text-tertiary);
+        }
+
+        /* Responsiveness */
+        @media (max-width: 992px) {
+            header {
+                padding: 0.75rem 1.5rem;
+            }
+            .header-left {
+                gap: 1.25rem;
+            }
+            .hero-billboard {
+                padding: 3rem 1.5rem;
+            }
+            .container {
+                padding: 0 1.5rem 3rem;
+            }
+            .modal-meta-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            .search-box {
+                width: 180px;
+            }
+            .search-box input:focus {
+                width: 210px;
+            }
+            .hero-title {
+                font-size: 2rem;
+            }
+            .movie-grid {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+                gap: 1rem;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <div id="auth">
-        <div class="login">
-            <h1 style="color:var(--p); font-weight:900; letter-spacing:-2px; font-size:2.5rem; margin-bottom:1rem">CinemaElite</h1>
-            <p style="color:#888; margin-bottom:2.5rem">Unrivaled streaming experience.</p>
-            <input type="text" id="u" class="field" placeholder="Username" value="watcher">
-            <input type="password" id="p" class="field" placeholder="Password" value="password">
-            <button id="auth-btn" class="btn btn-p" style="width:100%; font-size:1rem" onclick="handleAuth()">Start Watching</button>
-            <p style="margin-top:1.5rem; color:#888; font-size:0.9rem">New member? <a href="#" style="color:var(--p); font-weight:800; text-decoration:none" onclick="toggleAuth()">Join Now</a></p>
+    <!-- Header Navigation -->
+    <header>
+        <div class="header-left">
+            <a href="#" class="brand" onclick="navigateTab('all')">
+                <div class="brand-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect width="18" height="18" x="3" y="3" rx="2"/>
+                        <path d="M7 3v18"/>
+                        <path d="M3 7.5h4"/>
+                        <path d="M3 12h18"/>
+                        <path d="M3 16.5h4"/>
+                        <path d="M17 3v18"/>
+                        <path d="M17 7.5h4"/>
+                        <path d="M17 16.5h4"/>
+                    </svg>
+                </div>
+                <div class="brand-title">CINEMA<span>ELITE</span></div>
+            </a>
+
+            <nav class="nav-links">
+                <button class="nav-btn active" id="tab-all" onclick="navigateTab('all')">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/>
+                        <rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/>
+                    </svg>
+                    Explore Library
+                </button>
+                <button class="nav-btn" id="tab-trending" onclick="navigateTab('trending')">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>
+                    </svg>
+                    Trending Now
+                </button>
+                <button class="nav-btn" id="tab-watchlist" onclick="navigateTab('watchlist')">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>
+                    </svg>
+                    My Watchlist
+                </button>
+            </nav>
         </div>
-    </div>
 
-    <div id="app" class="hidden">
-        <nav class="nav">
-            <h2 style="font-weight:900; letter-spacing:-2px; font-size:1.8rem"><span style="color:var(--p)">Cinema</span>Elite</h2>
-            <div style="display:flex; gap:2.5rem; align-items:center">
-                <a href="#" style="color:white; text-decoration:none; font-weight:700" onclick="v('home')">Home</a>
-                <a href="#" style="color:#888; text-decoration:none; font-weight:700" onclick="v('watchlist')">My List</a>
-                <button class="btn btn-s" onclick="location.reload()">Sign Out</button>
+        <div class="header-right">
+            <div class="search-box">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+                </svg>
+                <input type="text" id="searchInput" placeholder="Search films, actors, directors..." oninput="handleSearch(this.value)">
             </div>
-        </nav>
 
-        <div class="hero">
-            <div class="hero-content">
-                <span class="badge" style="float:none; margin-bottom:10px; display:inline-block">FEATURED</span>
-                <h1 style="font-size:3.5rem; font-weight:900; line-height:1; margin-bottom:1.5rem">The Stellar Horizon</h1>
-                <p style="font-size:1.1rem; color:#E1E1E1; margin-bottom:2rem">Witness the untold legends of the far reaches of our galaxy in this visual masterpiece.</p>
-                <div style="display:flex; gap:1rem">
-                    <button class="btn btn-s" onclick="watch(1)">▶ Play Now</button>
-                    <button class="btn" style="background:rgba(255,255,255,0.1); color:white" onclick="toggleW(1)">+ Add List</button>
+            <div class="watchlist-pill" onclick="navigateTab('watchlist')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>
+                </svg>
+                <span>Watchlist</span>
+                <span class="count-badge" id="watchlistCount">1</span>
+            </div>
+
+            <div class="vip-status" title="Streaming in 4K HDR with Dolby Atmos">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+                <span>4K ULTRA VIP</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Billboard Section -->
+    <section class="hero-billboard" id="heroBillboard">
+        <div class="hero-backdrop" id="heroBackdrop"></div>
+        <div class="hero-content">
+            <div class="hero-meta-strip">
+                <span class="pill-badge pill-crimson">TOP 10 FEATURED</span>
+                <span class="pill-badge pill-glass" id="heroResolution">4K ULTRA HD</span>
+                <span class="pill-badge pill-glass" id="heroAudio">DOLBY ATMOS 7.1</span>
+                <span class="pill-badge pill-gold" id="heroImdb">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                    <span id="heroRatingVal">9.2</span>
+                </span>
+            </div>
+
+            <h1 class="hero-title" id="heroTitle">Interstellar Odyssey</h1>
+            <p class="hero-desc" id="heroDesc">
+                A crew of interstellar explorers undertakes an odyssey through a gravitational singularity wormhole in deep space to safeguard the continuum of human civilization.
+            </p>
+
+            <div class="hero-actions">
+                <button class="btn btn-primary" onclick="playHeroMovie()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <polygon points="5 3 19 12 5 21 5 3"/>
+                    </svg>
+                    Stream 4K Trailer
+                </button>
+                <button class="btn btn-secondary" id="heroWatchlistBtn" onclick="toggleHeroWatchlist()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14"/><path d="M12 5v14"/>
+                    </svg>
+                    Add to Watchlist
+                </button>
+                <button class="btn btn-ghost" onclick="inspectHeroMovie()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>
+                    </svg>
+                    Film Intel
+                </button>
+            </div>
+        </div>
+
+        <div class="hero-indicators" id="heroIndicators">
+            <!-- Rendered by JS -->
+        </div>
+    </section>
+
+    <!-- Main Container -->
+    <main class="container">
+        <!-- Filter and Controls Strip -->
+        <div class="controls-bar">
+            <div class="filter-chips">
+                <button class="chip active" onclick="setCategory('all', this)">All Catalogs</button>
+                <button class="chip" onclick="setCategory('Sci-Fi', this)">Sci-Fi & Cyberpunk</button>
+                <button class="chip" onclick="setCategory('Action', this)">Action & Warfare</button>
+                <button class="chip" onclick="setCategory('Documentary', this)">Documentary & City</button>
+                <button class="chip" onclick="setCategory('Nature', this)">Ocean & Nature</button>
+                <button class="chip" onclick="setCategory('Drama', this)">Drama & Mystery</button>
+            </div>
+
+            <div class="sort-wrapper">
+                <span class="sort-label">Sort by:</span>
+                <select class="sort-select" id="sortSelect" onchange="handleSort(this.value)">
+                    <option value="featured">Editor's Choice</option>
+                    <option value="rating">Top Rated (IMDb)</option>
+                    <option value="title">Alphabetical (A-Z)</option>
+                    <option value="duration">Runtime Length</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Section Title -->
+        <div class="section-header">
+            <div>
+                <h2 class="section-title" id="catalogTitle">Curated Masterpieces</h2>
+                <div class="section-tagline" id="catalogSubtitle">Showing all available 4K Ultra-HD streaming titles</div>
+            </div>
+            <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-tertiary);" id="movieCountText">
+                10 Titles Available
+            </div>
+        </div>
+
+        <!-- Movie Poster Grid -->
+        <div class="movie-grid" id="movieGrid">
+            <!-- Cards rendered via JS -->
+        </div>
+    </main>
+
+    <!-- Movie Details Inspector Modal -->
+    <div class="modal-overlay" id="detailModal">
+        <div class="modal-card">
+            <button class="modal-close-btn" onclick="closeModal()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </button>
+            <div class="modal-hero" id="mHero">
+                <div class="modal-hero-content">
+                    <div class="hero-meta-strip">
+                        <span class="pill-badge pill-crimson" id="mGenre">Sci-Fi</span>
+                        <span class="pill-badge pill-glass" id="mYear">2026</span>
+                        <span class="pill-badge pill-gold">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                            </svg>
+                            <span id="mRating">9.2</span>
+                        </span>
+                    </div>
+                    <h2 class="hero-title" style="font-size:2.2rem; margin-bottom:0.5rem;" id="mTitle">Movie Title</h2>
                 </div>
             </div>
-        </div>
 
-        <main class="main">
-            <div id="v-home" class="v">
-                <div class="category">
-                    <h3 style="font-size:1.5rem">Trending Library</h3>
-                    <div class="grid" id="m-grid"></div>
-                </div>
-            </div>
+            <div class="modal-body">
+                <div class="modal-meta-grid">
+                    <div>
+                        <h4 class="modal-desc-heading">SYNOPSIS</h4>
+                        <p class="modal-desc-text" id="mDesc"></p>
 
-            <div id="v-watchlist" class="v hidden">
-                <h2 style="font-size:2rem; margin-bottom:2rem">My Personalized Watchlist</h2>
-                <div class="grid" id="w-grid"></div>
-            </div>
-        </main>
-    </div>
+                        <div style="display:flex; gap:1rem; margin-top:2rem;">
+                            <button class="btn btn-primary" id="mPlayBtn">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                    <polygon points="5 3 19 12 5 21 5 3"/>
+                                </svg>
+                                Launch Theater Player
+                            </button>
+                            <button class="btn btn-secondary" id="mWatchlistBtn">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>
+                                </svg>
+                                Watchlist
+                            </button>
+                        </div>
+                    </div>
 
-    <div id="player">
-        <div class="player-header">
-            <button class="btn" style="background:none; color:white; font-size:1.5rem; cursor:pointer" onclick="closePlayer()">〈 Back</button>
-            <h2 id="p-title">Interstellar</h2>
-            <div></div>
-        </div>
-        <video id="p-vid" controls autoplay></video>
-        <div style="padding:4rem; max-width:800px">
-            <h3 style="color:var(--p); margin-bottom:1rem">SYNOPSIS</h3>
-            <p id="p-desc" style="color:#CCC; line-height:1.6"></p>
-        </div>
-    </div>
-
-    <script>
-        const API = 'http://localhost:3006/api';
-        let user = null, movies = [];
-
-        async function handleAuth() {
-            const u = document.getElementById('u').value, p = document.getElementById('p').value;
-            const res = await fetch(`${API}/auth/login`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({username:u, password:p}) });
-            if (res.ok) {
-                user = (await res.json()).user;
-                document.getElementById('auth').classList.add('hidden');
-                document.getElementById('app').classList.remove('hidden');
-                loadData();
-            } else alert('Access Denied');
-        }
-
-        async function loadData() {
-            movies = await (await fetch(`${API}/movies`)).json();
-            renderMovies();
-        }
-
-        function renderMovies() {
-            document.getElementById('m-grid').innerHTML = movies.map(m => `
-                <div class="m-card" onclick="watch(${m.id})">
-                    <img src="${m.image}" class="m-img">
-                    <div class="m-overlay">
-                        <span class="badge" style="background:var(--secondary)">⭐ ${m.rating}</span>
-                        <h3>${m.title}</h3>
-                        <p style="font-size:0.8rem; color:#CCC; margin-top:5px">${m.genre}</p>
-                        <button class="btn btn-p" style="margin-top:1.5rem; padding:0.5rem" onclick="event.stopPropagation(); toggleW(${m.id})">${user.watchlist.includes(m.id)?'✓ Listed':'+ Watchlist'}</button>
+                    <div>
+                        <h4 class="modal-desc-heading">SPECIFICATIONS</h4>
+                        <div class="tech-spec-box">
+                            <div class="tech-row">
+                                <span class="tech-k">Director</span>
+                                <span class="tech-v" id="mDirector">Christopher N.</span>
+                            </div>
+                            <div class="tech-row">
+                                <span class="tech-k">Starring</span>
+                                <span class="tech-v" id="mCast">M. McConaughey, A. Hathaway</span>
+                            </div>
+                            <div class="tech-row">
+                                <span class="tech-k">Runtime</span>
+                                <span class="tech-v" id="mRuntime">169 Minutes</span>
+                            </div>
+                            <div class="tech-row">
+                                <span class="tech-k">Resolution</span>
+                                <span class="tech-v" style="color:var(--cyan-accent);">4K Ultra HD (2160p)</span>
+                            </div>
+                            <div class="tech-row">
+                                <span class="tech-k">Audio Stream</span>
+                                <span class="tech-v" style="color:var(--emerald-badge);">Dolby Atmos 7.1.4</span>
+                            </div>
+                            <div class="tech-row">
+                                <span class="tech-k">Dynamic Range</span>
+                                <span class="tech-v">HDR10+ / Dolby Vision</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Theater Video Player Modal -->
+    <div id="theaterModal">
+        <div class="theater-bar">
+            <button class="theater-back-btn" onclick="closeTheater()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+                </svg>
+                Exit Theater
+            </button>
+
+            <div class="theater-title" id="theaterTitle">Interstellar Odyssey</div>
+
+            <div class="theater-controls-right">
+                <span class="pill-badge pill-crimson">MASTER STREAM</span>
+                <span class="pill-badge pill-glass">4K UHD 60FPS</span>
+            </div>
+        </div>
+
+        <div class="video-container">
+            <video id="cinemaVideo" controls autoplay playsinline preload="auto"></video>
+        </div>
+
+        <div class="theater-footer">
+            <div style="display:flex; align-items:center; gap:1.25rem;">
+                <span style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-secondary);">
+                    HOTKEYS: <b style="color:var(--text-primary);">Space</b> (Play/Pause) &bull; <b style="color:var(--text-primary);">F</b> (Fullscreen) &bull; <b style="color:var(--text-primary);">Esc</b> (Exit)
+                </span>
+            </div>
+
+            <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--emerald-badge); display:flex; align-items:center; gap:0.4rem;">
+                <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--emerald-badge); box-shadow:0 0 8px var(--emerald-badge);"></span>
+                BUFFER HEALTH: 100% (24.8 Mbps)
+            </div>
+        </div>
+    </div>
+
+    <!-- Feedback Toast -->
+    <div class="toast-box" id="toast">
+        <div class="toast-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+        </div>
+        <div id="toastMessage">Notification message</div>
+    </div>
+
+    <!-- Application Script -->
+    <script>
+        // High-definition curated cinema dataset
+        const MASTER_MOVIES = [
+            {
+                id: 1,
+                title: "Interstellar Odyssey",
+                genre: "Sci-Fi",
+                rating: 9.2,
+                year: 2026,
+                runtime: "169 min",
+                director: "Christopher Nolan",
+                cast: "Matthew McConaughey, Anne Hathaway, Jessica Chastain",
+                image: "https://images.unsplash.com/photo-1614728263952-84ea256f9679?auto=format&fit=crop&q=80&w=800",
+                heroImage: "https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?auto=format&fit=crop&q=80&w=1600",
+                video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+                desc: "A team of elite space explorers ventures through a newly detected gravitational singularity wormhole in search of a viable sanctuary world for humanity's endangered future."
+            },
+            {
+                id: 2,
+                title: "Cyberpunk 2099: Neon Nights",
+                genre: "Sci-Fi",
+                rating: 8.8,
+                year: 2026,
+                runtime: "142 min",
+                director: "Ridley Scott & Denis V.",
+                cast: "Ryan Gosling, Ana de Armas, Harrison Ford",
+                image: "https://images.unsplash.com/photo-1540959733332-e94e270b4052?auto=format&fit=crop&q=80&w=800",
+                heroImage: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&q=80&w=1600",
+                video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+                desc: "Amid rain-slicked skyscrapers and blinding neon holograms of Neo-Tokyo, a rogue synthetic detective unravels a conspiratorial nexus that threatens android autonomy."
+            },
+            {
+                id: 3,
+                title: "The Shogun of Shadows",
+                genre: "Action",
+                rating: 8.9,
+                year: 2025,
+                runtime: "154 min",
+                director: "Takashi Miike",
+                cast: "Hiroyuki Sanada, Tadanobu Asano, Anna Sawai",
+                image: "https://images.unsplash.com/photo-1514539079130-25950c84af65?auto=format&fit=crop&q=80&w=800",
+                heroImage: "https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&q=80&w=1600",
+                video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+                desc: "Feudal honor clashes with subterranean shadow syndicates when a disgraced ronin must protect the last scion of the imperial dynasty through treacherous mountain fortresses."
+            },
+            {
+                id: 4,
+                title: "Abyssal Symphony",
+                genre: "Nature",
+                rating: 9.1,
+                year: 2026,
+                runtime: "118 min",
+                director: "James Cameron",
+                cast: "David Attenborough (Narrator)",
+                image: "https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&q=80&w=800",
+                heroImage: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&q=80&w=1600",
+                video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+                desc: "An awe-inspiring high-fidelity sonic exploration of the Mariana Trench's hydrothermal vents and bioluminescent creatures inhabiting the most remote depths of Earth."
+            },
+            {
+                id: 5,
+                title: "Quantum Breach: The Heist",
+                genre: "Action",
+                rating: 8.6,
+                year: 2025,
+                runtime: "135 min",
+                director: "Michael Mann",
+                cast: "Christian Bale, Cillian Murphy, Florence Pugh",
+                image: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&q=80&w=800",
+                heroImage: "https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&q=80&w=1600",
+                video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+                desc: "A syndicate of theoretical physicists and master infiltrators attempt the world's first multi-dimensional vault extraction beneath CERN's particle accelerator ring."
+            },
+            {
+                id: 6,
+                title: "Metropolis: Concrete Echoes",
+                genre: "Documentary",
+                rating: 8.4,
+                year: 2024,
+                runtime: "98 min",
+                director: "Ron Fricke",
+                cast: "Hans Zimmer (Composer)",
+                image: "https://images.unsplash.com/photo-1477959858617-67f30bc75b82?auto=format&fit=crop&q=80&w=800",
+                heroImage: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=1600",
+                video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyBlazes.mp4",
+                desc: "Hypnotic time-lapse cinematography charting the frantic pulse of the world's greatest megalopolises—from Manhattan to Shanghai and São Paulo."
+            },
+            {
+                id: 7,
+                title: "The Enigma Protocol",
+                genre: "Drama",
+                rating: 8.7,
+                year: 2025,
+                runtime: "128 min",
+                director: "David Fincher",
+                cast: "Rooney Mara, Jake Gyllenhaal, Mark Ruffalo",
+                image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&q=80&w=800",
+                heroImage: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=1600",
+                video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+                desc: "An obsessive cryptographic analyst uncovers an algorithmic kill-switch hidden inside high-frequency trading networks across Zurich and London."
+            },
+            {
+                id: 8,
+                title: "Solaris Prime: First Dawn",
+                genre: "Sci-Fi",
+                rating: 9.0,
+                year: 2026,
+                runtime: "162 min",
+                director: "Alfonso Cuarón",
+                cast: "Sandra Bullock, Oscar Isaac, Mahershala Ali",
+                image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=800",
+                heroImage: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&q=80&w=1600",
+                video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4",
+                desc: "Colony ship Genesis touches down on an alien terrestrial sphere with three orbital suns, only to discover an ancient biome communicating through atmospheric bio-resonances."
+            },
+            {
+                id: 9,
+                title: "Glacier: The Final Melt",
+                genre: "Nature",
+                rating: 8.5,
+                year: 2025,
+                runtime: "105 min",
+                director: "Luc Jacquet",
+                cast: "Sigourney Weaver (Narrator)",
+                image: "https://images.unsplash.com/photo-1483921020237-2ff51e8e4b22?auto=format&fit=crop&q=80&w=800",
+                heroImage: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=1600",
+                video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+                desc: "An expedition across the rapidly shifting ice shelves of Antarctica, documenting the fragile majesty of polar wildlife and glaciers in ultra-high dynamic range."
+            },
+            {
+                id: 10,
+                title: "Valkyrie: Sky Warriors",
+                genre: "Action",
+                rating: 8.7,
+                year: 2026,
+                runtime: "139 min",
+                director: "George Miller",
+                cast: "Charlize Theron, Tom Hardy, Nicholas Hoult",
+                image: "https://images.unsplash.com/photo-1519074069444-1ba4ea16e6f1?auto=format&fit=crop&q=80&w=800",
+                heroImage: "https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&q=80&w=1600",
+                video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+                desc: "Supersonic dogfights and aerial resistance squads battle across post-cataclysmic cloud cities to liberate humanity's last atmospheric oxygen reservoir."
+            }
+        ];
+
+        // Persistent Watchlist Storage
+        let userWatchlist = JSON.parse(localStorage.getItem('cinema_elite_watchlist') || '[1, 2]');
+        let currentFilter = 'all';
+        let currentSort = 'featured';
+        let searchQuery = '';
+        let heroMovieIndex = 0;
+        let heroInterval = null;
+
+        // Initialize App
+        function initApp() {
+            renderHero(heroMovieIndex);
+            renderHeroIndicators();
+            renderMovies();
+            updateWatchlistCount();
+            startHeroTimer();
+
+            // Keyboard shortcut support
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeModal();
+                    closeTheater();
+                }
+            });
+        }
+
+        // Hero Billboard Management
+        function renderHero(index) {
+            heroMovieIndex = index;
+            const movie = MASTER_MOVIES[index];
+            if (!movie) return;
+
+            const backdrop = document.getElementById('heroBackdrop');
+            backdrop.style.opacity = '0.3';
+            
+            setTimeout(() => {
+                backdrop.style.backgroundImage = `url('${movie.heroImage}')`;
+                backdrop.style.opacity = '1';
+            }, 200);
+
+            document.getElementById('heroTitle').textContent = movie.title;
+            document.getElementById('heroDesc').textContent = movie.desc;
+            document.getElementById('heroRatingVal').textContent = movie.rating;
+
+            const isListed = userWatchlist.includes(movie.id);
+            const wBtn = document.getElementById('heroWatchlistBtn');
+            wBtn.innerHTML = isListed 
+                ? `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> In Your Watchlist`
+                : `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg> Add to Watchlist`;
+
+            // Update indicators
+            document.querySelectorAll('.hero-dot').forEach((dot, idx) => {
+                dot.classList.toggle('active', idx === index);
+            });
+        }
+
+        function renderHeroIndicators() {
+            const container = document.getElementById('heroIndicators');
+            container.innerHTML = MASTER_MOVIES.slice(0, 5).map((m, idx) => `
+                <button class="hero-dot ${idx === heroMovieIndex ? 'active' : ''}" onclick="selectHero(${idx})" title="${m.title}"></button>
             `).join('');
         }
 
-        async function toggleW(id) {
-            const res = await fetch(`${API}/watchlist`, { method:'PATCH', headers:{'Content-Type':'application/json'}, body:JSON.stringify({userId: user.id, movieId: id}) });
-            if (res.ok) {
-                user.watchlist = (await res.json()).watchlist;
-                renderMovies();
-                if(!document.getElementById('v-watchlist').classList.contains('hidden')) v('watchlist');
-            }
+        function selectHero(index) {
+            clearInterval(heroInterval);
+            renderHero(index);
+            startHeroTimer();
         }
 
-        function v(view) {
-            document.querySelectorAll('.v').forEach(el => el.classList.add('hidden'));
-            document.getElementById(`v-${view}`).classList.remove('hidden');
-            if (view === 'watchlist') {
-                const list = movies.filter(m => user.watchlist.includes(m.id));
-                document.getElementById('w-grid').innerHTML = list.map(m => `
-                    <div class="m-card" onclick="watch(${m.id})">
-                        <img src="${m.image}" class="m-img">
-                        <div class="m-overlay"><h3>${m.title}</h3></div>
+        function startHeroTimer() {
+            clearInterval(heroInterval);
+            heroInterval = setInterval(() => {
+                heroMovieIndex = (heroMovieIndex + 1) % 5;
+                renderHero(heroMovieIndex);
+            }, 8000);
+        }
+
+        function playHeroMovie() {
+            const movie = MASTER_MOVIES[heroMovieIndex];
+            launchTheater(movie);
+        }
+
+        function toggleHeroWatchlist() {
+            const movie = MASTER_MOVIES[heroMovieIndex];
+            toggleWatchlist(movie.id);
+            renderHero(heroMovieIndex);
+        }
+
+        function inspectHeroMovie() {
+            const movie = MASTER_MOVIES[heroMovieIndex];
+            openModal(movie.id);
+        }
+
+        // Filtering and Sorting
+        function setCategory(genre, el) {
+            currentFilter = genre;
+            document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+            if (el) el.classList.add('active');
+            renderMovies();
+        }
+
+        function handleSearch(val) {
+            searchQuery = val.trim().toLowerCase();
+            renderMovies();
+        }
+
+        function handleSort(val) {
+            currentSort = val;
+            renderMovies();
+        }
+
+        function navigateTab(tab) {
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            const activeBtn = document.getElementById(`tab-${tab}`);
+            if (activeBtn) activeBtn.classList.add('active');
+
+            if (tab === 'all') {
+                currentFilter = 'all';
+                document.getElementById('catalogTitle').textContent = 'Curated Masterpieces';
+                document.getElementById('catalogSubtitle').textContent = 'Showing all available 4K Ultra-HD streaming titles';
+            } else if (tab === 'trending') {
+                currentFilter = 'trending';
+                document.getElementById('catalogTitle').textContent = 'Top Trending Worldwide';
+                document.getElementById('catalogSubtitle').textContent = 'High-velocity viewership titles updated hourly';
+            } else if (tab === 'watchlist') {
+                currentFilter = 'watchlist';
+                document.getElementById('catalogTitle').textContent = 'My Curated Watchlist';
+                document.getElementById('catalogSubtitle').textContent = 'Saved titles for instant offline-ready streaming';
+            }
+            renderMovies();
+        }
+
+        // Render Movie Cards
+        function renderMovies() {
+            const grid = document.getElementById('movieGrid');
+            let list = [...MASTER_MOVIES];
+
+            // Filter logic
+            if (currentFilter === 'watchlist') {
+                list = list.filter(m => userWatchlist.includes(m.id));
+            } else if (currentFilter === 'trending') {
+                list = list.filter(m => m.rating >= 8.7);
+            } else if (currentFilter !== 'all') {
+                list = list.filter(m => m.genre.toLowerCase() === currentFilter.toLowerCase());
+            }
+
+            // Search filter
+            if (searchQuery) {
+                list = list.filter(m => 
+                    m.title.toLowerCase().includes(searchQuery) ||
+                    m.genre.toLowerCase().includes(searchQuery) ||
+                    m.director.toLowerCase().includes(searchQuery) ||
+                    m.cast.toLowerCase().includes(searchQuery)
+                );
+            }
+
+            // Sort logic
+            if (currentSort === 'rating') {
+                list.sort((a, b) => b.rating - a.rating);
+            } else if (currentSort === 'title') {
+                list.sort((a, b) => a.title.localeCompare(b.title));
+            } else if (currentSort === 'duration') {
+                list.sort((a, b) => parseInt(b.runtime) - parseInt(a.runtime));
+            }
+
+            document.getElementById('movieCountText').textContent = `${list.length} TITLES MATCHED`;
+
+            if (list.length === 0) {
+                grid.innerHTML = `
+                    <div style="grid-column: 1 / -1;">
+                        <div class="empty-state">
+                            <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <circle cx="12" cy="12" r="10"/>
+                                <line x1="8" y1="12" x2="16" y2="12"/>
+                            </svg>
+                            <h3 style="font-family: var(--font-display); font-size: 1.25rem; margin-bottom: 0.5rem;">No films matched your parameters</h3>
+                            <p style="color: var(--text-secondary); font-size: 0.9rem;">Try clearing your search query or selecting a different genre.</p>
+                            <button class="btn btn-secondary" style="margin-top: 1.5rem;" onclick="resetFilters()">Reset All Filters</button>
+                        </div>
                     </div>
-                `).join('') || '<p style="color:#666">Your list is currently empty.</p>';
+                `;
+                return;
+            }
+
+            grid.innerHTML = list.map(m => {
+                const isWatchlisted = userWatchlist.includes(m.id);
+                return `
+                    <div class="movie-card" onclick="openModal(${m.id})">
+                        <div class="poster-frame">
+                            <img src="${m.image}" alt="${m.title}" class="poster-img" loading="lazy">
+                            <div class="poster-overlay">
+                                <div class="card-top-badges">
+                                    <span class="rating-badge">
+                                        <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
+                                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                        </svg>
+                                        ${m.rating}
+                                    </span>
+                                    <button class="quick-fav-btn ${isWatchlisted ? 'active' : ''}" title="${isWatchlisted ? 'Remove from Watchlist' : 'Add to Watchlist'}" onclick="event.stopPropagation(); toggleWatchlist(${m.id})">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="${isWatchlisted ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+
+                                <div class="card-center-play">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                                        <polygon points="5 3 19 12 5 21 5 3"/>
+                                    </svg>
+                                </div>
+
+                                <div class="card-bottom-info">
+                                    <div class="card-genre">${m.genre}</div>
+                                    <h3 class="card-title">${m.title}</h3>
+                                    <div class="card-specs">
+                                        <span class="spec-item">${m.year}</span>
+                                        <span>&bull;</span>
+                                        <span class="spec-item">${m.runtime}</span>
+                                        <span>&bull;</span>
+                                        <span class="spec-item" style="color:var(--crimson-light); font-weight:700;">4K UHD</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function resetFilters() {
+            currentFilter = 'all';
+            searchQuery = '';
+            document.getElementById('searchInput').value = '';
+            document.querySelectorAll('.chip').forEach((c, idx) => c.classList.toggle('active', idx === 0));
+            renderMovies();
+        }
+
+        // Watchlist Actions
+        function toggleWatchlist(movieId) {
+            const movie = MASTER_MOVIES.find(m => m.id === movieId);
+            if (!movie) return;
+
+            const idx = userWatchlist.indexOf(movieId);
+            if (idx > -1) {
+                userWatchlist.splice(idx, 1);
+                showToast(`Removed "${movie.title}" from your Watchlist`);
+            } else {
+                userWatchlist.push(movieId);
+                showToast(`Added "${movie.title}" to your Watchlist`);
+            }
+
+            localStorage.setItem('cinema_elite_watchlist', JSON.stringify(userWatchlist));
+            updateWatchlistCount();
+            renderMovies();
+
+            if (heroMovieIndex === MASTER_MOVIES.findIndex(m => m.id === movieId)) {
+                renderHero(heroMovieIndex);
+            }
+
+            // If modal is open, update its button
+            const mBtn = document.getElementById('mWatchlistBtn');
+            if (mBtn && mBtn.dataset.movieId == movieId) {
+                const isListed = userWatchlist.includes(movieId);
+                mBtn.innerHTML = isListed 
+                    ? `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg> Saved in Watchlist`
+                    : `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg> Add to Watchlist`;
             }
         }
 
-        function watch(id) {
-            const m = movies.find(x => x.id === id);
-            document.getElementById('p-title').innerText = m.title;
-            document.getElementById('p-desc').innerText = m.desc;
-            document.getElementById('p-vid').src = m.video;
-            document.getElementById('player').style.display = 'flex';
-            document.body.style.overflow = 'hidden';
+        function updateWatchlistCount() {
+            document.getElementById('watchlistCount').textContent = userWatchlist.length;
         }
 
-        function closePlayer() {
-            document.getElementById('p-vid').pause();
-            document.getElementById('player').style.display = 'none';
-            document.body.style.overflow = 'auto';
+        // Details Modal Management
+        function openModal(movieId) {
+            const movie = MASTER_MOVIES.find(m => m.id === movieId);
+            if (!movie) return;
+
+            document.getElementById('mHero').style.backgroundImage = `url('${movie.heroImage}')`;
+            document.getElementById('mTitle').textContent = movie.title;
+            document.getElementById('mGenre').textContent = movie.genre;
+            document.getElementById('mYear').textContent = movie.year;
+            document.getElementById('mRating').textContent = movie.rating;
+            document.getElementById('mDesc').textContent = movie.desc;
+            document.getElementById('mDirector').textContent = movie.director;
+            document.getElementById('mCast').textContent = movie.cast;
+            document.getElementById('mRuntime').textContent = movie.runtime;
+
+            const isListed = userWatchlist.includes(movie.id);
+            const mBtn = document.getElementById('mWatchlistBtn');
+            mBtn.dataset.movieId = movie.id;
+            mBtn.innerHTML = isListed 
+                ? `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg> Saved in Watchlist`
+                : `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg> Add to Watchlist`;
+            mBtn.onclick = () => toggleWatchlist(movie.id);
+
+            const pBtn = document.getElementById('mPlayBtn');
+            pBtn.onclick = () => {
+                closeModal();
+                launchTheater(movie);
+            };
+
+            document.getElementById('detailModal').classList.add('active');
         }
+
+        function closeModal() {
+            document.getElementById('detailModal').classList.remove('active');
+        }
+
+        // Theater Player
+        function launchTheater(movie) {
+            document.getElementById('theaterTitle').textContent = `${movie.title} (${movie.year})`;
+            const vid = document.getElementById('cinemaVideo');
+            vid.src = movie.video;
+            document.getElementById('theaterModal').classList.add('active');
+            vid.play().catch(e => console.log('Autoplay restriction handled'));
+            showToast(`Now Streaming "${movie.title}" in 4K UHD Master Quality`);
+        }
+
+        function closeTheater() {
+            const vid = document.getElementById('cinemaVideo');
+            vid.pause();
+            vid.src = '';
+            document.getElementById('theaterModal').classList.remove('active');
+        }
+
+        // Toast Feedback System
+        let toastTimeout;
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMessage').textContent = msg;
+            toast.classList.add('active');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('active');
+            }, 3200);
+        }
+
+        // Launch Application
+        initApp();
     </script>
 </body>
 </html>

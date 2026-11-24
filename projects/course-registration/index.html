@@ -3,285 +3,1242 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduGlobal Intelligence - Elite Learning Suite</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Nexus Academic Portal — Course Enrollment & Degree Progress Engine</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #6366F1;
-            --primary-glow: rgba(99, 102, 241, 0.2);
-            --secondary: #10B981;
-            --dark: #0F172A;
-            --accent: #F43F5E;
-            --bg: #F8FAFC;
-            --radius: 20px;
+            --bg-void: #070b14;
+            --bg-surface: #0e1526;
+            --bg-elevated: #151f38;
+            --bg-glass: rgba(14, 21, 38, 0.88);
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --border-focus: rgba(245, 158, 11, 0.45);
+            
+            --gold-accent: #f59e0b;
+            --gold-bright: #fbbf24;
+            --gold-glow: rgba(245, 158, 11, 0.25);
+            
+            --blue-accent: #3b82f6;
+            --blue-glow: rgba(59, 130, 246, 0.2);
+            --emerald-status: #10b981;
+            --emerald-bg: rgba(16, 185, 129, 0.12);
+            --rose-danger: #f43f5e;
+            --rose-bg: rgba(244, 63, 94, 0.12);
+            
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-tertiary: #64748b;
+            
+            --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
+            --font-body: 'Inter', system-ui, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
+            --radius-full: 9999px;
+            
+            --shadow-subtle: 0 4px 20px rgba(0, 0, 0, 0.4);
+            --shadow-float: 0 12px 36px rgba(0, 0, 0, 0.6);
         }
 
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--dark); overflow-x: hidden; }
-
-        /* HERO / LANDING PAGE */
-        #landing {
-            min-height: 100vh; background: radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.1) 0%, transparent 40%), radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 40%), white;
-            display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2rem;
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
-        .hero-title { font-size: 4.5rem; font-weight: 800; letter-spacing: -3px; line-height: 1; margin-bottom: 1.5rem; background: linear-gradient(to right, #6366F1, #8B5CF6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .hero-desc { max-width: 600px; color: #64748B; font-size: 1.25rem; margin-bottom: 3rem; }
-        .hero-btns { display: flex; gap: 1rem; }
 
-        /* AUTH MODAL */
-        #auth-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 2000; }
-        .login-card { background: white; padding: 3rem; border-radius: 30px; width: 440px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
-        .field { width: 100%; padding: 1rem; border: 2px solid #E2E8F0; border-radius: 14px; margin-bottom: 1rem; outline: none; font-family: inherit; transition: 0.3s; }
-        .field:focus { border-color: var(--primary); box-shadow: 0 0 0 4px var(--primary-glow); }
-
-        /* APP BROWSER */
-        #app { display: none; min-height: 100vh; }
-        .sidebar { width: 280px; background: white; border-right: 1px solid #E2E8F0; position: fixed; height: 100vh; padding: 2rem; z-index: 100; }
-        .main-content { margin-left: 280px; flex: 1; padding: 2.5rem; }
-        
-        .nav-item { 
-            display: flex; align-items: center; gap: 1rem; padding: 1rem 1.25rem; color: #64748B; 
-            text-decoration: none; border-radius: 16px; font-weight: 600; cursor: pointer; margin-bottom: 0.5rem; transition: 0.3s;
+        body {
+            background-color: var(--bg-void);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            min-height: 100vh;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            background-image: 
+                radial-gradient(circle at 15% 10%, rgba(245, 158, 11, 0.07) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(59, 130, 246, 0.08) 0%, transparent 45%);
+            background-attachment: fixed;
         }
-        .nav-item:hover, .nav-item.active { background: #EEF2FF; color: var(--primary); }
-        
-        /* DASHBOARD ELEMENTS */
-        .glass-card { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: var(--radius); padding: 2rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); }
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
-        .stat-card { background: white; padding: 1.5rem; border-radius: var(--radius); border: 1px solid #E2E8F0; transition: 0.3s; }
-        .stat-card:hover { transform: translateY(-5px); border-color: var(--primary); }
 
-        .btn { padding: 0.8rem 1.5rem; border-radius: 14px; border: none; font-weight: 700; cursor: pointer; transition: 0.3s; font-family: inherit; font-size: 0.95rem; }
-        .btn-p { background: var(--primary); color: white; box-shadow: 0 10px 15px -3px var(--primary-glow); }
-        .btn-p:hover { transform: translateY(-2px); filter: brightness(1.1); }
-        
-        .badge { padding: 0.4rem 0.8rem; border-radius: 30px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; }
-        .badge-ai { background: linear-gradient(45deg, #6366F1, #A855F7); color: white; }
+        /* Themed browser surfaces */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-void);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: var(--radius-full);
+            border: 2px solid var(--bg-void);
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155;
+        }
+        ::selection {
+            background: rgba(245, 158, 11, 0.3);
+            color: #ffffff;
+        }
+        :focus-visible {
+            outline: 2px solid var(--gold-accent);
+            outline-offset: 3px;
+        }
 
-        .v-section { animation: fadeIn 0.5s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        /* Top Navigation Header */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--bg-glass);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 0.85rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
 
-        .course-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
-        .course-card { background: white; border: 1px solid #E2E8F0; border-radius: 24px; padding: 1.5rem; transition: 0.3s; overflow: hidden; }
-        .course-card:hover { border-color: var(--primary); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.05); }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
 
-        .hidden { display: none !important; }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .brand-crest {
+            width: 38px;
+            height: 38px;
+            border-radius: var(--radius-md);
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(59, 130, 246, 0.15));
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold-bright);
+            box-shadow: 0 0 15px var(--gold-glow);
+        }
+
+        .brand-text h1 {
+            font-family: var(--font-display);
+            font-size: 1.05rem;
+            font-weight: 800;
+            letter-spacing: -0.01em;
+            color: #ffffff;
+        }
+
+        .brand-text p {
+            font-size: 0.72rem;
+            color: var(--text-secondary);
+            font-family: var(--font-mono);
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .back-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.45rem 0.9rem;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-full);
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .back-pill:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .term-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 0.9rem;
+            background: rgba(245, 158, 11, 0.08);
+            border: 1px solid rgba(245, 158, 11, 0.25);
+            border-radius: var(--radius-full);
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--gold-bright);
+            font-weight: 600;
+        }
+
+        /* Student Identity & Degree Progress Bar */
+        .identity-banner {
+            max-width: 1360px;
+            margin: 1.5rem auto 0;
+            padding: 0 1.75rem;
+        }
+
+        .profile-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 1.4rem 1.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            box-shadow: var(--shadow-subtle);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, var(--gold-bright), var(--blue-accent));
+        }
+
+        .student-profile {
+            display: flex;
+            align-items: center;
+            gap: 1.15rem;
+        }
+
+        .student-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: var(--radius-full);
+            background: linear-gradient(135deg, var(--gold-accent), #d97706);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: 1.1rem;
+            color: #070b14;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 18px var(--gold-glow);
+        }
+
+        .student-meta h2 {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .student-meta p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        .academic-stats {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .stat-block {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-title {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-tertiary);
+            font-weight: 600;
+        }
+
+        .stat-val {
+            font-family: var(--font-mono);
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-top: 2px;
+        }
+
+        .stat-val.gold {
+            color: var(--gold-bright);
+        }
+
+        .unit-meter-wrap {
+            display: flex;
+            flex-direction: column;
+            width: 180px;
+        }
+
+        .unit-progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+            margin-top: 6px;
+        }
+
+        .unit-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold-bright), var(--blue-accent));
+            border-radius: var(--radius-full);
+            transition: width 0.4s ease;
+        }
+
+        /* Workspace Area */
+        .workspace {
+            max-width: 1360px;
+            margin: 1.5rem auto;
+            padding: 0 1.75rem 3.5rem;
+        }
+
+        /* Tab Navigation */
+        .nav-tabs {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .tab-btn-group {
+            display: flex;
+            gap: 0.4rem;
+            background: var(--bg-surface);
+            padding: 0.35rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .portal-tab {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            padding: 0.55rem 1.15rem;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .portal-tab:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .portal-tab.active {
+            background: var(--gold-bright);
+            color: #070b14;
+            box-shadow: 0 0 16px rgba(245, 158, 11, 0.35);
+        }
+
+        /* Search & Department Filters */
+        .catalog-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            flex-wrap: wrap;
+        }
+
+        .search-wrap {
+            position: relative;
+            min-width: 280px;
+        }
+
+        .search-wrap svg {
+            position: absolute;
+            left: 0.85rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-tertiary);
+            pointer-events: none;
+        }
+
+        .search-input {
+            width: 100%;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 0.55rem 0.9rem 0.55rem 2.3rem;
+            color: #ffffff;
+            font-family: var(--font-body);
+            font-size: 0.86rem;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .search-input:focus {
+            border-color: var(--gold-accent);
+            box-shadow: 0 0 12px var(--gold-glow);
+        }
+
+        .filter-tag-btn {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            font-family: var(--font-display);
+            font-size: 0.78rem;
+            font-weight: 600;
+            padding: 0.45rem 0.8rem;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .filter-tag-btn:hover {
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .filter-tag-btn.active {
+            background: rgba(245, 158, 11, 0.15);
+            border-color: rgba(245, 158, 11, 0.4);
+            color: var(--gold-bright);
+        }
+
+        /* Course Catalog Cards Grid */
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem;
+        }
+
+        .course-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 1.4rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .course-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .course-card.enrolled {
+            border-color: rgba(16, 185, 129, 0.4);
+            background: linear-gradient(180deg, rgba(16, 185, 129, 0.04), var(--bg-surface));
+        }
+
+        .course-card.enrolled::after {
+            content: 'ENROLLED';
+            position: absolute;
+            top: 1rem;
+            right: 1.25rem;
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: var(--emerald-status);
+            background: var(--emerald-bg);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 0.2rem 0.55rem;
+            border-radius: var(--radius-full);
+        }
+
+        .course-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.85rem;
+        }
+
+        .course-code-badge {
+            font-family: var(--font-mono);
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--gold-bright);
+            background: rgba(245, 158, 11, 0.12);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            padding: 0.25rem 0.65rem;
+            border-radius: var(--radius-sm);
+        }
+
+        .course-units {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .course-title {
+            font-family: var(--font-display);
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1.35;
+            margin-bottom: 0.45rem;
+        }
+
+        .course-instructor {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            margin-bottom: 1rem;
+        }
+
+        .prereq-strip {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .prereq-chip {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            padding: 0.2rem 0.55rem;
+            border-radius: var(--radius-sm);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .prereq-chip.met {
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            color: var(--emerald-status);
+        }
+
+        .prereq-chip.missing {
+            background: rgba(244, 63, 94, 0.08);
+            border: 1px solid rgba(244, 63, 94, 0.25);
+            color: var(--rose-danger);
+        }
+
+        /* Capacity stats */
+        .capacity-section {
+            margin-bottom: 1.25rem;
+        }
+
+        .capacity-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.35rem;
+            font-family: var(--font-mono);
+        }
+
+        .capacity-bar {
+            width: 100%;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+        }
+
+        .capacity-fill {
+            height: 100%;
+            border-radius: var(--radius-full);
+            background: var(--blue-accent);
+        }
+
+        .capacity-fill.full {
+            background: var(--rose-danger);
+        }
+
+        /* Action Buttons */
+        .btn-enroll-action {
+            width: 100%;
+            padding: 0.7rem 1.2rem;
+            border-radius: var(--radius-md);
+            font-family: var(--font-display);
+            font-size: 0.86rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            border: none;
+        }
+
+        .btn-enroll-action.enroll {
+            background: linear-gradient(135deg, var(--gold-accent), #d97706);
+            color: #070b14;
+            box-shadow: 0 4px 15px var(--gold-glow);
+        }
+
+        .btn-enroll-action.enroll:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+        }
+
+        .btn-enroll-action.drop {
+            background: var(--rose-bg);
+            border: 1px solid rgba(244, 63, 94, 0.3);
+            color: var(--rose-danger);
+        }
+
+        .btn-enroll-action.drop:hover {
+            background: rgba(244, 63, 94, 0.2);
+        }
+
+        .btn-enroll-action.full-btn {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-tertiary);
+            cursor: not-allowed;
+            border: 1px solid var(--border-subtle);
+        }
+
+        /* Registered Schedule & Projected GPA Engine View */
+        .enrolled-view-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 1.5rem;
+        }
+
+        .enrolled-panel {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .panel-headline {
+            font-family: var(--font-display);
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.85rem;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .panel-headline svg {
+            color: var(--gold-bright);
+        }
+
+        .schedule-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 1rem 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.85rem;
+        }
+
+        .schedule-left h4 {
+            font-family: var(--font-display);
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .schedule-left p {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            margin-top: 3px;
+        }
+
+        .gpa-simulator-card {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 1.25rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .grade-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            font-size: 0.84rem;
+        }
+
+        .grade-select {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            color: var(--gold-bright);
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 0.25rem 0.6rem;
+            border-radius: var(--radius-sm);
+            outline: none;
+        }
+
+        .projected-gpa-display {
+            padding: 1.5rem;
+            background: rgba(245, 158, 11, 0.06);
+            border: 1px solid rgba(245, 158, 11, 0.25);
+            border-radius: var(--radius-md);
+            text-align: center;
+        }
+
+        .gpa-huge {
+            font-family: var(--font-mono);
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--gold-bright);
+            line-height: 1;
+            margin: 0.4rem 0;
+        }
+
+        /* Empty state */
+        .empty-slate {
+            text-align: center;
+            padding: 3.5rem 1.5rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-slate svg {
+            color: var(--text-tertiary);
+            margin-bottom: 1rem;
+        }
+
+        /* Toast notifications */
+        .toast-notif {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--bg-elevated);
+            color: #ffffff;
+            border: 1px solid rgba(245, 158, 11, 0.35);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border-radius: var(--radius-md);
+            padding: 0.9rem 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.88rem;
+            font-weight: 500;
+            transform: translateY(120%);
+            opacity: 0;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 2000;
+        }
+
+        .toast-notif.active {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 1100px) {
+            .courses-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .enrolled-view-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 700px) {
+            header {
+                padding: 0.75rem 1rem;
+            }
+            .identity-banner, .workspace {
+                padding: 0 1rem;
+            }
+            .courses-grid {
+                grid-template-columns: 1fr;
+            }
+            .profile-card {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .academic-stats {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <!-- LANDING PAGE HERO -->
-    <div id="landing">
-        <div class="glass-card" style="box-shadow: none; border: none; padding: 3rem;">
-            <div style="background: var(--primary-glow); padding: 0.3rem 0.8rem; border-radius: 30px; display: inline-block; color: var(--primary); font-weight: 800; font-size: 0.8rem; margin-bottom: 1.5rem;">NEXT-GEN LEARNING</div>
-            <h1 class="hero-title">Knowledge Without<br>Boundaries.</h1>
-            <p class="hero-desc">Experience a professional institutional platform designed for the modern era. Secure, intelligent, and globally connected.</p>
-            <div class="hero-btns">
-                <button class="btn btn-p" onclick="showAuth()">Launch Portal</button>
-                <button class="btn" style="background: white; border: 2px solid #E2E8F0;" onclick="window.open('https://github.com')">Documentation</button>
-            </div>
-        </div>
-        <div style="margin-top: 4rem; width: 100%; max-width: 900px; height: 300px; background: white; border-radius: 30px 30px 0 0; border: 1px solid #E2E8F0; border-bottom: none; padding: 2rem; overflow: hidden;">
-             <div style="display: flex; gap: 1rem; border-bottom: 1px solid #E2E8F0; padding-bottom: 1rem; margin-bottom: 1.5rem;">
-                 <div style="width: 12px; height: 12px; border-radius: 50%; background: #EF4444;"></div>
-                 <div style="width: 12px; height: 12px; border-radius: 50%; background: #F59E0B;"></div>
-                 <div style="width: 12px; height: 12px; border-radius: 50%; background: #10B981;"></div>
-             </div>
-             <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 1rem;">
-                 <div style="height: 150px; background: #F1F5F9; border-radius: 16px;"></div>
-                 <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                     <div style="height: 20px; width: 60%; background: #F1F5F9; border-radius: 6px;"></div>
-                     <div style="height: 20px; width: 90%; background: #F1F5F9; border-radius: 6px;"></div>
-                     <div style="height: 20px; width: 40%; background: #F1F5F9; border-radius: 6px;"></div>
-                 </div>
-             </div>
-        </div>
-    </div>
-
-    <!-- AUTH OVERLAY -->
-    <div id="auth-overlay">
-        <div class="login-card">
-            <h2 id="auth-title" style="font-weight: 800; letter-spacing: -1px; margin-bottom: 0.5rem;">Secure Access</h2>
-            <p id="auth-sub" style="color: #64748B; margin-bottom: 2rem; font-size: 0.95rem;">Please enter your institutional credentials.</p>
-            
-            <div id="reg-fields" class="hidden">
-                <input type="text" id="reg-name" class="field" placeholder="Full Legal Name">
-            </div>
-            
-            <input type="text" id="u" class="field" placeholder="Username" value="student">
-            <input type="password" id="p" class="field" placeholder="Password" value="password">
-            
-            <button id="auth-btn" class="btn btn-p" style="width: 100%; padding: 1rem; font-size: 1rem;" onclick="handleAuth()">Enter System</button>
-            
-            <div style="margin-top: 1.5rem; text-align: center; font-size: 0.85rem;">
-                <span id="auth-toggle-text" style="color: #64748B;">Don't have an account?</span>
-                <a href="#" id="auth-toggle-link" style="color: var(--primary); font-weight: 700; text-decoration: none; margin-left: 5px;" onclick="toggleAuth()">Register Now</a>
-            </div>
-            
-            <div id="auth-hint" style="margin-top: 1rem; text-align: center; font-size: 0.75rem; color: #94A3B8;">
-                STUDENT: student / password • ADMIN: admin / admin
-            </div>
-        </div>
-    </div>
-
-    <!-- MAIN APP STRUCTURE -->
-    <div id="app">
-        <aside class="sidebar">
-            <div style="margin-bottom: 3rem;">
-                <h2 style="font-weight: 900; letter-spacing: -1px; color: var(--primary);">EduGlobal</h2>
-                <p style="font-size: 0.7rem; font-weight: 800; color: #94A3B8;">INTELLIGENCE SUITE</p>
-            </div>
-            <nav id="nav">
-                <!-- Navigation Items dynamically generated -->
-            </nav>
-            <div style="position: absolute; bottom: 2rem; left: 2rem; right: 2rem;">
-                <button class="nav-item" style="width: 100%; border: none; background: #F1F5F9; color: var(--accent);" onclick="location.reload()">🔒 Logout</button>
-            </div>
-        </aside>
-
-        <main class="main-content">
-            <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem;">
-                <div>
-                    <h1 id="v-title" style="font-weight: 900; letter-spacing: -1px;">Intelligence Hub</h1>
-                    <p id="v-sub" style="color: #64748B; font-weight: 500;">Welcome back to your academic overview.</p>
+    <!-- Header Navigation -->
+    <header>
+        <div class="header-left">
+            <a href="../index.html" class="brand">
+                <div class="brand-crest">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                        <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                    </svg>
                 </div>
-                <div style="display: flex; align-items: center; gap: 1rem;">
-                    <div style="text-align: right;">
-                        <div id="user-name" style="font-weight: 800; font-size: 1rem;">Student Name</div>
-                        <div id="user-role" style="font-size: 0.7rem; font-weight: 800; color: var(--primary); text-transform: uppercase;">Student</div>
+                <div class="brand-text">
+                    <h1>Nexus Academic</h1>
+                    <p>University Course Enrollment Portal</p>
+                </div>
+            </a>
+            <a href="../index.html" class="back-pill">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back to Portfolio
+            </a>
+        </div>
+
+        <div class="term-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            FALL 2026 SEMESTER
+        </div>
+    </header>
+
+    <!-- Student Academic Profile Banner -->
+    <div class="identity-banner">
+        <section class="profile-card">
+            <div class="student-profile">
+                <div class="student-avatar">SL</div>
+                <div class="student-meta">
+                    <h2>Semagn Legese</h2>
+                    <p>B.Sc. Software Engineering &bull; Class of 2027 (Year 3)</p>
+                </div>
+            </div>
+
+            <div class="academic-stats">
+                <div class="stat-block">
+                    <span class="stat-title">Cumulative GPA</span>
+                    <span class="stat-val gold">3.88 <span style="font-size:0.85rem; color:var(--text-tertiary); font-weight:400;">/ 4.00</span></span>
+                </div>
+
+                <div class="stat-block">
+                    <span class="stat-title">Standing</span>
+                    <span class="stat-val" style="color:var(--emerald-status)">Dean's Honors</span>
+                </div>
+
+                <div class="unit-meter-wrap">
+                    <div style="display:flex; justify-content:space-between; font-size:0.75rem;">
+                        <span style="color:var(--text-secondary);">Enrolled Units</span>
+                        <span style="font-family:var(--font-mono); font-weight:700; color:#ffffff;" id="unitFraction">0 / 18</span>
                     </div>
-                    <div id="user-ava" style="width: 50px; height: 50px; border-radius: 16px; background: var(--primary); display: flex; align-items: center; justify-content: center; color: white; font-weight: 900; font-size: 1.25rem;">U</div>
+                    <div class="unit-progress-bar">
+                        <div class="unit-progress-fill" id="unitProgressFill" style="width: 0%;"></div>
+                    </div>
                 </div>
-            </header>
+            </div>
+        </section>
+    </div>
 
-            <div id="viewport"></div>
-        </main>
+    <!-- Main Workspace -->
+    <main class="workspace">
+
+        <!-- Navigation Tabs & Search Toolbar -->
+        <div class="nav-tabs">
+            <div class="tab-btn-group">
+                <button class="portal-tab active" id="tabCatalogBtn" onclick="switchPortalView('catalog')">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                    </svg>
+                    Course Catalog
+                </button>
+                <button class="portal-tab" id="tabScheduleBtn" onclick="switchPortalView('schedule')">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9 11 12 14 22 4"/>
+                        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                    </svg>
+                    My Enrolled Schedule (<span id="tabEnrolledCount">0</span>)
+                </button>
+            </div>
+
+            <div class="catalog-controls" id="catalogControls">
+                <div class="search-wrap">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                    <input type="text" id="courseSearchInput" class="search-input" placeholder="Search courses, instructors, codes..." oninput="handleCatalogFilter()">
+                </div>
+
+                <button class="filter-tag-btn active" onclick="setDepartmentFilter('ALL', this)">All</button>
+                <button class="filter-tag-btn" onclick="setDepartmentFilter('CS', this)">CS</button>
+                <button class="filter-tag-btn" onclick="setDepartmentFilter('SE', this)">SE</button>
+                <button class="filter-tag-btn" onclick="setDepartmentFilter('AI', this)">AI</button>
+            </div>
+        </div>
+
+        <!-- Catalog Grid View -->
+        <div id="view-catalog">
+            <div class="courses-grid" id="coursesGridContainer">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+
+        <!-- Enrolled Courses & GPA Simulation View -->
+        <div id="view-schedule" style="display: none;">
+            <div class="enrolled-view-grid">
+                <!-- Enrolled Course Schedule -->
+                <div class="enrolled-panel">
+                    <div class="panel-headline">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6"/>
+                            <line x1="8" y1="2" x2="8" y2="6"/>
+                            <line x1="3" y1="10" x2="21" y2="10"/>
+                        </svg>
+                        Fall 2026 Academic Timetable & Lecture Roster
+                    </div>
+
+                    <div id="enrolledListContainer">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Live Semester Projected GPA Engine -->
+                <div class="enrolled-panel">
+                    <div class="panel-headline">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 6v6l4 2"/>
+                        </svg>
+                        Target GPA Simulation Engine
+                    </div>
+
+                    <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                        Project your term GPA and cumulative CGPA based on expected letter grades:
+                    </p>
+
+                    <div class="gpa-simulator-card" id="gpaGradeRows">
+                        <!-- Populated by JS -->
+                    </div>
+
+                    <div class="projected-gpa-display">
+                        <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-secondary); font-weight: 600;">
+                            Projected Fall 2026 Semester GPA
+                        </div>
+                        <div class="gpa-huge" id="projectedGpaVal">3.92</div>
+                        <div style="font-size: 0.8rem; color: var(--gold-bright); font-family: var(--font-mono);" id="projectedCgpaVal">
+                            Estimated Cumulative CGPA: 3.89
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Global Toast Notification -->
+    <div class="toast-notif" id="toastBox">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold-bright)" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+        <span id="toastMsg">Action executed</span>
     </div>
 
     <script>
-        const API = 'http://localhost:3003/api';
-        let user = null;
-        let isRegister = false;
+        // Catalog Courses
+        const courses = [
+            { id: 1, code: 'CS301', name: 'Data Structures & Algorithmic Complexity', instructor: 'Prof. A. Bekele', units: 4, enrolled: true, max: 30, current: 28, dept: 'CS', time: 'Mon / Wed 09:00 - 10:30', room: 'Hall 402', prereqs: ['CS102', 'MATH101'] },
+            { id: 2, code: 'CS201', name: 'Web Architecture & Distributed Systems', instructor: 'Dr. T. Haile', units: 3, enrolled: true, max: 25, current: 15, dept: 'CS', time: 'Tue / Thu 11:00 - 12:30', room: 'Lab 2B', prereqs: ['CS102'] },
+            { id: 3, code: 'CS401', name: 'Database Management Systems & SQL', instructor: 'Prof. M. Girma', units: 4, enrolled: false, max: 20, current: 20, dept: 'CS', time: 'Mon / Wed 14:00 - 15:30', room: 'Hall 105', prereqs: ['CS202'] },
+            { id: 4, code: 'SE201', name: 'Software Engineering Principles & Lifecycle', instructor: 'Dr. H. Tadesse', units: 3, enrolled: true, max: 35, current: 13, dept: 'SE', time: 'Fri 08:30 - 11:30', room: 'Auditorium 1', prereqs: ['CS202', 'CS301'] },
+            { id: 5, code: 'CS501', name: 'Mobile Application Architecture & Flutter', instructor: 'Dr. Y. Mamo', units: 3, enrolled: false, max: 22, current: 18, dept: 'CS', time: 'Tue / Thu 14:00 - 15:30', room: 'Lab 4', prereqs: [] },
+            { id: 6, code: 'AI301', name: 'Applied Machine Learning & Neural Nets', instructor: 'Prof. L. Tesfaye', units: 4, enrolled: false, max: 18, current: 10, dept: 'AI', time: 'Mon / Wed 16:00 - 17:30', room: 'AI Research Hub', prereqs: ['MATH102', 'CS301'] },
+        ];
 
-        function showAuth() { document.getElementById('auth-overlay').style.display = 'flex'; }
+        // Completed courses for prerequisite checking
+        const completedCourses = ['CS101', 'CS102', 'MATH101', 'MATH102', 'CS202', 'ENG101', 'PHYS101'];
 
-        function toggleAuth() {
-            isRegister = !isRegister;
-            document.getElementById('auth-title').innerText = isRegister ? 'Create Account' : 'Secure Access';
-            document.getElementById('auth-sub').innerText = isRegister ? 'Join the EduGlobal academic community.' : 'Please enter your institutional credentials.';
-            document.getElementById('auth-btn').innerText = isRegister ? 'Create Account' : 'Enter System';
-            document.getElementById('auth-toggle-text').innerText = isRegister ? 'Already have an account?' : "Don't have an account?";
-            document.getElementById('auth-toggle-link').innerText = isRegister ? 'Login Instead' : 'Register Now';
-            document.getElementById('reg-fields').classList.toggle('hidden');
-            document.getElementById('auth-hint').classList.toggle('hidden');
-        }
+        const gradePoints = {
+            'A+': 4.0, 'A': 4.0, 'A-': 3.75,
+            'B+': 3.5, 'B': 3.0, 'B-': 2.75,
+            'C+': 2.5, 'C': 2.0
+        };
 
-        async function handleAuth() {
-            if (isRegister) register();
-            else login();
-        }
+        let courseGrades = {
+            1: 'A',
+            2: 'A-',
+            4: 'A'
+        };
 
-        async function register() {
-            const name = document.getElementById('reg-name').value;
-            const username = document.getElementById('u').value;
-            const password = document.getElementById('p').value;
-            
-            const res = await fetch(`${API}/auth/register`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({username, password, name}) });
-            if (res.ok) {
-                alert('Account Created Successfully! You can now login.');
-                toggleAuth();
-            } else {
-                const err = await res.json();
-                alert(err.error || 'Registration failed');
+        let activeDept = 'ALL';
+
+        function switchPortalView(view) {
+            document.getElementById('view-catalog').style.display = view === 'catalog' ? 'block' : 'none';
+            document.getElementById('view-schedule').style.display = view === 'schedule' ? 'block' : 'none';
+            document.getElementById('catalogControls').style.display = view === 'catalog' ? 'flex' : 'none';
+
+            document.getElementById('tabCatalogBtn').classList.toggle('active', view === 'catalog');
+            document.getElementById('tabScheduleBtn').classList.toggle('active', view === 'schedule');
+
+            if (view === 'schedule') {
+                renderSchedule();
             }
         }
 
-        async function login() {
-            const u = document.getElementById('u').value, p = document.getElementById('p').value;
-            const res = await fetch(`${API}/auth/login`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({username:u, password:p}) });
-            if (res.ok) {
-                user = (await res.json()).user;
-                document.getElementById('landing').style.display = 'none';
-                document.getElementById('auth-overlay').style.display = 'none';
-                document.getElementById('app').style.display = 'flex';
-                initApp();
-            } else alert('Access Denied: Invalid Credentials');
+        function setDepartmentFilter(dept, btn) {
+            activeDept = dept;
+            document.querySelectorAll('.filter-tag-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderCatalog();
         }
 
-        async function initApp() {
-            document.getElementById('user-name').innerText = user.username;
-            document.getElementById('user-role').innerText = user.role;
-            document.getElementById('user-ava').innerText = user.username[0].toUpperCase();
-            
-            const nav = document.getElementById('nav');
-            const items = {
-                student: [['Dashboard', 'home', '🏠'], ['Education', 'edu', '📚'], ['Finance', 'fin', '💳'], ['Licensing', 'lic', '🎓']],
-                admin: [['BI Dashboard', 'home', '📊'], ['Academic Queue', 'queue', '🛡️'], ['Intelligence', 'intel', '🧠'], ['System Logs', 'logs', '📜']]
-            };
-            nav.innerHTML = items[user.role].map(i => `<div class="nav-item" id="nav-${i[1]}" onclick="v('${i[1]}')">${i[2]} <span>${i[0]}</span></div>`).join('');
-            v('home');
+        function handleCatalogFilter() {
+            renderCatalog();
         }
 
-        async function v(view) {
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            if(document.getElementById(`nav-${view}`)) document.getElementById(`nav-${view}`).classList.add('active');
-            
-            const port = document.getElementById('viewport');
-            port.innerHTML = `<div class="v-section">Loading intelligence data...</div>`;
+        function renderCatalog() {
+            const query = document.getElementById('courseSearchInput').value.toLowerCase().trim();
+            const container = document.getElementById('coursesGridContainer');
 
-            if (view === 'home') {
-                if (user.role === 'student') {
-                    const s = await (await fetch(`${API}/students/${user.studentId}`)).json();
-                    const e = await (await fetch(`${API}/students/${user.studentId}/enrollments`)).json();
-                    const c = await (await fetch(`${API}/certificates/${user.studentId}`)).json();
-                    
-                    port.innerHTML = `
-                        <div class="stats-grid v-section">
-                            <div class="stat-card"><b>Wallet Balance</b><h2 style="font-size: 2rem; margin-top: 0.5rem; color: var(--primary);">$${s.balance}</h2></div>
-                            <div class="stat-card"><b>Ongoing Courses</b><h2 style="font-size: 2rem; margin-top: 0.5rem;">${e.length}</h2></div>
-                            <div class="stat-card"><b>Earned Licenses</b><h2 style="font-size: 2rem; margin-top: 0.5rem; color: var(--secondary);">${c.length}</h2></div>
-                            <div class="stat-card"><b>Global Rank</b><h2 style="font-size: 2rem; margin-top: 0.5rem;">#142</h2></div>
-                        </div>
-                        <div style="display: grid; grid-template-columns: 2fr 1.2fr; gap: 1.5rem;" class="v-section">
-                            <div class="glass-card">
-                                <h3>Curated Learning Paths</h3>
-                                <p style="color: #64748B; font-size: 0.9rem; margin-bottom: 2rem;">Top picks based on your recent activity.</p>
-                                <div id="top-courses" class="course-grid"></div>
+            const filtered = courses.filter(c => {
+                const matchDept = activeDept === 'ALL' || c.dept === activeDept;
+                const matchQuery = !query || 
+                    c.name.toLowerCase().includes(query) || 
+                    c.code.toLowerCase().includes(query) || 
+                    c.instructor.toLowerCase().includes(query);
+                return matchDept && matchQuery;
+            });
+
+            container.innerHTML = filtered.map(c => {
+                const isFull = c.current >= c.max;
+                const pct = Math.round((c.current / c.max) * 100);
+
+                let btnClass = c.enrolled ? 'drop' : (isFull ? 'full-btn' : 'enroll');
+                let btnText = c.enrolled ? 'Drop Course' : (isFull ? 'Course Full (Waitlist)' : '+ Enroll in Course');
+
+                const prereqsHtml = c.prereqs && c.prereqs.length > 0 
+                    ? c.prereqs.map(req => {
+                        const met = completedCourses.includes(req);
+                        return `
+                            <span class="prereq-chip ${met ? 'met' : 'missing'}">
+                                ${met ? '&#10003;' : '&#9888;'} ${req}
+                            </span>
+                        `;
+                    }).join('')
+                    : `<span style="font-size:0.7rem; color:var(--text-tertiary); font-family:var(--font-mono);">No prerequisites</span>`;
+
+                return `
+                    <div class="course-card ${c.enrolled ? 'enrolled' : ''}">
+                        <div>
+                            <div class="course-top">
+                                <span class="course-code-badge">${c.code}</span>
+                                <span class="course-units">${c.units} Credit Units</span>
                             </div>
-                            <div class="glass-card" style="background: linear-gradient(135deg, white, #F8FAFC);">
-                                <h3>Announcements</h3>
-                                <div style="margin-top: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
-                                    <div style="padding: 1rem; background: #F1F5F9; border-radius: 12px; font-size: 0.85rem;"><b>New Feature:</b> Professional PDF exports are now live.</div>
-                                    <div style="padding: 1rem; background: #F1F5F9; border-radius: 12px; font-size: 0.85rem;"><b>Holiday:</b> The campus will be closed on April 20th.</div>
+
+                            <h3 class="course-title">${c.name}</h3>
+
+                            <div class="course-instructor">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="12" cy="7" r="4"/>
+                                </svg>
+                                ${c.instructor} &bull; ${c.time}
+                            </div>
+
+                            <div class="prereq-strip">
+                                ${prereqsHtml}
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="capacity-section">
+                                <div class="capacity-meta">
+                                    <span>Enrollment Capacity</span>
+                                    <span>${c.current} / ${c.max} seats (${pct}%)</span>
+                                </div>
+                                <div class="capacity-bar">
+                                    <div class="capacity-fill ${isFull ? 'full' : ''}" style="width: ${pct}%;"></div>
                                 </div>
                             </div>
+
+                            <button class="btn-enroll-action ${btnClass}" onclick="toggleEnrollCourse(${c.id})" ${isFull && !c.enrolled ? 'disabled' : ''}>
+                                ${btnText}
+                            </button>
                         </div>
-                    `;
-                    const allC = await (await fetch(`${API}/courses`)).json();
-                    document.getElementById('top-courses').innerHTML = allC.map(x => `<div class="course-card"><b>${x.name}</b><br><small>${x.code}</small></div>`).join('');
-                } else {
-                   // Admin Home
-                   const intel = await (await fetch(`${API}/admin/intelligence`)).json();
-                   port.innerHTML = `
-                        <div class="stats-grid v-section">
-                             <div class="stat-card"><b>Net Revenue</b><h2 style="font-size: 2rem; margin-top: 0.5rem;">$${intel.revenue.toLocaleString()}</h2></div>
-                             <div class="stat-card"><b>Graduation Rate</b><h2 style="font-size: 2rem; margin-top: 0.5rem;">${intel.completionRate}%</h2></div>
-                             <div class="stat-card"><b>Total Certificates</b><h2 style="font-size: 2rem; margin-top: 0.5rem;">${intel.totalCerts}</h2></div>
-                        </div>
-                        <div class="glass-card v-section"><h3>Platform Activity</h3><canvas id="mainChart" height="120"></canvas></div>
-                   `;
-                }
-            } else if (view === 'edu') {
-                const c = await (await fetch(`${API}/courses`)).json();
-                port.innerHTML = `<h3>Available Education Programs</h3><div class="course-grid v-section" style="margin-top: 2rem;">${c.map(x => `<div class="course-card"><h4>${x.name}</h4><p style="font-size:0.8rem">${x.level} • $${x.price}</p></div>`).join('')}</div>`;
-            } else if (view === 'intel') {
-                 port.innerHTML = `<div class="glass-card"><h3>Strategic Analytics</h3><p>Internal metric calculation in progress...</p></div>`;
-            } else if (view === 'logs') {
-                 const logs = await (await fetch(`${API}/admin/audit-logs`)).json();
-                 port.innerHTML = `<div class="glass-card"><h3>Security Audit Trail</h3><div style="margin-top:1rem">${logs.map(l => `<div style="padding:8px; border-bottom:1px solid #F1F5F9; font-size:0.8rem">[${new Date(l.timestamp).toLocaleTimeString()}] ${l.user}: ${l.action}</div>`).join('')}</div></div>`;
-            }
+                    </div>
+                `;
+            }).join('');
+
+            updateAcademicMetrics();
         }
+
+        function toggleEnrollCourse(id) {
+            const course = courses.find(c => c.id === id);
+            if (!course) return;
+
+            if (course.enrolled) {
+                course.enrolled = false;
+                course.current--;
+                delete courseGrades[id];
+                showToast(`Dropped ${course.code}: ${course.name}`);
+            } else {
+                // Verify Prerequisites
+                if (course.prereqs && course.prereqs.length > 0) {
+                    const missing = course.prereqs.filter(req => !completedCourses.includes(req));
+                    if (missing.length > 0) {
+                        showToast(`Prerequisite unmet: ${missing.join(', ')} required.`);
+                        return;
+                    }
+                }
+
+                // Verify Credit Units Limit (18 max)
+                const currentEnrolledUnits = courses.filter(c => c.enrolled).reduce((sum, c) => sum + c.units, 0);
+                if (currentEnrolledUnits + course.units > 18) {
+                    showToast('Unit cap exceeded: maximum 18 units allowed per term.');
+                    return;
+                }
+
+                course.enrolled = true;
+                course.current++;
+                courseGrades[id] = 'A';
+                showToast(`Successfully enrolled in ${course.code}`);
+            }
+
+            renderCatalog();
+            renderSchedule();
+        }
+
+        function updateAcademicMetrics() {
+            const enrolled = courses.filter(c => c.enrolled);
+            const totalUnits = enrolled.reduce((sum, c) => sum + c.units, 0);
+            const pct = Math.round((totalUnits / 18) * 100);
+
+            document.getElementById('unitFraction').textContent = `${totalUnits} / 18`;
+            document.getElementById('unitProgressFill').style.width = `${pct}%`;
+            document.getElementById('tabEnrolledCount').textContent = enrolled.length;
+        }
+
+        function renderSchedule() {
+            const container = document.getElementById('enrolledListContainer');
+            const enrolled = courses.filter(c => c.enrolled);
+
+            if (enrolled.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-slate">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                        </svg>
+                        <div style="font-size:1.05rem; font-weight:700; color:#ffffff;">No courses currently enrolled</div>
+                        <p style="font-size:0.8rem; margin-top:0.35rem;">Navigate to the Course Catalog to select lectures for this term.</p>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = enrolled.map(c => `
+                    <div class="schedule-item">
+                        <div class="schedule-left">
+                            <h4>${c.code}: ${c.name}</h4>
+                            <p>${c.time} &bull; Room ${c.room} &bull; ${c.instructor}</p>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:0.85rem;">
+                            <span style="font-family:var(--font-mono); font-size:0.8rem; color:var(--gold-bright); font-weight:600;">${c.units} Units</span>
+                            <button class="btn-enroll-action drop" style="width:auto; padding:0.4rem 0.8rem; font-size:0.75rem;" onclick="toggleEnrollCourse(${c.id})">
+                                Drop
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            renderGpaSimulator(enrolled);
+        }
+
+        function renderGpaSimulator(enrolled) {
+            const container = document.getElementById('gpaGradeRows');
+            if (enrolled.length === 0) {
+                container.innerHTML = `<div style="text-align:center; color:var(--text-tertiary); font-size:0.8rem; padding:1.5rem;">Enroll in courses to simulate semester GPA.</div>`;
+                document.getElementById('projectedGpaVal').textContent = '0.00';
+                return;
+            }
+
+            container.innerHTML = enrolled.map(c => {
+                const currentGrade = courseGrades[c.id] || 'A';
+                return `
+                    <div class="grade-row">
+                        <div>
+                            <span style="font-family:var(--font-mono); font-weight:700; color:#ffffff;">${c.code}</span>
+                            <span style="color:var(--text-secondary); margin-left:0.5rem;">(${c.units} units)</span>
+                        </div>
+                        <select class="grade-select" onchange="updateExpectedGrade(${c.id}, this.value)">
+                            ${Object.keys(gradePoints).map(g => `
+                                <option value="${g}" ${g === currentGrade ? 'selected' : ''}>${g} (${gradePoints[g].toFixed(2)})</option>
+                            `).join('')}
+                        </select>
+                    </div>
+                `;
+            }).join('');
+
+            computeProjectedGpa(enrolled);
+        }
+
+        function updateExpectedGrade(courseId, grade) {
+            courseGrades[courseId] = grade;
+            const enrolled = courses.filter(c => c.enrolled);
+            computeProjectedGpa(enrolled);
+        }
+
+        function computeProjectedGpa(enrolled) {
+            let totalPoints = 0;
+            let totalUnits = 0;
+
+            enrolled.forEach(c => {
+                const grade = courseGrades[c.id] || 'A';
+                const pts = gradePoints[grade] || 4.0;
+                totalPoints += pts * c.units;
+                totalUnits += c.units;
+            });
+
+            const termGpa = totalUnits > 0 ? (totalPoints / totalUnits).toFixed(2) : '0.00';
+            document.getElementById('projectedGpaVal').textContent = termGpa;
+
+            // Prior completed credits estimate: ~68 credits at 3.88
+            const priorCredits = 68;
+            const priorPoints = 68 * 3.88;
+            const projectedCgpa = ((priorPoints + totalPoints) / (priorCredits + totalUnits)).toFixed(2);
+            document.getElementById('projectedCgpaVal').textContent = `Estimated Cumulative CGPA: ${projectedCgpa}`;
+        }
+
+        // Global Toast System
+        let toastTimeout;
+        function showToast(msg) {
+            const box = document.getElementById('toastBox');
+            document.getElementById('toastMsg').textContent = msg;
+            box.classList.add('active');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                box.classList.remove('active');
+            }, 3000);
+        }
+
+        // Initialize
+        renderCatalog();
     </script>
 </body>
 </html>
